@@ -22,6 +22,8 @@ BASE_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
 # Wait times are used for packages that need CI/CD to complete publishing
 # before dependent packages can fetch the new version from npm.
 PROJECTS=(
+    "../tapayoka_pi:0"
+    "../tapayoka_pi_pico:0"
     "../tapayoka_types:60"
     "../tapayoka_api:0"
     "../tapayoka_client:60"
