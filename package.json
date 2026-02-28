@@ -1,20 +1,21 @@
 {
   "name": "tapayoka_vendor_app",
   "private": true,
-  "version": "0.0.3",
+  "version": "0.0.4",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc -b && vite build",
+    "process:static": "curl -sL https://raw.githubusercontent.com/johnqh/workflows/main/scripts/process-static-files.ts -o /tmp/process-static-files.ts && bunx tsx /tmp/process-static-files.ts",
+    "dev": "bun run process:static && vite",
+    "build": "bun run process:static && tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
     "typecheck": "tsc -b --noEmit",
     "test": "vitest run"
   },
   "dependencies": {
-    "@sudobility/tapayoka_lib": "^0.0.2",
-    "@sudobility/tapayoka_types": "^0.0.2",
-    "@sudobility/types": "^1.9.54",
+    "@sudobility/tapayoka_lib": "^0.0.3",
+    "@sudobility/tapayoka_types": "^0.0.3",
+    "@sudobility/types": "^1.9.55",
     "@tanstack/react-query": "^5.90.5",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",

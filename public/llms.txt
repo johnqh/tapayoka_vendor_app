@@ -1,0 +1,26 @@
+# {{VITE_APP_NAME}} - Vendor Management Dashboard
+
+> Manage your vending machines, orders, and services from one dashboard.
+
+## Overview
+[About Tapayoka vendor dashboard for managing vending devices, monitoring orders, configuring services, and viewing analytics]
+
+## Core Features
+[Device management, order monitoring, service configuration, analytics, real-time dashboard]
+
+## Key Pages
+- `/login` - Vendor login page (only public page)
+- Dashboard pages require authentication
+
+## Technical Details
+- React + TypeScript frontend
+- Firebase authentication
+- Single language (English)
+
+## Contact
+- Website: https://{{VITE_APP_DOMAIN}}
+- Support: {{VITE_SUPPORT_EMAIL}}
+- Company: {{VITE_COMPANY_NAME}}
+
+## For AI Assistants
+[Brief guidance - note that most of the app is behind authentication]
