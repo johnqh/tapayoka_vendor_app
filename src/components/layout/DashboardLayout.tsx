@@ -1,15 +1,24 @@
-import { Outlet, NavLink } from 'react-router-dom';
+import { Outlet, NavLink, useParams } from 'react-router-dom';
 import { AppFooter } from '@sudobility/building_blocks';
 import { CONSTANTS } from '../../config/constants';
-
-const navItems = [
-  { to: '/', label: 'Dashboard' },
-  { to: '/devices', label: 'Devices' },
-  { to: '/services', label: 'Services' },
-  { to: '/orders', label: 'Orders' },
-];
+import { useCurrentEntity } from '@sudobility/entity_client';
 
 export function DashboardLayout() {
+  const { entitySlug } = useParams<{ entitySlug: string }>();
+  const { currentEntity } = useCurrentEntity();
+
+  const base = `/dashboard/${encodeURIComponent(entitySlug ?? '')}`;
+
+  const navItems = [
+    { to: base, label: 'Dashboard', end: true },
+    { to: `${base}/devices`, label: 'Devices' },
+    { to: `${base}/services`, label: 'Services' },
+    { to: `${base}/orders`, label: 'Orders' },
+    { to: `${base}/workspaces`, label: 'Organizations' },
+    { to: `${base}/members`, label: 'Members' },
+    { to: `${base}/invitations`, label: 'Invitations' },
+  ];
+
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
       <nav className="bg-white shadow-sm border-b">
@@ -21,7 +30,7 @@ export function DashboardLayout() {
                 <NavLink
                   key={item.to}
                   to={item.to}
-                  end={item.to === '/'}
+                  end={item.end}
                   className={({ isActive }) =>
                     `px-3 py-2 text-sm font-medium rounded-md ${
                       isActive ? 'text-blue-600 bg-blue-50' : 'text-gray-600 hover:text-gray-900'
@@ -32,6 +41,13 @@ export function DashboardLayout() {
                 </NavLink>
               ))}
             </div>
+            {currentEntity && (
+              <div className="flex items-center">
+                <span className="text-sm text-gray-500">
+                  {currentEntity.displayName}
+                </span>
+              </div>
+            )}
           </div>
         </div>
       </nav>
