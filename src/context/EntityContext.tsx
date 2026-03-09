@@ -6,7 +6,7 @@ export function EntityProvider({ children }: { children: ReactNode }) {
   const { user, networkClient, baseUrl } = useAuth();
 
   const entityClient = useMemo(
-    () => new EntityClient({ baseUrl, networkClient }),
+    () => new EntityClient({ baseUrl: `${baseUrl}/api/v1`, networkClient }),
     [baseUrl, networkClient],
   );
 
