@@ -13,8 +13,8 @@
         "@sudobility/entity_client": "^0.0.25",
         "@sudobility/entity_pages": "^0.0.56",
         "@sudobility/subscription_lib": "^0.0.19",
-        "@sudobility/tapayoka_client": "^0.0.6",
-        "@sudobility/tapayoka_lib": "^0.0.6",
+        "@sudobility/tapayoka_client": "^0.0.7",
+        "@sudobility/tapayoka_lib": "^0.0.7",
         "@sudobility/tapayoka_types": "^0.0.6",
         "@sudobility/types": "^1.9.55",
         "@tanstack/react-query": "^5.90.5",
@@ -459,9 +459,9 @@
 
     "@sudobility/subscription_lib": ["@sudobility/subscription_lib@0.0.19", "", { "peerDependencies": { "@revenuecat/purchases-js": "^1.0.0", "@sudobility/types": "^1.9.55", "react": "^18.0.0 || ^19.0.0", "react-native-purchases": ">=7.0.0" }, "optionalPeers": ["@revenuecat/purchases-js", "react-native-purchases"] }, "sha512-xFyArahebYcaPcoCPo0ZK8daATs3xCqmPbsUglkVtNCTh+c/DtW4uH/uAjizsoMBS73vlGNLtL0hN16i4136fA=="],
 
-    "@sudobility/tapayoka_client": ["@sudobility/tapayoka_client@0.0.6", "", { "peerDependencies": { "@sudobility/tapayoka_types": "^0.0.6", "@sudobility/types": "^1.9.55", "@tanstack/react-query": ">=5.0.0", "react": ">=18.0.0" } }, "sha512-h9Ddty4Zw0CM0gUIt0rEjciHbMSVPhxclHDgPMjPcyTp402UTS5WH0FpIc6ZePBmnEykbTfh06+hdLc6Efar+A=="],
+    "@sudobility/tapayoka_client": ["@sudobility/tapayoka_client@0.0.7", "", { "peerDependencies": { "@sudobility/tapayoka_types": "^0.0.6", "@sudobility/types": "^1.9.55", "@tanstack/react-query": ">=5.0.0", "react": ">=18.0.0" } }, "sha512-ihDocyRHDpiaLoz4Efxjjq99n3+wp2AU4Mr0nyhsuhEOf26K+OBIR9LLUunDi4dobmDtxoyXwY3XNudGxOBNMA=="],
 
-    "@sudobility/tapayoka_lib": ["@sudobility/tapayoka_lib@0.0.6", "", { "peerDependencies": { "@sudobility/tapayoka_client": "^0.0.6", "@sudobility/tapayoka_types": "^0.0.6", "@sudobility/types": "^1.9.55", "@tanstack/react-query": ">=5.0.0", "react": ">=18.0.0", "zustand": ">=5.0.0" } }, "sha512-IbiV2HQj8J+8iVUVbMOKU7AV3zvn4rbynpZZjpfTlG42WjMHEKociyWtwR2XYLpKUcgVIdMPIrkLL5Wjd5nT5A=="],
+    "@sudobility/tapayoka_lib": ["@sudobility/tapayoka_lib@0.0.7", "", { "peerDependencies": { "@sudobility/tapayoka_client": "^0.0.7", "@sudobility/tapayoka_types": "^0.0.6", "@sudobility/types": "^1.9.55", "@tanstack/react-query": ">=5.0.0", "react": ">=18.0.0", "zustand": ">=5.0.0" } }, "sha512-Ld+Q7VwqmjVY8iwxrPMvhLo5XzPox9CzHX0oyGG+EEVgkPnVKfaGAfR3xHZMJ0bHx76XnEX9VVzq4Sd6w5uaXw=="],
 
     "@sudobility/tapayoka_types": ["@sudobility/tapayoka_types@0.0.6", "", { "peerDependencies": { "@sudobility/types": "^1.9.55" } }, "sha512-ouSmJUC8B2S2gjDsk1PEjG4lRBWLUVg23yJqlnglOI1NzARVr7iFga0WWVP4AHrtEGNHxiXfVdfN8dJ+PP+u6A=="],
 

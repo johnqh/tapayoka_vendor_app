@@ -4,7 +4,7 @@ import path from 'path';
 
 export default defineConfig({
   plugins: [react()],
-  server: { port: 5210 },
+  server: { port: 5131 },
   resolve: {
     dedupe: ['react', 'react-dom', '@tanstack/react-query'],
     alias: {
