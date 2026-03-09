@@ -1,7 +1,7 @@
 {
   "name": "tapayoka_vendor_app",
   "private": true,
-  "version": "0.0.10",
+  "version": "0.0.11",
   "type": "module",
   "scripts": {
     "process:static": "curl -sL https://raw.githubusercontent.com/johnqh/workflows/main/scripts/process-static-files.ts -o /tmp/process-static-files.ts && bunx tsx /tmp/process-static-files.ts",
@@ -21,8 +21,8 @@
     "@sudobility/entity_client": "^0.0.25",
     "@sudobility/entity_pages": "^0.0.56",
     "@sudobility/subscription_lib": "^0.0.19",
-    "@sudobility/tapayoka_client": "^0.0.7",
-    "@sudobility/tapayoka_lib": "^0.0.7",
+    "@sudobility/tapayoka_client": "^0.0.8",
+    "@sudobility/tapayoka_lib": "^0.0.8",
     "@sudobility/tapayoka_types": "^0.0.6",
     "@sudobility/types": "^1.9.55",
     "@tanstack/react-query": "^5.90.5",
