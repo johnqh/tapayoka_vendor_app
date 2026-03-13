@@ -3,7 +3,7 @@
   <!-- Login page -->
   <url>
     <loc>https://{{VITE_APP_DOMAIN}}/login</loc>
-    <lastmod>2026-03-09</lastmod>
+    <lastmod>2026-03-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>

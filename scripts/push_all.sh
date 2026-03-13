@@ -25,6 +25,7 @@ PROJECTS=(
     "../tapayoka_pi:0"
     "../tapayoka_pi_pico:0"
     "../tapayoka_types:60"
+    "../tapayoka_bluetooth:0"
     "../tapayoka_api:0"
     "../tapayoka_client:60"
     "../tapayoka_lib:60"
