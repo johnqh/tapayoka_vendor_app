@@ -11,8 +11,8 @@ export function DashboardLayout() {
 
   const navItems = [
     { to: base, label: 'Dashboard', end: true },
-    { to: `${base}/devices`, label: 'Devices' },
-    { to: `${base}/installations`, label: 'Installations' },
+    { to: `${base}/locations`, label: 'Locations' },
+    { to: `${base}/models`, label: 'Models' },
     { to: `${base}/orders`, label: 'Orders' },
     { to: `${base}/workspaces`, label: 'Organizations' },
     { to: `${base}/members`, label: 'Members' },
