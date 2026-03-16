@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useAuth, useCurrentEntity } from '../../context';
+import { useApi } from '@sudobility/building_blocks/firebase';
+import { useCurrentEntity } from '@sudobility/entity_client';
 import { useVendorModelsManager } from '@sudobility/tapayoka_lib';
 import type {
   VendorModel,
@@ -269,7 +270,7 @@ function ModelFormModal({ visible, model, onClose, onSave }: ModelFormModalProps
 export function ModelsPage() {
   const navigate = useNavigate();
   const { entitySlug } = useParams<{ entitySlug: string }>();
-  const { networkClient, baseUrl, token } = useAuth();
+  const { networkClient, baseUrl, token } = useApi();
   const { currentEntitySlug } = useCurrentEntity();
   const manager = useVendorModelsManager(networkClient, baseUrl, currentEntitySlug, token);
 
@@ -418,3 +419,5 @@ export function ModelsPage() {
     </div>
   );
 }
+
+export default ModelsPage;

@@ -1,6 +1,7 @@
 import { useState, useCallback } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { useAuth, useCurrentEntity } from '../../context';
+import { useApi } from '@sudobility/building_blocks/firebase';
+import { useCurrentEntity } from '@sudobility/entity_client';
 import {
   useVendorLocationsManager,
   useVendorModelsManager,
@@ -16,7 +17,7 @@ import type {
 
 export function LocationDetailPage() {
   const { entitySlug, locationId } = useParams<{ entitySlug: string; locationId: string }>();
-  const { networkClient, baseUrl, token } = useAuth();
+  const { networkClient, baseUrl, token } = useApi();
   const { currentEntitySlug } = useCurrentEntity();
 
   const locationsManager = useVendorLocationsManager(networkClient, baseUrl, currentEntitySlug, token);
@@ -156,3 +157,5 @@ export function LocationDetailPage() {
     </div>
   );
 }
+
+export default LocationDetailPage;

@@ -1,28 +1,62 @@
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AppFooter } from '@sudobility/building_blocks';
-import { APP_NAME, CONSTANTS } from '../config/constants';
+import { useAuthStatus } from '@sudobility/auth-components';
+import { getFirebaseAuth } from '@sudobility/auth_lib';
+import {
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  GoogleAuthProvider,
+  signInWithPopup,
+} from 'firebase/auth';
+import { LoginPage as LoginPageComponent } from '@sudobility/building_blocks';
+import { CONSTANTS } from '../config/constants';
 
-export function LoginPage() {
+export default function LoginPage() {
+  const { user, loading } = useAuthStatus();
   const navigate = useNavigate();
-  return (
-    <div className="min-h-screen flex flex-col bg-gray-50">
-      <div className="flex-1 flex items-center justify-center">
-        <div className="max-w-md w-full space-y-8 p-8 bg-white rounded-lg shadow">
-          <h2 className="text-3xl font-bold text-center text-gray-900">{APP_NAME}</h2>
-          <p className="text-center text-gray-600">Sign in to manage your devices</p>
-          <button
-            onClick={() => navigate('/')}
-            className="w-full py-3 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
-          >
-            Sign In
-          </button>
-        </div>
+  const auth = getFirebaseAuth();
+
+  useEffect(() => {
+    if (!loading && user) {
+      navigate('/dashboard', { replace: true });
+    }
+  }, [user, loading, navigate]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-theme-bg-primary">
+        <div
+          role="status"
+          aria-label="Loading authentication"
+          className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"
+        />
       </div>
-      <AppFooter
-        companyName={CONSTANTS.COMPANY_NAME}
-        companyUrl={`https://${CONSTANTS.APP_DOMAIN}`}
-        sticky
-      />
-    </div>
+    );
+  }
+
+  if (!auth) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-theme-bg-primary">
+        <p role="alert" className="text-red-600">
+          Firebase not configured
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <LoginPageComponent
+      appName={CONSTANTS.APP_NAME}
+      onEmailSignIn={async (email, password) => {
+        await signInWithEmailAndPassword(auth, email, password);
+      }}
+      onEmailSignUp={async (email, password) => {
+        await createUserWithEmailAndPassword(auth, email, password);
+      }}
+      onGoogleSignIn={async () => {
+        await signInWithPopup(auth, new GoogleAuthProvider());
+      }}
+      onSuccess={() => navigate('/dashboard', { replace: true })}
+    />
   );
 }

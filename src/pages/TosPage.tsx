@@ -1,29 +1,36 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { AppFooter } from '@sudobility/building_blocks';
-import { TapayokaClient } from '@sudobility/tapayoka_client';
-import { useAuth } from '../context/useAuth';
-import { CONSTANTS } from '../config/constants';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { TapayokaClient } from "@sudobility/tapayoka_client";
+import { useApi } from "@sudobility/building_blocks/firebase";
+import { useAuthStatus } from "@sudobility/auth-components";
+import ScreenContainer from "../components/layout/ScreenContainer";
 
-export function TosPage() {
+function TosPage() {
   const navigate = useNavigate();
-  const { networkClient, baseUrl, token, signOut } = useAuth();
+  const { networkClient, baseUrl, token } = useApi();
+  const { user } = useAuthStatus();
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  // Suppress unused variable warning
+  void user;
 
   const handleAccept = async () => {
     if (!token) return;
     setIsLoading(true);
+    setError(null);
     try {
       const client = new TapayokaClient({ networkClient, baseUrl });
       await client.acceptTosAndCreateEntity({ acceptTos: true }, token);
-      navigate('/dashboard');
-    } catch {
+      navigate("/dashboard");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to accept terms. Please try again.");
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50">
+    <ScreenContainer>
       <div className="flex-1 max-w-3xl mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-8">Terms of Service</h1>
 
@@ -77,9 +84,15 @@ export function TosPage() {
           </div>
         </div>
 
+        {error && (
+          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4">
+            {error}
+          </div>
+        )}
+
         <div className="flex justify-end gap-4">
           <button
-            onClick={signOut}
+            onClick={() => navigate("/login")}
             disabled={isLoading}
             className="px-6 py-3 border border-gray-300 rounded-lg text-gray-700 font-medium hover:bg-gray-50 transition"
           >
@@ -90,15 +103,12 @@ export function TosPage() {
             disabled={isLoading}
             className="px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition disabled:opacity-50"
           >
-            {isLoading ? 'Please wait...' : 'Accept & Continue'}
+            {isLoading ? "Please wait..." : "Accept & Continue"}
           </button>
         </div>
       </div>
-      <AppFooter
-        companyName={CONSTANTS.COMPANY_NAME}
-        companyUrl={`https://${CONSTANTS.APP_DOMAIN}`}
-        sticky
-      />
-    </div>
+    </ScreenContainer>
   );
 }
+
+export default TosPage;

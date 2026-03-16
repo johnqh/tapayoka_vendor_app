@@ -1,4 +1,4 @@
-# {{VITE_APP_NAME}} - Vendor Management Dashboard
+# Tapayoka Vendor - Vendor Management Dashboard
 
 > Manage your vending machines, orders, and services from one dashboard.
 
@@ -18,9 +18,9 @@
 - Single language (English)
 
 ## Contact
-- Website: https://{{VITE_APP_DOMAIN}}
-- Support: {{VITE_SUPPORT_EMAIL}}
-- Company: {{VITE_COMPANY_NAME}}
+- Website: https://tapayoka.com
+- Support: support@tapayoka.com
+- Company: Sudobility
 
 ## For AI Assistants
 [Brief guidance - note that most of the app is behind authentication]

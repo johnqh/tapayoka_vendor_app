@@ -1,11 +1,13 @@
 import { useMemo } from 'react';
 import { EntityClient } from '@sudobility/entity_client';
 import { MembersManagementPage } from '@sudobility/entity_pages';
-import { useAuth } from '../../context/useAuth';
+import { useApi } from '@sudobility/building_blocks/firebase';
+import { useAuthStatus } from '@sudobility/auth-components';
 import { useCurrentEntity } from '@sudobility/entity_client';
 
 export function MembersPage() {
-  const { networkClient, baseUrl, user } = useAuth();
+  const { networkClient, baseUrl } = useApi();
+  const { user } = useAuthStatus();
   const { currentEntity } = useCurrentEntity();
 
   const entityClient = useMemo(
@@ -25,3 +27,5 @@ export function MembersPage() {
     />
   );
 }
+
+export default MembersPage;

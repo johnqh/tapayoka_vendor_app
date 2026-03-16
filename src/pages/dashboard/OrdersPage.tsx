@@ -1,4 +1,5 @@
-import { useAuth, useCurrentEntity } from '../../context';
+import { useApi } from '@sudobility/building_blocks/firebase';
+import { useCurrentEntity } from '@sudobility/entity_client';
 import { useOrdersManager } from '@sudobility/tapayoka_lib';
 import type { Order, OrderStatus } from '@sudobility/tapayoka_types';
 
@@ -32,7 +33,7 @@ function truncateId(id: string): string {
 }
 
 export function OrdersPage() {
-  const { networkClient, baseUrl, token } = useAuth();
+  const { networkClient, baseUrl, token } = useApi();
   const { currentEntitySlug } = useCurrentEntity();
   const { orders, isLoading, error, refresh } = useOrdersManager(
     networkClient,
@@ -114,3 +115,5 @@ export function OrdersPage() {
     </div>
   );
 }
+
+export default OrdersPage;

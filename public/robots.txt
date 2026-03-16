@@ -1,5 +1,5 @@
-# robots.txt for {{VITE_APP_NAME}}
-# https://{{VITE_APP_DOMAIN}}
+# robots.txt for Tapayoka Vendor
+# https://tapayoka.com
 
 # ===========================================
 # Standard Search Engine Crawlers
@@ -120,11 +120,11 @@ Crawl-delay: 5
 # Sitemaps
 # ===========================================
 
-Sitemap: https://{{VITE_APP_DOMAIN}}/sitemap.xml
+Sitemap: https://tapayoka.com/sitemap.xml
 
 # ===========================================
 # AI Content Files
 # ===========================================
 
 # LLMs.txt - AI crawler guidance
-# Available at: https://{{VITE_APP_DOMAIN}}/llms.txt
+# Available at: https://tapayoka.com/llms.txt

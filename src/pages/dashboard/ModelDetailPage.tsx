@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { useAuth, useCurrentEntity } from '../../context';
+import { useApi } from '@sudobility/building_blocks/firebase';
+import { useCurrentEntity } from '@sudobility/entity_client';
 import {
   useVendorModelsManager,
   useVendorLocationsManager,
@@ -44,7 +45,7 @@ function Chip({ label, active, onClick }: { label: string; active: boolean; onCl
 
 export function ModelDetailPage() {
   const { entitySlug, modelId } = useParams<{ entitySlug: string; modelId: string }>();
-  const { networkClient, baseUrl, token } = useAuth();
+  const { networkClient, baseUrl, token } = useApi();
   const { currentEntitySlug } = useCurrentEntity();
 
   const modelsManager = useVendorModelsManager(networkClient, baseUrl, currentEntitySlug, token);
@@ -338,3 +339,5 @@ export function ModelDetailPage() {
     </div>
   );
 }
+
+export default ModelDetailPage;

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useAuth } from '../../context';
-import { useCurrentEntity } from '../../context';
+import { useApi } from '@sudobility/building_blocks/firebase';
+import { useCurrentEntity } from '@sudobility/entity_client';
 import { useVendorLocationsManager } from '@sudobility/tapayoka_lib';
 import type {
   VendorLocation,
@@ -30,7 +30,7 @@ const emptyForm: FormFields = {
 export function LocationsPage() {
   const navigate = useNavigate();
   const { entitySlug } = useParams<{ entitySlug: string }>();
-  const { networkClient, baseUrl, token } = useAuth();
+  const { networkClient, baseUrl, token } = useApi();
   const { currentEntitySlug } = useCurrentEntity();
 
   const manager = useVendorLocationsManager(
@@ -340,3 +340,5 @@ export function LocationsPage() {
     </div>
   );
 }
+
+export default LocationsPage;
