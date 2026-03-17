@@ -13,5 +13,5 @@ export default defineConfig({
       '@sudobility/subscription-components': path.resolve(__dirname, 'src/stubs/subscription-components.ts'),
     },
   },
-  build: { target: 'es2020', sourcemap: false },
+  build: { target: 'es2020', sourcemap: false, chunkSizeWarningLimit: 1000 },
 });
