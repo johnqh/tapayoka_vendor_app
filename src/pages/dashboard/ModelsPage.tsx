@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { EmptyState } from '@sudobility/building_blocks';
 import { useApi } from '@sudobility/building_blocks/firebase';
 import { useCurrentEntity } from '@sudobility/entity_client';
 import { useVendorModelsManager } from '@sudobility/tapayoka_lib';
@@ -333,9 +334,11 @@ export function ModelsPage() {
           Loading...
         </div>
       ) : manager.models.length === 0 ? (
-        <div className="bg-white rounded-lg shadow-sm border p-8 text-center text-gray-500">
-          No models yet. Add one to get started.
-        </div>
+        <EmptyState
+          message="Manage your equipment models here."
+          buttonLabel="Add Model"
+          onPress={handleAdd}
+        />
       ) : (
         <div className="bg-white rounded-lg shadow-sm border overflow-hidden">
           <table className="min-w-full divide-y divide-gray-200">

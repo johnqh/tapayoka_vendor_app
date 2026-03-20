@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { EmptyState } from '@sudobility/building_blocks';
 import { useApi } from '@sudobility/building_blocks/firebase';
 import { useCurrentEntity } from '@sudobility/entity_client';
 import {
@@ -299,7 +300,11 @@ export function ModelDetailPage() {
         {offeringsManager.isLoading ? (
           <div className="p-8 text-center text-gray-500">Loading...</div>
         ) : offeringsManager.offerings.length === 0 ? (
-          <div className="p-8 text-center text-gray-500">No offerings yet.</div>
+          <EmptyState
+            message="Manage your offerings here."
+            buttonLabel="Add Offering"
+            onPress={handleAddOffering}
+          />
         ) : (
           <table className="w-full">
             <thead>
