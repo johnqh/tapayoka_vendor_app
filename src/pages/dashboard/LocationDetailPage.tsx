@@ -5,14 +5,14 @@ import { useCurrentEntity } from '@sudobility/entity_client';
 import {
   useVendorLocationsManager,
   useVendorModelsManager,
-  useVendorInstallationsManager,
+  useVendorOfferingsManager,
 } from '@sudobility/tapayoka_lib';
-import { InstallationModal } from '../../components/InstallationModal';
+import { OfferingModal } from '../../components/OfferingModal';
 import { formatPricingSubtitle } from '../../components/pricingUtils';
 import type {
-  VendorInstallation,
-  VendorInstallationCreateRequest,
-  VendorInstallationUpdateRequest,
+  VendorOffering,
+  VendorOfferingCreateRequest,
+  VendorOfferingUpdateRequest,
 } from '@sudobility/tapayoka_types';
 
 export function LocationDetailPage() {
@@ -22,49 +22,49 @@ export function LocationDetailPage() {
 
   const locationsManager = useVendorLocationsManager(networkClient, baseUrl, currentEntitySlug, token);
   const modelsManager = useVendorModelsManager(networkClient, baseUrl, currentEntitySlug, token);
-  const installationsManager = useVendorInstallationsManager(
+  const offeringsManager = useVendorOfferingsManager(
     networkClient, baseUrl, currentEntitySlug, token, locationId ?? null, 'location'
   );
 
   const location = locationsManager.locations.find(l => l.id === locationId);
 
   const [modalOpen, setModalOpen] = useState(false);
-  const [editingInstallation, setEditingInstallation] = useState<VendorInstallation | null>(null);
+  const [editingOffering, setEditingOffering] = useState<VendorOffering | null>(null);
 
   const handleAdd = useCallback(() => {
-    setEditingInstallation(null);
+    setEditingOffering(null);
     setModalOpen(true);
   }, []);
 
-  const handleEdit = useCallback((inst: VendorInstallation) => {
-    setEditingInstallation(inst);
+  const handleEdit = useCallback((inst: VendorOffering) => {
+    setEditingOffering(inst);
     setModalOpen(true);
   }, []);
 
-  const handleDelete = useCallback(async (inst: VendorInstallation) => {
-    if (!window.confirm(`Delete installation "${inst.name}"?`)) return;
-    const ok = await installationsManager.deleteInstallation(inst.id);
-    if (!ok && installationsManager.error) {
-      alert(installationsManager.error);
+  const handleDelete = useCallback(async (inst: VendorOffering) => {
+    if (!window.confirm(`Delete offering "${inst.name}"?`)) return;
+    const ok = await offeringsManager.deleteOffering(inst.id);
+    if (!ok && offeringsManager.error) {
+      alert(offeringsManager.error);
     }
-  }, [installationsManager]);
+  }, [offeringsManager]);
 
-  const handleSave = useCallback(async (data: VendorInstallationCreateRequest | VendorInstallationUpdateRequest) => {
-    if (editingInstallation) {
-      const result = await installationsManager.updateInstallation(editingInstallation.id, data);
-      if (!result && installationsManager.error) {
-        alert(installationsManager.error);
+  const handleSave = useCallback(async (data: VendorOfferingCreateRequest | VendorOfferingUpdateRequest) => {
+    if (editingOffering) {
+      const result = await offeringsManager.updateOffering(editingOffering.id, data);
+      if (!result && offeringsManager.error) {
+        alert(offeringsManager.error);
         return;
       }
     } else {
-      const result = await installationsManager.addInstallation(data as VendorInstallationCreateRequest);
-      if (!result && installationsManager.error) {
-        alert(installationsManager.error);
+      const result = await offeringsManager.addOffering(data as VendorOfferingCreateRequest);
+      if (!result && offeringsManager.error) {
+        alert(offeringsManager.error);
         return;
       }
     }
     setModalOpen(false);
-  }, [editingInstallation, installationsManager]);
+  }, [editingOffering, offeringsManager]);
 
   if (!location && !locationsManager.isLoading) {
     return (
@@ -96,16 +96,16 @@ export function LocationDetailPage() {
           className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition text-sm"
           onClick={handleAdd}
         >
-          Add Installation
+          Add Offering
         </button>
       </div>
 
       <div className="bg-white rounded-lg shadow-sm border">
-        {installationsManager.isLoading ? (
+        {offeringsManager.isLoading ? (
           <div className="p-8 text-center text-gray-500">Loading...</div>
-        ) : installationsManager.installations.length === 0 ? (
+        ) : offeringsManager.offerings.length === 0 ? (
           <div className="p-8 text-center text-gray-500">
-            No installations yet. Add one to get started.
+            No offerings yet. Add one to get started.
           </div>
         ) : (
           <table className="w-full">
@@ -117,7 +117,7 @@ export function LocationDetailPage() {
               </tr>
             </thead>
             <tbody>
-              {installationsManager.installations.map(inst => (
+              {offeringsManager.offerings.map(inst => (
                 <tr key={inst.id} className="border-b last:border-0 hover:bg-gray-50">
                   <td className="px-4 py-3 text-sm text-gray-900">{inst.name}</td>
                   <td className="px-4 py-3 text-sm text-gray-500">
@@ -144,9 +144,9 @@ export function LocationDetailPage() {
         )}
       </div>
 
-      <InstallationModal
+      <OfferingModal
         open={modalOpen}
-        installation={editingInstallation}
+        offering={editingOffering}
         parentType="location"
         parentId={locationId ?? ''}
         parentName={location?.name ?? ''}

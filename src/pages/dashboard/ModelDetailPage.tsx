@@ -5,14 +5,14 @@ import { useCurrentEntity } from '@sudobility/entity_client';
 import {
   useVendorModelsManager,
   useVendorLocationsManager,
-  useVendorInstallationsManager,
+  useVendorOfferingsManager,
 } from '@sudobility/tapayoka_lib';
-import { InstallationModal } from '../../components/InstallationModal';
+import { OfferingModal } from '../../components/OfferingModal';
 import { formatPricingSubtitle } from '../../components/pricingUtils';
 import type {
-  VendorInstallation,
-  VendorInstallationCreateRequest,
-  VendorInstallationUpdateRequest,
+  VendorOffering,
+  VendorOfferingCreateRequest,
+  VendorOfferingUpdateRequest,
   VendorModelPricing,
   VendorModelSlot,
   VendorModelAction,
@@ -50,7 +50,7 @@ export function ModelDetailPage() {
 
   const modelsManager = useVendorModelsManager(networkClient, baseUrl, currentEntitySlug, token);
   const locationsManager = useVendorLocationsManager(networkClient, baseUrl, currentEntitySlug, token);
-  const installationsManager = useVendorInstallationsManager(
+  const offeringsManager = useVendorOfferingsManager(
     networkClient, baseUrl, currentEntitySlug, token, modelId ?? null, 'model'
   );
 
@@ -106,44 +106,44 @@ export function ModelDetailPage() {
     }
   }, [modelsManager, modelId, pricing, slot, action, interruption, payment, schedule]);
 
-  // Installations
+  // Offerings
   const [modalOpen, setModalOpen] = useState(false);
-  const [editingInstallation, setEditingInstallation] = useState<VendorInstallation | null>(null);
+  const [editingOffering, setEditingOffering] = useState<VendorOffering | null>(null);
 
-  const handleAddInstallation = useCallback(() => {
-    setEditingInstallation(null);
+  const handleAddOffering = useCallback(() => {
+    setEditingOffering(null);
     setModalOpen(true);
   }, []);
 
-  const handleEditInstallation = useCallback((inst: VendorInstallation) => {
-    setEditingInstallation(inst);
+  const handleEditOffering = useCallback((inst: VendorOffering) => {
+    setEditingOffering(inst);
     setModalOpen(true);
   }, []);
 
-  const handleDeleteInstallation = useCallback(async (inst: VendorInstallation) => {
-    if (!window.confirm(`Delete installation "${inst.name}"?`)) return;
-    const ok = await installationsManager.deleteInstallation(inst.id);
-    if (!ok && installationsManager.error) {
-      alert(installationsManager.error);
+  const handleDeleteOffering = useCallback(async (inst: VendorOffering) => {
+    if (!window.confirm(`Delete offering "${inst.name}"?`)) return;
+    const ok = await offeringsManager.deleteOffering(inst.id);
+    if (!ok && offeringsManager.error) {
+      alert(offeringsManager.error);
     }
-  }, [installationsManager]);
+  }, [offeringsManager]);
 
-  const handleSaveInstallation = useCallback(async (data: VendorInstallationCreateRequest | VendorInstallationUpdateRequest) => {
-    if (editingInstallation) {
-      const result = await installationsManager.updateInstallation(editingInstallation.id, data);
-      if (!result && installationsManager.error) {
-        alert(installationsManager.error);
+  const handleSaveOffering = useCallback(async (data: VendorOfferingCreateRequest | VendorOfferingUpdateRequest) => {
+    if (editingOffering) {
+      const result = await offeringsManager.updateOffering(editingOffering.id, data);
+      if (!result && offeringsManager.error) {
+        alert(offeringsManager.error);
         return;
       }
     } else {
-      const result = await installationsManager.addInstallation(data as VendorInstallationCreateRequest);
-      if (!result && installationsManager.error) {
-        alert(installationsManager.error);
+      const result = await offeringsManager.addOffering(data as VendorOfferingCreateRequest);
+      if (!result && offeringsManager.error) {
+        alert(offeringsManager.error);
         return;
       }
     }
     setModalOpen(false);
-  }, [editingInstallation, installationsManager]);
+  }, [editingOffering, offeringsManager]);
 
   const scheduledDays = new Set(schedule.map(s => s.dayOfWeek));
 
@@ -284,22 +284,22 @@ export function ModelDetailPage() {
         </div>
       </div>
 
-      {/* Installations */}
+      {/* Offerings */}
       <div className="bg-white rounded-lg shadow-sm border">
         <div className="flex justify-between items-center px-4 py-3 border-b">
-          <h2 className="text-lg font-semibold text-gray-900">Installations</h2>
+          <h2 className="text-lg font-semibold text-gray-900">Offerings</h2>
           <button
             className="px-3 py-1.5 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition"
-            onClick={handleAddInstallation}
+            onClick={handleAddOffering}
           >
-            Add Installation
+            Add Offering
           </button>
         </div>
 
-        {installationsManager.isLoading ? (
+        {offeringsManager.isLoading ? (
           <div className="p-8 text-center text-gray-500">Loading...</div>
-        ) : installationsManager.installations.length === 0 ? (
-          <div className="p-8 text-center text-gray-500">No installations yet.</div>
+        ) : offeringsManager.offerings.length === 0 ? (
+          <div className="p-8 text-center text-gray-500">No offerings yet.</div>
         ) : (
           <table className="w-full">
             <thead>
@@ -310,13 +310,13 @@ export function ModelDetailPage() {
               </tr>
             </thead>
             <tbody>
-              {installationsManager.installations.map(inst => (
+              {offeringsManager.offerings.map(inst => (
                 <tr key={inst.id} className="border-b last:border-0 hover:bg-gray-50">
                   <td className="px-4 py-3 text-sm text-gray-900">{inst.name}</td>
                   <td className="px-4 py-3 text-sm text-gray-500">{formatPricingSubtitle(inst.pricing)}</td>
                   <td className="px-4 py-3 text-right">
-                    <button className="text-blue-600 text-sm hover:text-blue-800 mr-3" onClick={() => handleEditInstallation(inst)}>Edit</button>
-                    <button className="text-red-600 text-sm hover:text-red-800" onClick={() => handleDeleteInstallation(inst)}>Delete</button>
+                    <button className="text-blue-600 text-sm hover:text-blue-800 mr-3" onClick={() => handleEditOffering(inst)}>Edit</button>
+                    <button className="text-red-600 text-sm hover:text-red-800" onClick={() => handleDeleteOffering(inst)}>Delete</button>
                   </td>
                 </tr>
               ))}
@@ -325,16 +325,16 @@ export function ModelDetailPage() {
         )}
       </div>
 
-      <InstallationModal
+      <OfferingModal
         open={modalOpen}
-        installation={editingInstallation}
+        offering={editingOffering}
         parentType="model"
         parentId={modelId ?? ''}
         parentName={model?.name ?? ''}
         locations={locationsManager.locations}
         selectedModel={model ?? undefined}
         onClose={() => setModalOpen(false)}
-        onSave={handleSaveInstallation}
+        onSave={handleSaveOffering}
       />
     </div>
   );

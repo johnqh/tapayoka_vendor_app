@@ -19,7 +19,7 @@ const sections = [
     description:
       "Accept contactless QR code payments without requiring customers to download an app. Customers simply scan, pay, and use the service.",
     items: [
-      "Generate QR codes for each installation",
+      "Generate QR codes for each offering",
       "Support both pre-pay and post-pay models",
       "Real-time payment confirmation via BLE",
       "Automatic receipt generation",
@@ -31,7 +31,7 @@ const sections = [
       "Manage multiple business locations from a single account. Each location can have its own set of devices with independent configurations.",
     items: [
       "Add unlimited locations with address details",
-      "Manage installations per location",
+      "Manage offerings per location",
       "View location-specific analytics",
       "Invite team members to specific workspaces",
     ],

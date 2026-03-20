@@ -1,14 +1,14 @@
 import { useState, useEffect, useCallback } from 'react';
 import type {
-  VendorInstallation,
-  VendorInstallationCreateRequest,
-  VendorInstallationUpdateRequest,
+  VendorOffering,
+  VendorOfferingCreateRequest,
+  VendorOfferingUpdateRequest,
   VendorModel,
   VendorLocation,
   VariablePricingConfig,
   FixedPricingConfig,
-  VendorInstallationPricing,
-  InstallationSignal,
+  VendorOfferingPricing,
+  OfferingSignal,
   SlotPricing,
   DurationUnit,
 } from '@sudobility/tapayoka_types';
@@ -151,7 +151,7 @@ function FixedPricingForm({
   const handleRemoveSignal = (index: number) => {
     onChange({ ...config, signals: config.signals.filter((_, i) => i !== index) });
   };
-  const handleUpdateSignal = (index: number, signal: InstallationSignal) => {
+  const handleUpdateSignal = (index: number, signal: OfferingSignal) => {
     onChange({ ...config, signals: config.signals.map((s, i) => (i === index ? signal : s)) });
   };
 
@@ -217,9 +217,9 @@ function FixedPricingForm({
   );
 }
 
-interface InstallationModalProps {
+interface OfferingModalProps {
   open: boolean;
-  installation: VendorInstallation | null;
+  offering: VendorOffering | null;
   parentType: 'location' | 'model';
   parentId: string;
   parentName: string;
@@ -227,12 +227,12 @@ interface InstallationModalProps {
   locations?: VendorLocation[];
   selectedModel?: VendorModel;
   onClose: () => void;
-  onSave: (data: VendorInstallationCreateRequest | VendorInstallationUpdateRequest) => Promise<void>;
+  onSave: (data: VendorOfferingCreateRequest | VendorOfferingUpdateRequest) => Promise<void>;
 }
 
-export function InstallationModal({
+export function OfferingModal({
   open,
-  installation,
+  offering,
   parentType,
   parentId,
   parentName,
@@ -241,10 +241,10 @@ export function InstallationModal({
   selectedModel: preselectedModel,
   onClose,
   onSave,
-}: InstallationModalProps) {
+}: OfferingModalProps) {
   const [name, setName] = useState('');
   const [pickerId, setPickerId] = useState('');
-  const [pricing, setPricing] = useState<VendorInstallationPricing | null>(null);
+  const [pricing, setPricing] = useState<VendorOfferingPricing | null>(null);
   const [saving, setSaving] = useState(false);
 
   // Resolve model to determine pricing/slot
@@ -257,7 +257,7 @@ export function InstallationModal({
 
   // Init pricing when model changes
   useEffect(() => {
-    if (!modelPricing || installation) return;
+    if (!modelPricing || offering) return;
     const currency = 'USD';
     if (modelSlot === 'multi') {
       setPricing({
@@ -270,21 +270,21 @@ export function InstallationModal({
     } else {
       setPricing(modelPricing === 'variable' ? makeDefaultVariable(currency) : makeDefaultFixed(currency));
     }
-  }, [modelPricing, modelSlot, installation]);
+  }, [modelPricing, modelSlot, offering]);
 
   useEffect(() => {
     if (open) {
-      if (installation) {
-        setName(installation.name);
-        setPricing(installation.pricing);
-        setPickerId(parentType === 'location' ? installation.vendorModelId : installation.vendorLocationId);
+      if (offering) {
+        setName(offering.name);
+        setPricing(offering.pricing);
+        setPickerId(parentType === 'location' ? offering.vendorModelId : offering.vendorLocationId);
       } else {
         setName('');
         setPricing(null);
         setPickerId('');
       }
     }
-  }, [open, installation, parentType]);
+  }, [open, offering, parentType]);
 
   const handleSlotPricingChange = useCallback((index: number, slotPricing: VariablePricingConfig | FixedPricingConfig) => {
     if (!pricing || pricing.type !== 'multi') return;
@@ -312,11 +312,11 @@ export function InstallationModal({
 
   const handleSave = async () => {
     if (!name.trim() || !pricing) return;
-    if (!installation && !pickerId) return;
+    if (!offering && !pickerId) return;
     setSaving(true);
     try {
-      if (installation) {
-        await onSave({ name: name.trim(), pricing } as VendorInstallationUpdateRequest);
+      if (offering) {
+        await onSave({ name: name.trim(), pricing } as VendorOfferingUpdateRequest);
       } else {
         const vendorLocationId = parentType === 'location' ? parentId : pickerId;
         const vendorModelId = parentType === 'model' ? parentId : pickerId;
@@ -325,7 +325,7 @@ export function InstallationModal({
           vendorModelId,
           name: name.trim(),
           pricing,
-        } as VendorInstallationCreateRequest);
+        } as VendorOfferingCreateRequest);
       }
     } finally {
       setSaving(false);
@@ -338,11 +338,11 @@ export function InstallationModal({
     ? (models ?? []).map(m => ({ id: m.id, label: m.name }))
     : (locations ?? []).map(l => ({ id: l.id, label: l.name }));
 
-  const title = installation
-    ? 'Edit Installation'
+  const title = offering
+    ? 'Edit Offering'
     : parentType === 'location'
-      ? `Add Installation to ${parentName}`
-      : `Add ${parentName} Installation`;
+      ? `Add Offering to ${parentName}`
+      : `Add ${parentName} Offering`;
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
@@ -357,11 +357,11 @@ export function InstallationModal({
               className="w-full border rounded-lg px-3 py-2 text-sm"
               value={name}
               onChange={e => setName(e.target.value)}
-              placeholder="Installation name"
+              placeholder="Offering name"
             />
           </div>
 
-          {!installation && (
+          {!offering && (
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 {parentType === 'location' ? 'Model' : 'Location'}

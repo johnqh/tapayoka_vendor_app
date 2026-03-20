@@ -1,6 +1,6 @@
-import type { VendorInstallationPricing } from '@sudobility/tapayoka_types';
+import type { VendorOfferingPricing } from '@sudobility/tapayoka_types';
 
-export function formatPricingSubtitle(pricing: VendorInstallationPricing): string {
+export function formatPricingSubtitle(pricing: VendorOfferingPricing): string {
   if (pricing.type === 'variable') {
     const unit = pricing.startDurationUnit === 'hours' ? 'hr' : 'min';
     return `$${pricing.startPrice} / ${pricing.startDuration}${unit}`;

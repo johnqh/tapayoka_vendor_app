@@ -40,7 +40,7 @@ function GettingStartedContent() {
     { title: "Create Your Account", description: "Sign up with email or Google. You'll be prompted to accept the terms of service and create your first workspace." },
     { title: "Add a Location", description: "Go to Locations and add your first business location with address details." },
     { title: "Define Device Models", description: "Create device models (e.g., 'Standard Washer') with pricing strategy, slot mode, and action type." },
-    { title: "Add Installations", description: "Assign device instances to locations. Configure individual pricing and generate QR codes." },
+    { title: "Add Offerings", description: "Assign device instances to locations. Configure individual pricing and generate QR codes." },
     { title: "Start Accepting Payments", description: "Print QR codes and place them on your devices. Customers scan to pay and start their session." },
   ];
 
@@ -104,10 +104,10 @@ function DeviceSetupContent() {
       </div>
 
       <div>
-        <h2 className="text-xl font-semibold text-gray-900 mb-3">Installations</h2>
+        <h2 className="text-xl font-semibold text-gray-900 mb-3">Offerings</h2>
         <p className="text-gray-600">
-          Installations are individual device instances assigned to a location or model.
-          Each installation can override the model&apos;s default pricing with custom
+          Offerings are individual device instances assigned to a location or model.
+          Each offering can override the model&apos;s default pricing with custom
           pricing configurations (variable, fixed, or multi-slot).
         </p>
       </div>
@@ -120,7 +120,7 @@ function ApiReferenceContent() {
     <div className="space-y-8 max-w-3xl">
       <p className="text-gray-600">
         The Tapayoka API provides RESTful endpoints for managing locations, models,
-        installations, and orders.
+        offerings, and orders.
       </p>
 
       <div>
@@ -131,7 +131,7 @@ function ApiReferenceContent() {
             { method: "POST", path: "/api/v1/vendor/locations", description: "Create a location" },
             { method: "GET", path: "/api/v1/vendor/models", description: "List all device models" },
             { method: "POST", path: "/api/v1/vendor/models", description: "Create a device model" },
-            { method: "GET", path: "/api/v1/vendor/installations", description: "List installations" },
+            { method: "GET", path: "/api/v1/vendor/offerings", description: "List offerings" },
             { method: "GET", path: "/api/v1/vendor/orders", description: "List orders" },
           ].map((endpoint) => (
             <div key={`${endpoint.method}-${endpoint.path}`} className="p-4 bg-gray-50 rounded-lg font-mono text-sm border border-gray-200">
