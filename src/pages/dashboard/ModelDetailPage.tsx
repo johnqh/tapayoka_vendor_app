@@ -110,7 +110,7 @@ export function ModelDetailPage() {
     } finally {
       setSaving(false);
     }
-  }, [modelsManager, modelId, pricing, slot, action, interruption, payment, schedule]);
+  }, [modelsManager, modelId, pricing, slot, slotPricing, action, interruption, payment, schedule]);
 
   // Offerings
   const [modalOpen, setModalOpen] = useState(false);
