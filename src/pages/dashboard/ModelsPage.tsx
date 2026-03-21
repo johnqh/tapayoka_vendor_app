@@ -11,6 +11,7 @@ import type {
   VendorModelType,
   VendorModelPricing,
   VendorModelSlot,
+  VendorModelSlotPricing,
   VendorModelAction,
   VendorModelInterruption,
   VendorModelPayment,
@@ -18,7 +19,8 @@ import type {
 
 const MODEL_TYPES: VendorModelType[] = ['Washer', 'Dryer', 'Parking', 'Locker', 'Vending'];
 const PRICING_OPTIONS: VendorModelPricing[] = ['fixed', 'variable'];
-const SLOT_OPTIONS: VendorModelSlot[] = ['single', 'multi'];
+const SLOT_OPTIONS: VendorModelSlot[] = ['single', 'multi1D', 'multi2D'];
+const SLOT_PRICING_OPTIONS: VendorModelSlotPricing[] = ['Same', 'Different'];
 const ACTION_OPTIONS: VendorModelAction[] = ['timed', 'sequence'];
 const INTERRUPTION_OPTIONS: VendorModelInterruption[] = ['stop', 'continue'];
 const PAYMENT_OPTIONS: VendorModelPayment[] = ['atStart', 'atEnd'];
@@ -26,15 +28,16 @@ const PAYMENT_OPTIONS: VendorModelPayment[] = ['atStart', 'atEnd'];
 const TYPE_DEFAULTS: Record<VendorModelType, {
   pricing: VendorModelPricing;
   slot: VendorModelSlot;
+  slotPricing: VendorModelSlotPricing | null;
   action: VendorModelAction;
   interruption: VendorModelInterruption | null;
   payment: VendorModelPayment;
 }> = {
-  Washer: { pricing: 'variable', slot: 'single', action: 'timed', interruption: 'stop', payment: 'atStart' },
-  Dryer: { pricing: 'variable', slot: 'single', action: 'timed', interruption: 'stop', payment: 'atStart' },
-  Parking: { pricing: 'variable', slot: 'multi', action: 'timed', interruption: 'continue', payment: 'atStart' },
-  Locker: { pricing: 'variable', slot: 'multi', action: 'timed', interruption: 'stop', payment: 'atEnd' },
-  Vending: { pricing: 'fixed', slot: 'multi', action: 'sequence', interruption: null, payment: 'atStart' },
+  Washer: { pricing: 'variable', slot: 'single', slotPricing: null, action: 'timed', interruption: 'stop', payment: 'atStart' },
+  Dryer: { pricing: 'variable', slot: 'single', slotPricing: null, action: 'timed', interruption: 'stop', payment: 'atStart' },
+  Parking: { pricing: 'variable', slot: 'multi1D', slotPricing: 'Same', action: 'timed', interruption: 'continue', payment: 'atStart' },
+  Locker: { pricing: 'variable', slot: 'multi1D', slotPricing: 'Same', action: 'timed', interruption: 'stop', payment: 'atEnd' },
+  Vending: { pricing: 'fixed', slot: 'multi1D', slotPricing: 'Same', action: 'sequence', interruption: null, payment: 'atStart' },
 };
 
 function displayValue(value: string | null | undefined): string {
@@ -114,6 +117,7 @@ function ModelFormModal({ visible, model, onClose, onSave }: ModelFormModalProps
   const [type, setType] = useState<VendorModelType | null>(null);
   const [pricing, setPricing] = useState<VendorModelPricing | null>(null);
   const [slot, setSlot] = useState<VendorModelSlot | null>(null);
+  const [slotPricing, setSlotPricing] = useState<VendorModelSlotPricing | null>(null);
   const [action, setAction] = useState<VendorModelAction | null>(null);
   const [interruption, setInterruption] = useState<VendorModelInterruption | null>(null);
   const [payment, setPayment] = useState<VendorModelPayment | null>(null);
@@ -127,6 +131,7 @@ function ModelFormModal({ visible, model, onClose, onSave }: ModelFormModalProps
       setType(model?.type ?? null);
       setPricing(model?.pricing ?? null);
       setSlot(model?.slot ?? null);
+      setSlotPricing(model?.slotPricing ?? null);
       setAction(model?.action ?? null);
       setInterruption(model?.interruption ?? null);
       setPayment(model?.payment ?? null);
@@ -139,6 +144,7 @@ function ModelFormModal({ visible, model, onClose, onSave }: ModelFormModalProps
       const defaults = TYPE_DEFAULTS[mt];
       setPricing(defaults.pricing);
       setSlot(defaults.slot);
+      setSlotPricing(defaults.slotPricing);
       setAction(defaults.action);
       setInterruption(defaults.interruption);
       setPayment(defaults.payment);
@@ -159,8 +165,9 @@ function ModelFormModal({ visible, model, onClose, onSave }: ModelFormModalProps
       await onSave({
         name: name.trim(),
         type: type || undefined,
-        pricing: pricing || undefined,
+        pricing: slot === 'single' ? (pricing || undefined) : undefined,
         slot: slot || undefined,
+        slotPricing: slot && slot !== 'single' ? (slotPricing || undefined) : undefined,
         action: action || undefined,
         interruption: interruption || undefined,
         payment: payment || undefined,
@@ -202,21 +209,33 @@ function ModelFormModal({ visible, model, onClose, onSave }: ModelFormModalProps
               allowNone
             />
 
-            {/* Pricing */}
-            <ChipGroup
-              label="Pricing"
-              options={PRICING_OPTIONS.map((p) => ({ label: p, value: p }))}
-              value={pricing}
-              onChange={setPricing}
-            />
-
             {/* Slot */}
             <ChipGroup
               label="Slot"
-              options={SLOT_OPTIONS.map((s) => ({ label: s, value: s }))}
+              options={SLOT_OPTIONS.map((s) => ({ label: s === 'multi1D' ? 'Multi 1D' : s === 'multi2D' ? 'Multi 2D' : 'Single', value: s }))}
               value={slot}
               onChange={setSlot}
             />
+
+            {/* Pricing - only when slot is single */}
+            {(!slot || slot === 'single') && (
+              <ChipGroup
+                label="Pricing"
+                options={PRICING_OPTIONS.map((p) => ({ label: p, value: p }))}
+                value={pricing}
+                onChange={setPricing}
+              />
+            )}
+
+            {/* Slot Pricing - only when slot is multi */}
+            {slot && slot !== 'single' && (
+              <ChipGroup
+                label="Slot Pricing"
+                options={SLOT_PRICING_OPTIONS.map((sp) => ({ label: sp, value: sp }))}
+                value={slotPricing}
+                onChange={setSlotPricing}
+              />
+            )}
 
             {/* Action */}
             <ChipGroup

@@ -259,7 +259,7 @@ export function OfferingModal({
   useEffect(() => {
     if (!modelPricing || offering) return;
     const currency = 'USD';
-    if (modelSlot === 'multi') {
+    if (modelSlot && modelSlot !== 'single') {
       setPricing({
         type: 'multi',
         slots: [{

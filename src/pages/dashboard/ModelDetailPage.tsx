@@ -16,6 +16,7 @@ import type {
   VendorOfferingUpdateRequest,
   VendorModelPricing,
   VendorModelSlot,
+  VendorModelSlotPricing,
   VendorModelAction,
   VendorModelInterruption,
   VendorModelPayment,
@@ -24,7 +25,8 @@ import type {
 } from '@sudobility/tapayoka_types';
 
 const PRICING_OPTIONS: VendorModelPricing[] = ['fixed', 'variable'];
-const SLOT_OPTIONS: VendorModelSlot[] = ['single', 'multi'];
+const SLOT_OPTIONS: VendorModelSlot[] = ['single', 'multi1D', 'multi2D'];
+const SLOT_PRICING_OPTIONS: VendorModelSlotPricing[] = ['Same', 'Different'];
 const ACTION_OPTIONS: VendorModelAction[] = ['timed', 'sequence'];
 const INTERRUPTION_OPTIONS: VendorModelInterruption[] = ['stop', 'continue'];
 const PAYMENT_OPTIONS: VendorModelPayment[] = ['atStart', 'atEnd'];
@@ -60,6 +62,7 @@ export function ModelDetailPage() {
   // Settings state
   const [pricing, setPricing] = useState<VendorModelPricing | null>(null);
   const [slot, setSlot] = useState<VendorModelSlot | null>(null);
+  const [slotPricing, setSlotPricing] = useState<VendorModelSlotPricing | null>(null);
   const [action, setAction] = useState<VendorModelAction | null>(null);
   const [interruption, setInterruption] = useState<VendorModelInterruption | null>(null);
   const [payment, setPayment] = useState<VendorModelPayment | null>(null);
@@ -71,6 +74,7 @@ export function ModelDetailPage() {
     if (model) {
       setPricing(model.pricing ?? null);
       setSlot(model.slot ?? null);
+      setSlotPricing(model.slotPricing ?? null);
       setAction(model.action ?? null);
       setInterruption(model.interruption ?? null);
       setPayment(model.payment ?? null);
@@ -90,8 +94,9 @@ export function ModelDetailPage() {
     setSaving(true);
     try {
       const result = await modelsManager.updateModel(modelId, {
-        pricing: pricing || undefined,
+        pricing: slot === 'single' ? (pricing || undefined) : undefined,
         slot: slot || undefined,
+        slotPricing: slot && slot !== 'single' ? (slotPricing || undefined) : undefined,
         action: action || undefined,
         interruption: action === 'timed' ? (interruption || undefined) : undefined,
         payment: payment || undefined,
@@ -181,22 +186,35 @@ export function ModelDetailPage() {
 
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-500 mb-2">Pricing</label>
+            <label className="block text-sm font-medium text-gray-500 mb-2">Slot</label>
             <div className="flex gap-2">
-              {PRICING_OPTIONS.map(p => (
-                <Chip key={p} label={p === 'fixed' ? 'Fixed' : 'Variable'} active={pricing === p} onClick={() => { setPricing(p); setSettingsDirty(true); }} />
+              {SLOT_OPTIONS.map(s => (
+                <Chip key={s} label={s === 'multi1D' ? 'Multi 1D' : s === 'multi2D' ? 'Multi 2D' : 'Single'} active={slot === s} onClick={() => { setSlot(s); setSettingsDirty(true); }} />
               ))}
             </div>
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-500 mb-2">Slot</label>
-            <div className="flex gap-2">
-              {SLOT_OPTIONS.map(s => (
-                <Chip key={s} label={s === 'single' ? 'Single' : 'Multi'} active={slot === s} onClick={() => { setSlot(s); setSettingsDirty(true); }} />
-              ))}
+          {(!slot || slot === 'single') && (
+            <div>
+              <label className="block text-sm font-medium text-gray-500 mb-2">Pricing</label>
+              <div className="flex gap-2">
+                {PRICING_OPTIONS.map(p => (
+                  <Chip key={p} label={p === 'fixed' ? 'Fixed' : 'Variable'} active={pricing === p} onClick={() => { setPricing(p); setSettingsDirty(true); }} />
+                ))}
+              </div>
             </div>
-          </div>
+          )}
+
+          {slot && slot !== 'single' && (
+            <div>
+              <label className="block text-sm font-medium text-gray-500 mb-2">Slot Pricing</label>
+              <div className="flex gap-2">
+                {SLOT_PRICING_OPTIONS.map(sp => (
+                  <Chip key={sp} label={sp} active={slotPricing === sp} onClick={() => { setSlotPricing(sp); setSettingsDirty(true); }} />
+                ))}
+              </div>
+            </div>
+          )}
 
           <div>
             <label className="block text-sm font-medium text-gray-500 mb-2">Action</label>
