@@ -124,7 +124,7 @@ export function LocationDetailPage() {
                 <tr key={inst.id} className="border-b last:border-0 hover:bg-gray-50">
                   <td className="px-4 py-3 text-sm text-gray-900">{inst.name}</td>
                   <td className="px-4 py-3 text-sm text-gray-500">
-                    {formatPricingSubtitle(inst.pricing)}
+                    {formatPricingSubtitle(inst.pricingTiers)}
                   </td>
                   <td className="px-4 py-3 text-right">
                     <button

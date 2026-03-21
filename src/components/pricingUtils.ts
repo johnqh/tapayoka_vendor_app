@@ -1,12 +1,13 @@
-import type { VendorOfferingPricing } from '@sudobility/tapayoka_types';
+import type { PricingTier } from '@sudobility/tapayoka_types';
 
-export function formatPricingSubtitle(pricing: VendorOfferingPricing): string {
-  if (pricing.type === 'variable') {
-    const unit = pricing.startDurationUnit === 'hours' ? 'hr' : 'min';
-    return `$${pricing.startPrice} / ${pricing.startDuration}${unit}`;
+export function formatPricingSubtitle(tiers: PricingTier[]): string {
+  if (tiers.length === 0) return 'No pricing';
+  const first = tiers[0];
+  if (first.type === 'variable') {
+    const unit = first.startDurationUnit === 'hours' ? 'hr' : 'min';
+    const base = `$${first.startPrice} / ${first.startDuration}${unit}`;
+    return tiers.length > 1 ? `${base} (+${tiers.length - 1} more)` : base;
   }
-  if (pricing.type === 'fixed') {
-    return `$${pricing.price}`;
-  }
-  return `${pricing.slots.length} slots`;
+  const base = `$${first.price}`;
+  return tiers.length > 1 ? `${base} (+${tiers.length - 1} more)` : base;
 }

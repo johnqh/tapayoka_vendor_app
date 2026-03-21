@@ -26,7 +26,7 @@ import type {
 
 const PRICING_OPTIONS: VendorModelPricing[] = ['fixed', 'variable'];
 const SLOT_OPTIONS: VendorModelSlot[] = ['single', 'multi1D', 'multi2D'];
-const SLOT_PRICING_OPTIONS: VendorModelSlotPricing[] = ['Same', 'Different', 'Tiered'];
+const SLOT_PRICING_OPTIONS: VendorModelSlotPricing[] = ['Tiered', 'Unique'];
 const ACTION_OPTIONS: VendorModelAction[] = ['timed', 'sequence'];
 const INTERRUPTION_OPTIONS: VendorModelInterruption[] = ['stop', 'continue'];
 const PAYMENT_OPTIONS: VendorModelPayment[] = ['atStart', 'atEnd'];
@@ -334,7 +334,7 @@ export function ModelDetailPage() {
               {offeringsManager.offerings.map(inst => (
                 <tr key={inst.id} className="border-b last:border-0 hover:bg-gray-50">
                   <td className="px-4 py-3 text-sm text-gray-900">{inst.name}</td>
-                  <td className="px-4 py-3 text-sm text-gray-500">{formatPricingSubtitle(inst.pricing)}</td>
+                  <td className="px-4 py-3 text-sm text-gray-500">{formatPricingSubtitle(inst.pricingTiers)}</td>
                   <td className="px-4 py-3 text-right">
                     <button className="text-blue-600 text-sm hover:text-blue-800 mr-3" onClick={() => handleEditOffering(inst)}>Edit</button>
                     <button className="text-red-600 text-sm hover:text-red-800" onClick={() => handleDeleteOffering(inst)}>Delete</button>

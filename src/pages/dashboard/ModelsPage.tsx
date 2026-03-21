@@ -20,7 +20,7 @@ import type {
 const MODEL_TYPES: VendorModelType[] = ['Washer', 'Dryer', 'Parking', 'Locker', 'Vending'];
 const PRICING_OPTIONS: VendorModelPricing[] = ['fixed', 'variable'];
 const SLOT_OPTIONS: VendorModelSlot[] = ['single', 'multi1D', 'multi2D'];
-const SLOT_PRICING_OPTIONS: VendorModelSlotPricing[] = ['Same', 'Different', 'Tiered'];
+const SLOT_PRICING_OPTIONS: VendorModelSlotPricing[] = ['Tiered', 'Unique'];
 const ACTION_OPTIONS: VendorModelAction[] = ['timed', 'sequence'];
 const INTERRUPTION_OPTIONS: VendorModelInterruption[] = ['stop', 'continue'];
 const PAYMENT_OPTIONS: VendorModelPayment[] = ['atStart', 'atEnd'];
@@ -35,9 +35,9 @@ const TYPE_DEFAULTS: Record<VendorModelType, {
 }> = {
   Washer: { pricing: 'variable', slot: 'single', slotPricing: null, action: 'timed', interruption: 'stop', payment: 'atStart' },
   Dryer: { pricing: 'variable', slot: 'single', slotPricing: null, action: 'timed', interruption: 'stop', payment: 'atStart' },
-  Parking: { pricing: 'variable', slot: 'multi1D', slotPricing: 'Same', action: 'timed', interruption: 'continue', payment: 'atStart' },
-  Locker: { pricing: 'variable', slot: 'multi1D', slotPricing: 'Same', action: 'timed', interruption: 'stop', payment: 'atEnd' },
-  Vending: { pricing: 'fixed', slot: 'multi1D', slotPricing: 'Same', action: 'sequence', interruption: null, payment: 'atStart' },
+  Parking: { pricing: 'variable', slot: 'multi1D', slotPricing: 'Tiered', action: 'timed', interruption: 'continue', payment: 'atStart' },
+  Locker: { pricing: 'variable', slot: 'multi1D', slotPricing: 'Tiered', action: 'timed', interruption: 'stop', payment: 'atEnd' },
+  Vending: { pricing: 'fixed', slot: 'multi1D', slotPricing: 'Tiered', action: 'sequence', interruption: null, payment: 'atStart' },
 };
 
 function displayValue(value: string | null | undefined): string {

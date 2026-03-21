@@ -5,19 +5,26 @@ import type {
   VendorOfferingUpdateRequest,
   VendorModel,
   VendorLocation,
-  VariablePricingConfig,
-  FixedPricingConfig,
-  VendorOfferingPricing,
+  VendorModelPricing,
+  VariablePricingTier,
+  FixedPricingTier,
+  PricingTier,
   OfferingSignal,
-  SlotPricing,
   DurationUnit,
 } from '@sudobility/tapayoka_types';
 
 const DURATION_UNITS: DurationUnit[] = ['minutes', 'hours'];
 
-function makeDefaultVariable(currency: string): VariablePricingConfig {
+let nextTierId = 1;
+function generateTierId(): string {
+  return `tier_${Date.now()}_${nextTierId++}`;
+}
+
+function makeDefaultVariableTier(currency: string, name: string): VariablePricingTier {
   return {
     type: 'variable',
+    id: generateTierId(),
+    name,
     currencyCode: currency,
     startPrice: '1.00',
     startDuration: 30,
@@ -29,21 +36,29 @@ function makeDefaultVariable(currency: string): VariablePricingConfig {
   };
 }
 
-function makeDefaultFixed(currency: string): FixedPricingConfig {
+function makeDefaultFixedTier(currency: string, name: string): FixedPricingTier {
   return {
     type: 'fixed',
+    id: generateTierId(),
+    name,
     currencyCode: currency,
     price: '5.00',
     signals: [{ pinNumber: 0, duration: 5 }],
   };
 }
 
+function makeDefaultTier(pricingType: VendorModelPricing, currency: string, name: string): PricingTier {
+  return pricingType === 'variable'
+    ? makeDefaultVariableTier(currency, name)
+    : makeDefaultFixedTier(currency, name);
+}
+
 function VariablePricingForm({
   config,
   onChange,
 }: {
-  config: VariablePricingConfig;
-  onChange: (c: VariablePricingConfig) => void;
+  config: VariablePricingTier;
+  onChange: (c: VariablePricingTier) => void;
 }) {
   return (
     <div className="space-y-3">
@@ -142,8 +157,8 @@ function FixedPricingForm({
   config,
   onChange,
 }: {
-  config: FixedPricingConfig;
-  onChange: (c: FixedPricingConfig) => void;
+  config: FixedPricingTier;
+  onChange: (c: FixedPricingTier) => void;
 }) {
   const handleAddSignal = () => {
     onChange({ ...config, signals: [...config.signals, { pinNumber: 0, duration: 5 }] });
@@ -244,79 +259,63 @@ export function OfferingModal({
 }: OfferingModalProps) {
   const [name, setName] = useState('');
   const [pickerId, setPickerId] = useState('');
-  const [pricing, setPricing] = useState<VendorOfferingPricing | null>(null);
+  const [pricingTiers, setPricingTiers] = useState<PricingTier[]>([]);
   const [saving, setSaving] = useState(false);
 
-  // Resolve model to determine pricing/slot
+  // Resolve model to determine pricing type
   const resolvedModel = parentType === 'model'
     ? preselectedModel
     : models?.find(m => m.id === pickerId);
 
   const modelPricing = resolvedModel?.pricing ?? null;
-  const modelSlot = resolvedModel?.slot ?? null;
 
-  // Init pricing when model changes
+  // Init pricing tiers when model changes
   useEffect(() => {
     if (!modelPricing || offering) return;
-    const currency = 'USD';
-    if (modelSlot && modelSlot !== 'single') {
-      setPricing({
-        type: 'multi',
-        slots: [{
-          name: 'Slot 1',
-          pricing: modelPricing === 'variable' ? makeDefaultVariable(currency) : makeDefaultFixed(currency),
-        }],
-      });
-    } else {
-      setPricing(modelPricing === 'variable' ? makeDefaultVariable(currency) : makeDefaultFixed(currency));
-    }
-  }, [modelPricing, modelSlot, offering]);
+    setPricingTiers([makeDefaultTier(modelPricing, 'USD', 'Default')]);
+  }, [modelPricing, offering]);
 
   useEffect(() => {
     if (open) {
       if (offering) {
         setName(offering.name);
-        setPricing(offering.pricing);
+        setPricingTiers(offering.pricingTiers);
         setPickerId(parentType === 'location' ? offering.vendorModelId : offering.vendorLocationId);
       } else {
         setName('');
-        setPricing(null);
+        setPricingTiers([]);
         setPickerId('');
       }
     }
   }, [open, offering, parentType]);
 
-  const handleSlotPricingChange = useCallback((index: number, slotPricing: VariablePricingConfig | FixedPricingConfig) => {
-    if (!pricing || pricing.type !== 'multi') return;
-    setPricing({ ...pricing, slots: pricing.slots.map((s, i) => (i === index ? { ...s, pricing: slotPricing } : s)) });
-  }, [pricing]);
+  const handleTierChange = useCallback((index: number, tier: PricingTier) => {
+    setPricingTiers(prev => prev.map((t, i) => (i === index ? tier : t)));
+  }, []);
 
-  const handleSlotNameChange = useCallback((index: number, slotName: string) => {
-    if (!pricing || pricing.type !== 'multi') return;
-    setPricing({ ...pricing, slots: pricing.slots.map((s, i) => (i === index ? { ...s, name: slotName } : s)) });
-  }, [pricing]);
+  const handleTierNameChange = useCallback((index: number, tierName: string) => {
+    setPricingTiers(prev => prev.map((t, i) => (i === index ? { ...t, name: tierName } : t)));
+  }, []);
 
-  const handleAddSlot = useCallback(() => {
-    if (!pricing || pricing.type !== 'multi' || !modelPricing) return;
-    const newSlot: SlotPricing = {
-      name: `Slot ${pricing.slots.length + 1}`,
-      pricing: modelPricing === 'variable' ? makeDefaultVariable('USD') : makeDefaultFixed('USD'),
-    };
-    setPricing({ ...pricing, slots: [...pricing.slots, newSlot] });
-  }, [pricing, modelPricing]);
+  const handleAddTier = useCallback(() => {
+    if (!modelPricing) return;
+    setPricingTiers(prev => [
+      ...prev,
+      makeDefaultTier(modelPricing, 'USD', `Tier ${prev.length + 1}`),
+    ]);
+  }, [modelPricing]);
 
-  const handleRemoveSlot = useCallback((index: number) => {
-    if (!pricing || pricing.type !== 'multi') return;
-    setPricing({ ...pricing, slots: pricing.slots.filter((_, i) => i !== index) });
-  }, [pricing]);
+  const handleRemoveTier = useCallback((index: number) => {
+    setPricingTiers(prev => prev.filter((_, i) => i !== index));
+  }, []);
 
   const handleSave = async () => {
-    if (!name.trim() || !pricing) return;
+    if (!name.trim()) return;
     if (!offering && !pickerId) return;
     setSaving(true);
     try {
       if (offering) {
-        await onSave({ name: name.trim(), pricing } as VendorOfferingUpdateRequest);
+        await onSave({ name: name.trim(), pricingTiers } as VendorOfferingUpdateRequest);
       } else {
         const vendorLocationId = parentType === 'location' ? parentId : pickerId;
         const vendorModelId = parentType === 'model' ? parentId : pickerId;
@@ -324,7 +323,7 @@ export function OfferingModal({
           vendorLocationId,
           vendorModelId,
           name: name.trim(),
-          pricing,
+          pricingTiers,
         } as VendorOfferingCreateRequest);
       }
     } finally {
@@ -385,57 +384,43 @@ export function OfferingModal({
             </div>
           )}
 
-          {/* Pricing Section */}
-          {pricing && pricing.type === 'variable' && (
+          {/* Pricing Tiers Section */}
+          {pricingTiers.length > 0 && (
             <div>
-              <h3 className="text-sm font-semibold text-gray-700 mb-2">Variable Pricing</h3>
-              <VariablePricingForm config={pricing} onChange={p => setPricing(p)} />
-            </div>
-          )}
-
-          {pricing && pricing.type === 'fixed' && (
-            <div>
-              <h3 className="text-sm font-semibold text-gray-700 mb-2">Fixed Pricing</h3>
-              <FixedPricingForm config={pricing} onChange={p => setPricing(p)} />
-            </div>
-          )}
-
-          {pricing && pricing.type === 'multi' && (
-            <div>
-              <h3 className="text-sm font-semibold text-gray-700 mb-2">Slots</h3>
-              {pricing.slots.map((slot, index) => (
-                <div key={index} className="border rounded-lg p-3 mb-3">
+              <h3 className="text-sm font-semibold text-gray-700 mb-2">Pricing Tiers</h3>
+              {pricingTiers.map((tier, index) => (
+                <div key={tier.id} className="border rounded-lg p-3 mb-3">
                   <div className="flex items-center gap-2 mb-2">
                     <input
                       type="text"
                       className="flex-1 border rounded px-2 py-1 text-sm"
-                      value={slot.name}
-                      onChange={e => handleSlotNameChange(index, e.target.value)}
-                      placeholder="Slot name"
+                      value={tier.name}
+                      onChange={e => handleTierNameChange(index, e.target.value)}
+                      placeholder="Tier name"
                     />
-                    {pricing.slots.length > 1 && (
+                    {pricingTiers.length > 1 && (
                       <button
                         type="button"
                         className="text-red-500 text-xs hover:text-red-700"
-                        onClick={() => handleRemoveSlot(index)}
+                        onClick={() => handleRemoveTier(index)}
                       >
                         Remove
                       </button>
                     )}
                   </div>
-                  {slot.pricing.type === 'variable' ? (
-                    <VariablePricingForm config={slot.pricing} onChange={p => handleSlotPricingChange(index, p)} />
+                  {tier.type === 'variable' ? (
+                    <VariablePricingForm config={tier} onChange={p => handleTierChange(index, p)} />
                   ) : (
-                    <FixedPricingForm config={slot.pricing} onChange={p => handleSlotPricingChange(index, p)} />
+                    <FixedPricingForm config={tier} onChange={p => handleTierChange(index, p)} />
                   )}
                 </div>
               ))}
               <button
                 type="button"
                 className="text-blue-600 text-sm hover:text-blue-800"
-                onClick={handleAddSlot}
+                onClick={handleAddTier}
               >
-                + Add Slot
+                + Add Tier
               </button>
             </div>
           )}
@@ -451,7 +436,7 @@ export function OfferingModal({
           <button
             className="px-4 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 disabled:opacity-50"
             onClick={handleSave}
-            disabled={saving || !name.trim() || !pricing}
+            disabled={saving || !name.trim()}
           >
             {saving ? 'Saving...' : 'Save'}
           </button>
