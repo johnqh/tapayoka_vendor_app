@@ -84,7 +84,7 @@ function VariablePricingForm({
             type="number"
             className="w-16 border rounded px-2 py-1 text-sm"
             value={config.startDuration}
-            onChange={e => onChange({ ...config, startDuration: parseInt(e.target.value, 10) || 0 })}
+            onChange={e => onChange({ ...config, startDuration: parseInt(e.target.value, 10) || 1 })}
           />
           <div className="flex gap-1">
             {DURATION_UNITS.map(u => (
@@ -122,7 +122,7 @@ function VariablePricingForm({
             type="number"
             className="w-16 border rounded px-2 py-1 text-sm"
             value={config.marginalDuration}
-            onChange={e => onChange({ ...config, marginalDuration: parseInt(e.target.value, 10) || 0 })}
+            onChange={e => onChange({ ...config, marginalDuration: parseInt(e.target.value, 10) || 1 })}
           />
           <div className="flex gap-1">
             {DURATION_UNITS.map(u => (
@@ -209,7 +209,7 @@ function FixedPricingForm({
               type="number"
               className="w-16 border rounded px-2 py-1 text-sm"
               value={signal.duration}
-              onChange={e => handleUpdateSignal(index, { ...signal, duration: parseInt(e.target.value, 10) || 0 })}
+              onChange={e => handleUpdateSignal(index, { ...signal, duration: parseInt(e.target.value, 10) || 1 })}
             />
             <button
               type="button"
