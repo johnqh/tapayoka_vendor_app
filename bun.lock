@@ -17,8 +17,8 @@
         "@sudobility/entity_pages": "^0.0.62",
         "@sudobility/seo_lib": "^0.0.8",
         "@sudobility/subscription_lib": "^0.0.34",
-        "@sudobility/tapayoka_client": "^0.0.21",
-        "@sudobility/tapayoka_lib": "^0.0.21",
+        "@sudobility/tapayoka_client": "^0.0.23",
+        "@sudobility/tapayoka_lib": "^0.0.23",
         "@sudobility/tapayoka_types": "^0.0.19",
         "@sudobility/types": "^1.9.59",
         "@tanstack/react-query": "^5.90.5",
@@ -471,9 +471,9 @@
 
     "@sudobility/subscription_lib": ["@sudobility/subscription_lib@0.0.34", "", { "peerDependencies": { "@revenuecat/purchases-js": "^1.0.0", "@sudobility/types": "^1.9.59", "@tanstack/react-query": "^5.0.0", "react": "^18.0.0 || ^19.0.0", "react-native-purchases": ">=7.0.0" }, "optionalPeers": ["@revenuecat/purchases-js", "@tanstack/react-query", "react-native-purchases"] }, "sha512-pqmvLM4NCk7l5Kv5gvG+pSNhC8995nDPRUOFGhUfBdWtneIrzQp94THSGy0UZ1vFOP4QbVgWxbVJReeiL6JegA=="],
 
-    "@sudobility/tapayoka_client": ["@sudobility/tapayoka_client@0.0.21", "", { "peerDependencies": { "@sudobility/tapayoka_types": "^0.0.19", "@sudobility/types": "^1.9.59", "@tanstack/react-query": ">=5.0.0", "react": ">=18.0.0" } }, "sha512-NKsD3kQVfQRlFXdxyyeVM5fU5gUIv4L3sAGReAhWSTiBTavy3hqmckCgEQnK7dscmM6a43D/b2QlmeYSHJUTjg=="],
+    "@sudobility/tapayoka_client": ["@sudobility/tapayoka_client@0.0.23", "", { "peerDependencies": { "@sudobility/tapayoka_types": "^0.0.19", "@sudobility/types": "^1.9.59", "@tanstack/react-query": ">=5.0.0", "react": ">=18.0.0" } }, "sha512-qpoby8FhzHxHAeTq0XwjqVkJLOlsc5907wcWB0kQelbyB3wVR0D8XoaT02vmsgsqUgfBzATId+3pzuN+C9vh1A=="],
 
-    "@sudobility/tapayoka_lib": ["@sudobility/tapayoka_lib@0.0.21", "", { "peerDependencies": { "@sudobility/tapayoka_client": "^0.0.21", "@sudobility/tapayoka_types": "^0.0.19", "@sudobility/types": "^1.9.59", "@tanstack/react-query": ">=5.0.0", "react": ">=18.0.0", "zustand": ">=5.0.0" } }, "sha512-KfgXVWDwYxHNemiGTRfW2RjGRfmBoyVvU9IWNDROccnBNu0tQx+XAAgt25bWh3ljIXJA0ZtaBNytwDbOunONjQ=="],
+    "@sudobility/tapayoka_lib": ["@sudobility/tapayoka_lib@0.0.23", "", { "peerDependencies": { "@sudobility/tapayoka_client": "^0.0.23", "@sudobility/tapayoka_types": "^0.0.19", "@sudobility/types": "^1.9.59", "@tanstack/react-query": ">=5.0.0", "react": ">=18.0.0", "zustand": ">=5.0.0" } }, "sha512-0yezDYHnw9DrQLM6ocdaf6gKkgm8m2PEv2+LioyIRF4ce/P9392QfYSD5W0FjnSW7zG07I4KYUyx5ZmclyKNhw=="],
 
     "@sudobility/tapayoka_types": ["@sudobility/tapayoka_types@0.0.19", "", { "peerDependencies": { "@sudobility/types": "^1.9.59" } }, "sha512-rKChPhtTpTjt8FfAJLGGwRVwdTfWVXQhNgmvUbO4Ic71Cm/I1kxgDZMRxSH1qbYvqpl8uNLOtuwpzA7nHQLAsQ=="],
 
