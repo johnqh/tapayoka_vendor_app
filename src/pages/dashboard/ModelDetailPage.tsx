@@ -26,7 +26,7 @@ import type {
 
 const PRICING_OPTIONS: VendorModelPricing[] = ['fixed', 'variable'];
 const SLOT_OPTIONS: VendorModelSlot[] = ['single', 'multi1D', 'multi2D'];
-const SLOT_PRICING_OPTIONS: VendorModelSlotPricing[] = ['Same', 'Different'];
+const SLOT_PRICING_OPTIONS: VendorModelSlotPricing[] = ['Same', 'Different', 'Tiered'];
 const ACTION_OPTIONS: VendorModelAction[] = ['timed', 'sequence'];
 const INTERRUPTION_OPTIONS: VendorModelInterruption[] = ['stop', 'continue'];
 const PAYMENT_OPTIONS: VendorModelPayment[] = ['atStart', 'atEnd'];
@@ -94,7 +94,7 @@ export function ModelDetailPage() {
     setSaving(true);
     try {
       const result = await modelsManager.updateModel(modelId, {
-        pricing: slot === 'single' ? (pricing || undefined) : undefined,
+        pricing: pricing || undefined,
         slot: slot || undefined,
         slotPricing: slot && slot !== 'single' ? (slotPricing || undefined) : undefined,
         action: action || undefined,
@@ -194,16 +194,14 @@ export function ModelDetailPage() {
             </div>
           </div>
 
-          {(!slot || slot === 'single') && (
-            <div>
-              <label className="block text-sm font-medium text-gray-500 mb-2">Pricing</label>
-              <div className="flex gap-2">
-                {PRICING_OPTIONS.map(p => (
-                  <Chip key={p} label={p === 'fixed' ? 'Fixed' : 'Variable'} active={pricing === p} onClick={() => { setPricing(p); setSettingsDirty(true); }} />
-                ))}
-              </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-500 mb-2">Pricing</label>
+            <div className="flex gap-2">
+              {PRICING_OPTIONS.map(p => (
+                <Chip key={p} label={p === 'fixed' ? 'Fixed' : 'Variable'} active={pricing === p} onClick={() => { setPricing(p); setSettingsDirty(true); }} />
+              ))}
             </div>
-          )}
+          </div>
 
           {slot && slot !== 'single' && (
             <div>

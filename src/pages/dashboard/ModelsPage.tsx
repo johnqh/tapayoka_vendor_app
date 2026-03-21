@@ -20,7 +20,7 @@ import type {
 const MODEL_TYPES: VendorModelType[] = ['Washer', 'Dryer', 'Parking', 'Locker', 'Vending'];
 const PRICING_OPTIONS: VendorModelPricing[] = ['fixed', 'variable'];
 const SLOT_OPTIONS: VendorModelSlot[] = ['single', 'multi1D', 'multi2D'];
-const SLOT_PRICING_OPTIONS: VendorModelSlotPricing[] = ['Same', 'Different'];
+const SLOT_PRICING_OPTIONS: VendorModelSlotPricing[] = ['Same', 'Different', 'Tiered'];
 const ACTION_OPTIONS: VendorModelAction[] = ['timed', 'sequence'];
 const INTERRUPTION_OPTIONS: VendorModelInterruption[] = ['stop', 'continue'];
 const PAYMENT_OPTIONS: VendorModelPayment[] = ['atStart', 'atEnd'];
@@ -165,7 +165,7 @@ function ModelFormModal({ visible, model, onClose, onSave }: ModelFormModalProps
       await onSave({
         name: name.trim(),
         type: type || undefined,
-        pricing: slot === 'single' ? (pricing || undefined) : undefined,
+        pricing: pricing || undefined,
         slot: slot || undefined,
         slotPricing: slot && slot !== 'single' ? (slotPricing || undefined) : undefined,
         action: action || undefined,
@@ -217,15 +217,13 @@ function ModelFormModal({ visible, model, onClose, onSave }: ModelFormModalProps
               onChange={setSlot}
             />
 
-            {/* Pricing - only when slot is single */}
-            {(!slot || slot === 'single') && (
-              <ChipGroup
-                label="Pricing"
-                options={PRICING_OPTIONS.map((p) => ({ label: p, value: p }))}
-                value={pricing}
-                onChange={setPricing}
-              />
-            )}
+            {/* Pricing */}
+            <ChipGroup
+              label="Pricing"
+              options={PRICING_OPTIONS.map((p) => ({ label: p, value: p }))}
+              value={pricing}
+              onChange={setPricing}
+            />
 
             {/* Slot Pricing - only when slot is multi */}
             {slot && slot !== 'single' && (
