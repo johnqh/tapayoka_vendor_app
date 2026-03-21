@@ -62,7 +62,7 @@ function TosPage() {
             <p className="text-gray-600">
               As a vendor, you are responsible for the accuracy of your service
               listings, pricing, and device configurations. You agree to provide
-              services as described and maintain your equipment in working order.
+              services as described and maintain your installation in working order.
             </p>
           </div>
 

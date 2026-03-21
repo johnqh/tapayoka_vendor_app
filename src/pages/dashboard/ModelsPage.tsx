@@ -335,7 +335,7 @@ export function ModelsPage() {
         </div>
       ) : manager.models.length === 0 ? (
         <EmptyState
-          message="Manage your equipment models here."
+          message="Manage your installation models here."
           buttonLabel="Add Model"
           onPress={handleAdd}
         />
