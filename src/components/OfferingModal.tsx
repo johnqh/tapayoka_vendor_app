@@ -11,9 +11,12 @@ import type {
   PricingTier,
   OfferingSignal,
   DurationUnit,
+  DailySchedule,
+  DayOfWeek,
 } from '@sudobility/tapayoka_types';
 
 const DURATION_UNITS: DurationUnit[] = ['minutes', 'hours'];
+const DAYS_OF_WEEK: DayOfWeek[] = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
 let nextTierId = 1;
 function generateTierId(): string {
@@ -260,6 +263,7 @@ export function OfferingModal({
   const [name, setName] = useState('');
   const [pickerId, setPickerId] = useState('');
   const [pricingTiers, setPricingTiers] = useState<PricingTier[]>([]);
+  const [schedule, setSchedule] = useState<DailySchedule[]>([]);
   const [saving, setSaving] = useState(false);
 
   // Resolve model to determine pricing type
@@ -280,10 +284,12 @@ export function OfferingModal({
       if (offering) {
         setName(offering.name);
         setPricingTiers(offering.pricingTiers);
+        setSchedule(offering.schedule ?? []);
         setPickerId(parentType === 'location' ? offering.vendorModelId : offering.vendorLocationId);
       } else {
         setName('');
         setPricingTiers([]);
+        setSchedule([]);
         setPickerId('');
       }
     }
@@ -315,7 +321,7 @@ export function OfferingModal({
     setSaving(true);
     try {
       if (offering) {
-        await onSave({ name: name.trim(), pricingTiers } as VendorOfferingUpdateRequest);
+        await onSave({ name: name.trim(), pricingTiers, schedule: schedule.length > 0 ? schedule : null } as VendorOfferingUpdateRequest);
       } else {
         const vendorLocationId = parentType === 'location' ? parentId : pickerId;
         const vendorModelId = parentType === 'model' ? parentId : pickerId;
@@ -324,6 +330,7 @@ export function OfferingModal({
           vendorModelId,
           name: name.trim(),
           pricingTiers,
+          ...(schedule.length > 0 ? { schedule } : {}),
         } as VendorOfferingCreateRequest);
       }
     } finally {
@@ -424,6 +431,54 @@ export function OfferingModal({
               </button>
             </div>
           )}
+          {/* Schedule Section */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Schedule</label>
+            {schedule.map((entry, index) => (
+              <div key={`${entry.dayOfWeek}-${index}`} className="flex items-center gap-3 mb-2 bg-gray-50 rounded-lg px-3 py-2">
+                <span className="text-sm font-medium text-gray-700 w-24">{entry.dayOfWeek}</span>
+                <input
+                  type="text"
+                  className="w-20 border rounded px-2 py-1 text-sm"
+                  value={entry.startTime}
+                  onChange={e => setSchedule(prev => prev.map((s, i) => i === index ? { ...s, startTime: e.target.value } : s))}
+                  placeholder="09:00"
+                  maxLength={5}
+                />
+                <span className="text-xs text-gray-400">to</span>
+                <input
+                  type="text"
+                  className="w-20 border rounded px-2 py-1 text-sm"
+                  value={entry.endTime}
+                  onChange={e => setSchedule(prev => prev.map((s, i) => i === index ? { ...s, endTime: e.target.value } : s))}
+                  placeholder="17:00"
+                  maxLength={5}
+                />
+                <button
+                  type="button"
+                  className="text-red-500 text-xs hover:text-red-700"
+                  onClick={() => setSchedule(prev => prev.filter((_, i) => i !== index))}
+                >
+                  Remove
+                </button>
+              </div>
+            ))}
+            <div className="flex flex-wrap gap-2 mt-2">
+              {DAYS_OF_WEEK.filter(d => !schedule.some(s => s.dayOfWeek === d)).map(day => (
+                <button
+                  key={day}
+                  type="button"
+                  className="px-2 py-1 text-xs border border-dashed border-gray-300 rounded text-blue-600 hover:border-blue-400"
+                  onClick={() => {
+                    const last = schedule[schedule.length - 1];
+                    setSchedule(prev => [...prev, { dayOfWeek: day, startTime: last?.startTime ?? '09:00', endTime: last?.endTime ?? '17:00' }]);
+                  }}
+                >
+                  + {day.slice(0, 3)}
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
 
         <div className="flex justify-end gap-3 mt-6">

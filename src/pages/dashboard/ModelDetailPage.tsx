@@ -20,8 +20,6 @@ import type {
   VendorModelAction,
   VendorModelInterruption,
   VendorModelPayment,
-  DailySchedule,
-  DayOfWeek,
 } from '@sudobility/tapayoka_types';
 
 const PRICING_OPTIONS: VendorModelPricing[] = ['fixed', 'variable'];
@@ -30,8 +28,6 @@ const SLOT_PRICING_OPTIONS: VendorModelSlotPricing[] = ['Tiered', 'Unique'];
 const ACTION_OPTIONS: VendorModelAction[] = ['timed', 'sequence'];
 const INTERRUPTION_OPTIONS: VendorModelInterruption[] = ['stop', 'continue'];
 const PAYMENT_OPTIONS: VendorModelPayment[] = ['atStart', 'atEnd'];
-const DAYS_OF_WEEK: DayOfWeek[] = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-
 function Chip({ label, active, onClick }: { label: string; active: boolean; onClick: () => void }) {
   return (
     <button
@@ -66,7 +62,6 @@ export function ModelDetailPage() {
   const [action, setAction] = useState<VendorModelAction | null>(null);
   const [interruption, setInterruption] = useState<VendorModelInterruption | null>(null);
   const [payment, setPayment] = useState<VendorModelPayment | null>(null);
-  const [schedule, setSchedule] = useState<DailySchedule[]>([]);
   const [saving, setSaving] = useState(false);
   const [settingsDirty, setSettingsDirty] = useState(false);
 
@@ -78,7 +73,6 @@ export function ModelDetailPage() {
       setAction(model.action ?? null);
       setInterruption(model.interruption ?? null);
       setPayment(model.payment ?? null);
-      setSchedule(model.schedule ?? []);
       setSettingsDirty(false);
     }
   }, [model?.id]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -100,7 +94,6 @@ export function ModelDetailPage() {
         action: action || undefined,
         interruption: action === 'timed' ? (interruption || undefined) : undefined,
         payment: payment || undefined,
-        schedule: schedule.length > 0 ? schedule : null,
       });
       if (!result && modelsManager.error) {
         alert(modelsManager.error);
@@ -110,7 +103,7 @@ export function ModelDetailPage() {
     } finally {
       setSaving(false);
     }
-  }, [modelsManager, modelId, pricing, slot, slotPricing, action, interruption, payment, schedule]);
+  }, [modelsManager, modelId, pricing, slot, slotPricing, action, interruption, payment]);
 
   // Offerings
   const [modalOpen, setModalOpen] = useState(false);
@@ -150,8 +143,6 @@ export function ModelDetailPage() {
     }
     setModalOpen(false);
   }, [editingOffering, offeringsManager]);
-
-  const scheduledDays = new Set(schedule.map(s => s.dayOfWeek));
 
   if (!model && !modelsManager.isLoading) {
     return (
@@ -243,61 +234,6 @@ export function ModelDetailPage() {
             </div>
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-500 mb-2">Schedule</label>
-            {schedule.map((entry, index) => (
-              <div key={`${entry.dayOfWeek}-${index}`} className="flex items-center gap-3 mb-2 bg-gray-50 rounded-lg px-3 py-2">
-                <span className="text-sm font-medium text-gray-700 w-24">{entry.dayOfWeek}</span>
-                <input
-                  type="text"
-                  className="w-20 border rounded px-2 py-1 text-sm"
-                  value={entry.startTime}
-                  onChange={e => {
-                    setSchedule(prev => prev.map((s, i) => i === index ? { ...s, startTime: e.target.value } : s));
-                    setSettingsDirty(true);
-                  }}
-                  placeholder="09:00"
-                  maxLength={5}
-                />
-                <span className="text-xs text-gray-400">to</span>
-                <input
-                  type="text"
-                  className="w-20 border rounded px-2 py-1 text-sm"
-                  value={entry.endTime}
-                  onChange={e => {
-                    setSchedule(prev => prev.map((s, i) => i === index ? { ...s, endTime: e.target.value } : s));
-                    setSettingsDirty(true);
-                  }}
-                  placeholder="17:00"
-                  maxLength={5}
-                />
-                <button
-                  className="text-red-500 text-xs hover:text-red-700"
-                  onClick={() => {
-                    setSchedule(prev => prev.filter((_, i) => i !== index));
-                    setSettingsDirty(true);
-                  }}
-                >
-                  Remove
-                </button>
-              </div>
-            ))}
-            <div className="flex flex-wrap gap-2 mt-2">
-              {DAYS_OF_WEEK.filter(d => !scheduledDays.has(d)).map(day => (
-                <button
-                  key={day}
-                  className="px-2 py-1 text-xs border border-dashed border-gray-300 rounded text-blue-600 hover:border-blue-400"
-                  onClick={() => {
-                    const last = schedule[schedule.length - 1];
-                    setSchedule(prev => [...prev, { dayOfWeek: day, startTime: last?.startTime ?? '09:00', endTime: last?.endTime ?? '17:00' }]);
-                    setSettingsDirty(true);
-                  }}
-                >
-                  + {day.slice(0, 3)}
-                </button>
-              ))}
-            </div>
-          </div>
         </div>
       </div>
 
