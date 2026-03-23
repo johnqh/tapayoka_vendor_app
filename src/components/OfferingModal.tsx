@@ -51,7 +51,7 @@ function makeDefaultFixedTier(currency: string, name: string): FixedPricingTier 
 }
 
 function makeDefaultTier(pricingType: VendorModelPricing, currency: string, name: string): PricingTier {
-  return pricingType === 'timed'
+  return pricingType === 'variable'
     ? makeDefaultVariableTier(currency, name)
     : makeDefaultFixedTier(currency, name);
 }
