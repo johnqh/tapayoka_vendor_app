@@ -8,7 +8,7 @@ const sections = [
     description:
       "Register and configure all your devices from one central dashboard. Support for washers, dryers, parking meters, lockers, and vending machines. Set pricing strategies, slot modes, and operating schedules per device model.",
     items: [
-      "Define device models with custom pricing (fixed or variable)",
+      "Define device models with custom pricing (fixed or timed)",
       "Assign devices to locations with unique configurations",
       "Set daily operating schedules per model",
       "Track device status in real-time",

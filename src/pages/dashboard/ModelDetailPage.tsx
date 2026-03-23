@@ -22,7 +22,7 @@ import type {
   VendorModelPayment,
 } from '@sudobility/tapayoka_types';
 
-const PRICING_OPTIONS: VendorModelPricing[] = ['fixed', 'variable'];
+const PRICING_OPTIONS: VendorModelPricing[] = ['fixed', 'timed'];
 const SLOT_OPTIONS: VendorModelSlot[] = ['single', 'multi1D', 'multi2D'];
 const SLOT_PRICING_OPTIONS: VendorModelSlotPricing[] = ['Tiered', 'Unique'];
 const ACTION_OPTIONS: VendorModelAction[] = ['timed', 'sequence'];

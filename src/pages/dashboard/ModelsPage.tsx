@@ -18,7 +18,7 @@ import type {
 } from '@sudobility/tapayoka_types';
 
 const MODEL_TYPES: VendorModelType[] = ['Washer', 'Dryer', 'Parking', 'Locker', 'Vending'];
-const PRICING_OPTIONS: VendorModelPricing[] = ['fixed', 'variable'];
+const PRICING_OPTIONS: VendorModelPricing[] = ['fixed', 'timed'];
 const SLOT_OPTIONS: VendorModelSlot[] = ['single', 'multi1D', 'multi2D'];
 const SLOT_PRICING_OPTIONS: VendorModelSlotPricing[] = ['Tiered', 'Unique'];
 const ACTION_OPTIONS: VendorModelAction[] = ['timed', 'sequence'];
@@ -33,10 +33,10 @@ const TYPE_DEFAULTS: Record<VendorModelType, {
   interruption: VendorModelInterruption | null;
   payment: VendorModelPayment;
 }> = {
-  Washer: { pricing: 'variable', slot: 'single', slotPricing: null, action: 'timed', interruption: 'stop', payment: 'atStart' },
-  Dryer: { pricing: 'variable', slot: 'single', slotPricing: null, action: 'timed', interruption: 'stop', payment: 'atStart' },
-  Parking: { pricing: 'variable', slot: 'multi1D', slotPricing: 'Tiered', action: 'timed', interruption: 'continue', payment: 'atStart' },
-  Locker: { pricing: 'variable', slot: 'multi1D', slotPricing: 'Tiered', action: 'timed', interruption: 'stop', payment: 'atEnd' },
+  Washer: { pricing: 'timed', slot: 'single', slotPricing: null, action: 'timed', interruption: 'stop', payment: 'atStart' },
+  Dryer: { pricing: 'timed', slot: 'single', slotPricing: null, action: 'timed', interruption: 'stop', payment: 'atStart' },
+  Parking: { pricing: 'timed', slot: 'multi1D', slotPricing: 'Tiered', action: 'timed', interruption: 'continue', payment: 'atStart' },
+  Locker: { pricing: 'timed', slot: 'multi1D', slotPricing: 'Tiered', action: 'timed', interruption: 'stop', payment: 'atEnd' },
   Vending: { pricing: 'fixed', slot: 'multi1D', slotPricing: 'Tiered', action: 'sequence', interruption: null, payment: 'atStart' },
 };
 

@@ -6,7 +6,7 @@ import type {
   VendorModel,
   VendorLocation,
   VendorModelPricing,
-  VariablePricingTier,
+  TimedPricingTier,
   FixedPricingTier,
   PricingTier,
   OfferingSignal,
@@ -23,9 +23,9 @@ function generateTierId(): string {
   return `tier_${Date.now()}_${nextTierId++}`;
 }
 
-function makeDefaultVariableTier(currency: string, name: string): VariablePricingTier {
+function makeDefaultVariableTier(currency: string, name: string): TimedPricingTier {
   return {
-    type: 'variable',
+    type: 'timed',
     id: generateTierId(),
     name,
     currencyCode: currency,
@@ -51,7 +51,7 @@ function makeDefaultFixedTier(currency: string, name: string): FixedPricingTier 
 }
 
 function makeDefaultTier(pricingType: VendorModelPricing, currency: string, name: string): PricingTier {
-  return pricingType === 'variable'
+  return pricingType === 'timed'
     ? makeDefaultVariableTier(currency, name)
     : makeDefaultFixedTier(currency, name);
 }
@@ -60,8 +60,8 @@ function VariablePricingForm({
   config,
   onChange,
 }: {
-  config: VariablePricingTier;
-  onChange: (c: VariablePricingTier) => void;
+  config: TimedPricingTier;
+  onChange: (c: TimedPricingTier) => void;
 }) {
   return (
     <div className="space-y-3">
@@ -415,7 +415,7 @@ export function OfferingModal({
                       </button>
                     )}
                   </div>
-                  {tier.type === 'variable' ? (
+                  {tier.type === 'timed' ? (
                     <VariablePricingForm config={tier} onChange={p => handleTierChange(index, p)} />
                   ) : (
                     <FixedPricingForm config={tier} onChange={p => handleTierChange(index, p)} />
