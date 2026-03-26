@@ -294,6 +294,7 @@ export function ModelsPage() {
 
   const [modalVisible, setModalVisible] = useState(false);
   const [editingModel, setEditingModel] = useState<VendorModel | null>(null);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const handleAdd = () => {
     setEditingModel(null);
@@ -307,7 +308,10 @@ export function ModelsPage() {
 
   const handleDelete = async (model: VendorModel) => {
     if (!window.confirm(`Delete model "${model.name}"?`)) return;
+    setDeletingId(model.id);
+    await new Promise(r => setTimeout(r, 300));
     const ok = await manager.deleteModel(model.id);
+    setDeletingId(null);
     if (!ok && manager.error) {
       alert(manager.error);
     }
@@ -376,6 +380,9 @@ export function ModelsPage() {
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Action
                 </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Offerings
+                </th>
                 <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Actions
                 </th>
@@ -386,7 +393,8 @@ export function ModelsPage() {
                 <tr
                   key={model.id}
                   onClick={() => handleRowClick(model)}
-                  className="hover:bg-gray-50 cursor-pointer"
+                  className="hover:bg-gray-50 cursor-pointer transition-all duration-300"
+                  style={deletingId === model.id ? { opacity: 0, transform: 'translateX(-20px)' } : {}}
                 >
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                     {model.name}
@@ -402,6 +410,13 @@ export function ModelsPage() {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     {displayValue(model.action)}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {model.offeringCount != null && (
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                        {model.offeringCount}
+                      </span>
+                    )}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm">
                     <button

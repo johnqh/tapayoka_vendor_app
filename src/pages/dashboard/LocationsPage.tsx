@@ -45,6 +45,7 @@ export function LocationsPage() {
   const [editingLocation, setEditingLocation] = useState<VendorLocation | null>(null);
   const [form, setForm] = useState<FormFields>(emptyForm);
   const [saving, setSaving] = useState(false);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const openAddModal = () => {
     setEditingLocation(null);
@@ -107,7 +108,10 @@ export function LocationsPage() {
     if (!window.confirm(`Delete location "${location.name}"? This cannot be undone.`)) {
       return;
     }
+    setDeletingId(location.id);
+    await new Promise(r => setTimeout(r, 300));
     const ok = await manager.deleteLocation(location.id);
+    setDeletingId(null);
     if (!ok && manager.error) {
       alert(manager.error);
     }
@@ -172,6 +176,9 @@ export function LocationsPage() {
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Country
                 </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Offerings
+                </th>
                 <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Actions
                 </th>
@@ -182,7 +189,8 @@ export function LocationsPage() {
                 <tr
                   key={location.id}
                   onClick={() => handleRowClick(location)}
-                  className="hover:bg-gray-50 cursor-pointer"
+                  className="hover:bg-gray-50 cursor-pointer transition-all duration-300"
+                  style={deletingId === location.id ? { opacity: 0, transform: 'translateX(-20px)' } : {}}
                 >
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                     {location.name}
@@ -198,6 +206,13 @@ export function LocationsPage() {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     {location.country}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {location.offeringCount != null && (
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                        {location.offeringCount}
+                      </span>
+                    )}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm">
                     <button

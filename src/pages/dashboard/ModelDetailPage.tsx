@@ -108,6 +108,7 @@ export function ModelDetailPage() {
   // Offerings
   const [modalOpen, setModalOpen] = useState(false);
   const [editingOffering, setEditingOffering] = useState<VendorOffering | null>(null);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const handleAddOffering = useCallback(() => {
     setEditingOffering(null);
@@ -121,7 +122,10 @@ export function ModelDetailPage() {
 
   const handleDeleteOffering = useCallback(async (inst: VendorOffering) => {
     if (!window.confirm(`Delete offering "${inst.name}"?`)) return;
+    setDeletingId(inst.id);
+    await new Promise(r => setTimeout(r, 300));
     const ok = await offeringsManager.deleteOffering(inst.id);
+    setDeletingId(null);
     if (!ok && offeringsManager.error) {
       alert(offeringsManager.error);
     }
@@ -263,14 +267,22 @@ export function ModelDetailPage() {
               <tr className="border-b bg-gray-50">
                 <th className="text-left px-4 py-3 text-sm font-medium text-gray-500">Name</th>
                 <th className="text-left px-4 py-3 text-sm font-medium text-gray-500">Pricing</th>
+                <th className="text-left px-4 py-3 text-sm font-medium text-gray-500">Installations</th>
                 <th className="text-right px-4 py-3 text-sm font-medium text-gray-500">Actions</th>
               </tr>
             </thead>
             <tbody>
               {offeringsManager.offerings.map(inst => (
-                <tr key={inst.id} className="border-b last:border-0 hover:bg-gray-50">
+                <tr key={inst.id} className="border-b last:border-0 hover:bg-gray-50 transition-all duration-300" style={deletingId === inst.id ? { opacity: 0, transform: 'translateX(-20px)' } : {}}>
                   <td className="px-4 py-3 text-sm text-gray-900">{inst.name}</td>
                   <td className="px-4 py-3 text-sm text-gray-500">{formatPricingSubtitle(inst.pricingTiers)}</td>
+                  <td className="px-4 py-3 text-sm text-gray-500">
+                    {inst.installationCount != null && (
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                        {inst.installationCount}
+                      </span>
+                    )}
+                  </td>
                   <td className="px-4 py-3 text-right">
                     <button className="text-blue-600 text-sm hover:text-blue-800 mr-3" onClick={() => handleEditOffering(inst)}>Edit</button>
                     <button className="text-red-600 text-sm hover:text-red-800" onClick={() => handleDeleteOffering(inst)}>Delete</button>
