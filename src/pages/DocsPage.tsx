@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { MasterDetailLayout } from "@sudobility/components";
 import ScreenContainer from "../components/layout/ScreenContainer";
+import { useSetPageConfig } from "../hooks/usePageConfig";
 
 type DocSection = "getting-started" | "device-setup" | "api-reference";
 
@@ -178,6 +179,7 @@ function DocsPage() {
   const { section } = useParams<{ section?: string }>();
   const navigate = useNavigate();
   const [mobileView, setMobileView] = useState<"navigation" | "content">("navigation");
+  useSetPageConfig({ scrollable: false, contentPadding: "sm" });
 
   const currentSection = (section as DocSection) || "getting-started";
 
@@ -220,7 +222,7 @@ function DocsPage() {
 
   return (
     <ScreenContainer footerVariant="full">
-      <main className="flex-1">
+      <div className="w-full min-w-0 overflow-x-hidden flex-1 flex flex-col min-h-0 [&>div]:w-full [&>div]:min-w-0">
         <MasterDetailLayout
           masterTitle="Documentation"
           backButtonText="Documentation"
@@ -234,7 +236,7 @@ function DocsPage() {
           masterWidth={260}
           stickyTopOffset={80}
         />
-      </main>
+      </div>
     </ScreenContainer>
   );
 }

@@ -4,6 +4,7 @@ import { MasterDetailLayout } from "@sudobility/components";
 import { useApi } from "@sudobility/building_blocks/firebase";
 import { useCurrentEntity } from "@sudobility/entity_client";
 import ScreenContainer from "../../components/layout/ScreenContainer";
+import { useSetPageConfig } from "../../hooks/usePageConfig";
 
 // Sidebar icons
 const MapPinIcon = () => (
@@ -117,6 +118,7 @@ function DashboardPage() {
   const { entitySlug = "" } = useParams<{ entitySlug: string }>();
   const { isReady } = useApi();
   const { selectEntity } = useCurrentEntity();
+  useSetPageConfig({ scrollable: false, contentPadding: "sm" });
 
   // Sync URL entity slug with context
   useEffect(() => {
@@ -183,7 +185,7 @@ function DashboardPage() {
 
   return (
     <ScreenContainer showBreadcrumbs={false}>
-      <main className="flex-1">
+      <div className="w-full min-w-0 overflow-x-hidden flex-1 flex flex-col min-h-0 [&>div]:w-full [&>div]:min-w-0">
         <MasterDetailLayout
           masterTitle="Dashboard"
           backButtonText="Dashboard"
@@ -198,7 +200,7 @@ function DashboardPage() {
           masterWidth={260}
           stickyTopOffset={80}
         />
-      </main>
+      </div>
     </ScreenContainer>
   );
 }
