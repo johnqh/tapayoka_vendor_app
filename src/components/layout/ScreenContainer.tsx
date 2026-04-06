@@ -25,7 +25,7 @@ function ScreenContainerInner({
     <AppPageLayout
       topBar={topBarConfig}
       footer={showFooter ? footerConfig : undefined}
-      page={{ maxWidth: "full", contentPadding: "none", ...pageConfigOverrides }}
+      page={{ maxWidth: "full", contentPadding: "none", contentClassName: "w-full min-w-0", ...pageConfigOverrides }}
     >
       {children}
     </AppPageLayout>

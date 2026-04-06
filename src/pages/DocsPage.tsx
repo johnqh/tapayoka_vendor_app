@@ -179,7 +179,7 @@ function DocsPage() {
   const { section } = useParams<{ section?: string }>();
   const navigate = useNavigate();
   const [mobileView, setMobileView] = useState<"navigation" | "content">("navigation");
-  useSetPageConfig({ scrollable: false, contentPadding: "sm" });
+  useSetPageConfig({ scrollable: false, contentPadding: "sm", maxWidth: "7xl" });
 
   const currentSection = (section as DocSection) || "getting-started";
 
@@ -222,7 +222,7 @@ function DocsPage() {
 
   return (
     <ScreenContainer footerVariant="full">
-      <div className="w-full min-w-0 overflow-x-hidden flex-1 flex flex-col min-h-0 [&>div]:w-full [&>div]:min-w-0">
+      <div className="w-full min-w-0 overflow-x-hidden flex-1 flex flex-col min-h-0">
         <MasterDetailLayout
           masterTitle="Documentation"
           backButtonText="Documentation"

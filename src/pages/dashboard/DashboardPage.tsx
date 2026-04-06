@@ -118,7 +118,7 @@ function DashboardPage() {
   const { entitySlug = "" } = useParams<{ entitySlug: string }>();
   const { isReady } = useApi();
   const { selectEntity } = useCurrentEntity();
-  useSetPageConfig({ scrollable: false, contentPadding: "sm" });
+  useSetPageConfig({ scrollable: false, contentPadding: "sm", maxWidth: "7xl" });
 
   // Sync URL entity slug with context
   useEffect(() => {
@@ -185,7 +185,7 @@ function DashboardPage() {
 
   return (
     <ScreenContainer showBreadcrumbs={false}>
-      <div className="w-full min-w-0 overflow-x-hidden flex-1 flex flex-col min-h-0 [&>div]:w-full [&>div]:min-w-0">
+      <div className="w-full min-w-0 overflow-x-hidden flex-1 flex flex-col min-h-0">
         <MasterDetailLayout
           masterTitle="Dashboard"
           backButtonText="Dashboard"
