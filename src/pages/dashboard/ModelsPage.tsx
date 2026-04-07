@@ -25,19 +25,57 @@ const ACTION_OPTIONS: VendorModelAction[] = ['timed', 'sequence'];
 const INTERRUPTION_OPTIONS: VendorModelInterruption[] = ['stop', 'continue'];
 const PAYMENT_OPTIONS: VendorModelPayment[] = ['atStart', 'atEnd'];
 
-const TYPE_DEFAULTS: Record<VendorModelType, {
-  pricing: VendorModelPricing;
-  slot: VendorModelSlot;
-  slotPricing: VendorModelSlotPricing | null;
-  action: VendorModelAction;
-  interruption: VendorModelInterruption | null;
-  payment: VendorModelPayment;
-}> = {
-  Washer: { pricing: 'variable', slot: 'single', slotPricing: null, action: 'timed', interruption: 'stop', payment: 'atStart' },
-  Dryer: { pricing: 'variable', slot: 'single', slotPricing: null, action: 'timed', interruption: 'stop', payment: 'atStart' },
-  Parking: { pricing: 'variable', slot: 'multi1D', slotPricing: 'Tiered', action: 'timed', interruption: 'continue', payment: 'atStart' },
-  Locker: { pricing: 'variable', slot: 'multi1D', slotPricing: 'Tiered', action: 'timed', interruption: 'stop', payment: 'atEnd' },
-  Vending: { pricing: 'fixed', slot: 'multi1D', slotPricing: 'Tiered', action: 'sequence', interruption: null, payment: 'atStart' },
+const TYPE_DEFAULTS: Record<
+  VendorModelType,
+  {
+    pricing: VendorModelPricing;
+    slot: VendorModelSlot;
+    slotPricing: VendorModelSlotPricing | null;
+    action: VendorModelAction;
+    interruption: VendorModelInterruption | null;
+    payment: VendorModelPayment;
+  }
+> = {
+  Washer: {
+    pricing: 'variable',
+    slot: 'single',
+    slotPricing: null,
+    action: 'timed',
+    interruption: 'stop',
+    payment: 'atStart',
+  },
+  Dryer: {
+    pricing: 'variable',
+    slot: 'single',
+    slotPricing: null,
+    action: 'timed',
+    interruption: 'stop',
+    payment: 'atStart',
+  },
+  Parking: {
+    pricing: 'variable',
+    slot: 'multi1D',
+    slotPricing: 'Tiered',
+    action: 'timed',
+    interruption: 'continue',
+    payment: 'atStart',
+  },
+  Locker: {
+    pricing: 'variable',
+    slot: 'multi1D',
+    slotPricing: 'Tiered',
+    action: 'timed',
+    interruption: 'stop',
+    payment: 'atEnd',
+  },
+  Vending: {
+    pricing: 'fixed',
+    slot: 'multi1D',
+    slotPricing: 'Tiered',
+    action: 'sequence',
+    interruption: null,
+    payment: 'atStart',
+  },
 };
 
 function displayValue(value: string | null | undefined): string {
@@ -88,9 +126,7 @@ function ChipGroup<T extends string>({
     <div>
       <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
       <div className="flex flex-wrap gap-2">
-        {allowNone && (
-          <Chip label="None" value={null} selected={value} onSelect={onChange} />
-        )}
+        {allowNone && <Chip label="None" value={null} selected={value} onSelect={onChange} />}
         {options.map((opt) => (
           <Chip
             key={opt.value}
@@ -138,18 +174,21 @@ function ModelFormModal({ visible, model, onClose, onSave }: ModelFormModalProps
     }
   }, [visible, model]);
 
-  const handleTypeSelect = useCallback((mt: VendorModelType | null) => {
-    setType(mt);
-    if (mt && !isEditing) {
-      const defaults = TYPE_DEFAULTS[mt];
-      setPricing(defaults.pricing);
-      setSlot(defaults.slot);
-      setSlotPricing(defaults.slotPricing);
-      setAction(defaults.action);
-      setInterruption(defaults.interruption);
-      setPayment(defaults.payment);
-    }
-  }, [isEditing]);
+  const handleTypeSelect = useCallback(
+    (mt: VendorModelType | null) => {
+      setType(mt);
+      if (mt && !isEditing) {
+        const defaults = TYPE_DEFAULTS[mt];
+        setPricing(defaults.pricing);
+        setSlot(defaults.slot);
+        setSlotPricing(defaults.slotPricing);
+        setAction(defaults.action);
+        setInterruption(defaults.interruption);
+        setPayment(defaults.payment);
+      }
+    },
+    [isEditing]
+  );
 
   const handleActionSelect = useCallback((a: VendorModelAction | null) => {
     setAction(a);
@@ -167,7 +206,7 @@ function ModelFormModal({ visible, model, onClose, onSave }: ModelFormModalProps
         type: type || undefined,
         pricing: pricing || undefined,
         slot: slot || undefined,
-        slotPricing: slot && slot !== 'single' ? (slotPricing || undefined) : undefined,
+        slotPricing: slot && slot !== 'single' ? slotPricing || undefined : undefined,
         action: action || undefined,
         interruption: interruption || undefined,
         payment: payment || undefined,
@@ -212,7 +251,10 @@ function ModelFormModal({ visible, model, onClose, onSave }: ModelFormModalProps
             {/* Slot */}
             <ChipGroup
               label="Slot"
-              options={SLOT_OPTIONS.map((s) => ({ label: s === 'multi1D' ? 'Multi 1D' : s === 'multi2D' ? 'Multi 2D' : 'Single', value: s }))}
+              options={SLOT_OPTIONS.map((s) => ({
+                label: s === 'multi1D' ? 'Multi 1D' : s === 'multi2D' ? 'Multi 2D' : 'Single',
+                value: s,
+              }))}
               value={slot}
               onChange={setSlot}
             />
@@ -309,7 +351,7 @@ export function ModelsPage() {
   const handleDelete = async (model: VendorModel) => {
     if (!window.confirm(`Delete model "${model.name}"?`)) return;
     setDeletingId(model.id);
-    await new Promise(r => setTimeout(r, 300));
+    await new Promise((r) => setTimeout(r, 300));
     const ok = await manager.deleteModel(model.id);
     setDeletingId(null);
     if (!ok && manager.error) {
@@ -394,7 +436,9 @@ export function ModelsPage() {
                   key={model.id}
                   onClick={() => handleRowClick(model)}
                   className="hover:bg-gray-50 cursor-pointer transition-all duration-300"
-                  style={deletingId === model.id ? { opacity: 0, transform: 'translateX(-20px)' } : {}}
+                  style={
+                    deletingId === model.id ? { opacity: 0, transform: 'translateX(-20px)' } : {}
+                  }
                 >
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                     {model.name}

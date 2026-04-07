@@ -21,13 +21,23 @@ export function LocationDetailPage() {
   const { networkClient, baseUrl, token } = useApi();
   const { currentEntitySlug } = useCurrentEntity();
 
-  const locationsManager = useVendorLocationsManager(networkClient, baseUrl, currentEntitySlug, token);
+  const locationsManager = useVendorLocationsManager(
+    networkClient,
+    baseUrl,
+    currentEntitySlug,
+    token
+  );
   const modelsManager = useVendorModelsManager(networkClient, baseUrl, currentEntitySlug, token);
   const offeringsManager = useVendorOfferingsManager(
-    networkClient, baseUrl, currentEntitySlug, token, locationId ?? null, 'location'
+    networkClient,
+    baseUrl,
+    currentEntitySlug,
+    token,
+    locationId ?? null,
+    'location'
   );
 
-  const location = locationsManager.locations.find(l => l.id === locationId);
+  const location = locationsManager.locations.find((l) => l.id === locationId);
 
   const [modalOpen, setModalOpen] = useState(false);
   const [editingOffering, setEditingOffering] = useState<VendorOffering | null>(null);
@@ -43,39 +53,47 @@ export function LocationDetailPage() {
     setModalOpen(true);
   }, []);
 
-  const handleDelete = useCallback(async (inst: VendorOffering) => {
-    if (!window.confirm(`Delete offering "${inst.name}"?`)) return;
-    setDeletingId(inst.id);
-    await new Promise(r => setTimeout(r, 300));
-    const ok = await offeringsManager.deleteOffering(inst.id);
-    setDeletingId(null);
-    if (!ok && offeringsManager.error) {
-      alert(offeringsManager.error);
-    }
-  }, [offeringsManager]);
+  const handleDelete = useCallback(
+    async (inst: VendorOffering) => {
+      if (!window.confirm(`Delete offering "${inst.name}"?`)) return;
+      setDeletingId(inst.id);
+      await new Promise((r) => setTimeout(r, 300));
+      const ok = await offeringsManager.deleteOffering(inst.id);
+      setDeletingId(null);
+      if (!ok && offeringsManager.error) {
+        alert(offeringsManager.error);
+      }
+    },
+    [offeringsManager]
+  );
 
-  const handleSave = useCallback(async (data: VendorOfferingCreateRequest | VendorOfferingUpdateRequest) => {
-    if (editingOffering) {
-      const result = await offeringsManager.updateOffering(editingOffering.id, data);
-      if (!result && offeringsManager.error) {
-        alert(offeringsManager.error);
-        return;
+  const handleSave = useCallback(
+    async (data: VendorOfferingCreateRequest | VendorOfferingUpdateRequest) => {
+      if (editingOffering) {
+        const result = await offeringsManager.updateOffering(editingOffering.id, data);
+        if (!result && offeringsManager.error) {
+          alert(offeringsManager.error);
+          return;
+        }
+      } else {
+        const result = await offeringsManager.addOffering(data as VendorOfferingCreateRequest);
+        if (!result && offeringsManager.error) {
+          alert(offeringsManager.error);
+          return;
+        }
       }
-    } else {
-      const result = await offeringsManager.addOffering(data as VendorOfferingCreateRequest);
-      if (!result && offeringsManager.error) {
-        alert(offeringsManager.error);
-        return;
-      }
-    }
-    setModalOpen(false);
-  }, [editingOffering, offeringsManager]);
+      setModalOpen(false);
+    },
+    [editingOffering, offeringsManager]
+  );
 
   if (!location && !locationsManager.isLoading) {
     return (
       <div className="text-center text-gray-500 mt-12">
         Location not found.{' '}
-        <Link to={`/dashboard/${entitySlug}/locations`} className="text-blue-600 hover:underline">Back to locations</Link>
+        <Link to={`/dashboard/${entitySlug}/locations`} className="text-blue-600 hover:underline">
+          Back to locations
+        </Link>
       </div>
     );
   }
@@ -93,7 +111,8 @@ export function LocationDetailPage() {
           <h1 className="text-2xl font-bold text-gray-900">{location?.name ?? 'Loading...'}</h1>
           {location && (
             <p className="text-sm text-gray-500">
-              {location.address}, {location.city}, {location.stateProvince} {location.zipcode}, {location.country}
+              {location.address}, {location.city}, {location.stateProvince} {location.zipcode},{' '}
+              {location.country}
             </p>
           )}
         </div>
@@ -120,13 +139,21 @@ export function LocationDetailPage() {
               <tr className="border-b bg-gray-50">
                 <th className="text-left px-4 py-3 text-sm font-medium text-gray-500">Name</th>
                 <th className="text-left px-4 py-3 text-sm font-medium text-gray-500">Pricing</th>
-                <th className="text-left px-4 py-3 text-sm font-medium text-gray-500">Installations</th>
+                <th className="text-left px-4 py-3 text-sm font-medium text-gray-500">
+                  Installations
+                </th>
                 <th className="text-right px-4 py-3 text-sm font-medium text-gray-500">Actions</th>
               </tr>
             </thead>
             <tbody>
-              {offeringsManager.offerings.map(inst => (
-                <tr key={inst.id} className="border-b last:border-0 hover:bg-gray-50 transition-all duration-300" style={deletingId === inst.id ? { opacity: 0, transform: 'translateX(-20px)' } : {}}>
+              {offeringsManager.offerings.map((inst) => (
+                <tr
+                  key={inst.id}
+                  className="border-b last:border-0 hover:bg-gray-50 transition-all duration-300"
+                  style={
+                    deletingId === inst.id ? { opacity: 0, transform: 'translateX(-20px)' } : {}
+                  }
+                >
                   <td className="px-4 py-3 text-sm text-gray-900">{inst.name}</td>
                   <td className="px-4 py-3 text-sm text-gray-500">
                     {formatPricingSubtitle(inst.pricingTiers)}

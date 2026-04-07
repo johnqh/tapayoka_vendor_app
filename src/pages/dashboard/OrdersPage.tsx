@@ -39,7 +39,7 @@ export function OrdersPage() {
     networkClient,
     baseUrl,
     currentEntitySlug,
-    token,
+    token
   );
 
   return (
@@ -90,7 +90,10 @@ export function OrdersPage() {
             <tbody className="divide-y divide-gray-200">
               {orders.map((order: Order) => (
                 <tr key={order.id} className="hover:bg-gray-50 transition">
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-700" title={order.id}>
+                  <td
+                    className="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-700"
+                    title={order.id}
+                  >
                     {truncateId(order.id)}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">

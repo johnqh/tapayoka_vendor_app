@@ -1,21 +1,46 @@
-import { useContext, useLayoutEffect } from 'react';
-import type { AppPageProps } from '@sudobility/building_blocks';
-import { PageConfigContext } from '../context/pageConfigContextDef';
+import { createContext, useContext, useLayoutEffect } from 'react';
 
-/**
- * Hook for pages to override page-level config (e.g., scrollable: false for master-detail layouts).
- * Uses useLayoutEffect to set config before the browser paints, avoiding a flash of wrong layout.
- */
-export function useSetPageConfig(config: Partial<AppPageProps>) {
-  const { setPageConfig } = useContext(PageConfigContext);
-  const configKey = JSON.stringify(config);
-  useLayoutEffect(() => {
-    setPageConfig(config);
-    return () => setPageConfig({});
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [configKey, setPageConfig]);
+export interface PageConfig {
+  maxWidth?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '4xl' | '7xl' | 'full';
+  contentPadding?: 'none' | 'sm' | 'md' | 'lg';
+  scrollable?: boolean;
+  contentClassName?: string;
+  mainClassName?: string;
+  background?: 'default' | 'white' | 'gradient';
 }
 
-export function usePageConfig(): Partial<AppPageProps> {
-  return useContext(PageConfigContext).pageConfig;
+export interface PageConfigContextValue {
+  pageConfig: PageConfig;
+  setPageConfig: (config: PageConfig) => void;
+  resetPageConfig: () => void;
+}
+
+export const DEFAULT_PAGE_CONFIG: PageConfig = {
+  maxWidth: 'full',
+  contentPadding: 'none',
+  contentClassName: 'w-full min-w-0',
+};
+
+export const PageConfigContext = createContext<PageConfigContextValue | null>(null);
+
+export function usePageConfig() {
+  const context = useContext(PageConfigContext);
+  if (!context) {
+    throw new Error('usePageConfig must be used within PageConfigProvider');
+  }
+  return context;
+}
+
+/**
+ * Hook for pages to override layout config. Uses useLayoutEffect to set
+ * config before paint. Config is automatically reset when the page unmounts.
+ */
+export function useSetPageConfig(config: PageConfig) {
+  const { setPageConfig, resetPageConfig } = usePageConfig();
+  const configStr = JSON.stringify(config);
+
+  useLayoutEffect(() => {
+    setPageConfig(JSON.parse(configStr));
+    return () => resetPageConfig();
+  }, [configStr, setPageConfig, resetPageConfig]);
 }

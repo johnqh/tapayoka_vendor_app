@@ -8,7 +8,7 @@ export function InvitationsPage() {
 
   const entityClient = useMemo(
     () => new EntityClient({ baseUrl: `${baseUrl}/api/v1`, networkClient }),
-    [baseUrl, networkClient],
+    [baseUrl, networkClient]
   );
 
   return <InvitationsPageComponent client={entityClient} />;

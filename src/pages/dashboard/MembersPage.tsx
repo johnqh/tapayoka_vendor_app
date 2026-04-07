@@ -12,7 +12,7 @@ export function MembersPage() {
 
   const entityClient = useMemo(
     () => new EntityClient({ baseUrl: `${baseUrl}/api/v1`, networkClient }),
-    [baseUrl, networkClient],
+    [baseUrl, networkClient]
   );
 
   if (!currentEntity) {

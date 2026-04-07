@@ -1,4 +1,4 @@
-import packageJson from "../../package.json";
+import packageJson from '../../package.json';
 
 export const CONSTANTS = {
   APP_NAME: import.meta.env.VITE_APP_NAME || 'Tapayoka Vendor',

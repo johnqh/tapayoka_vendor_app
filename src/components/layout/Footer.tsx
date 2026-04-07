@@ -1,13 +1,7 @@
-import { Link } from "react-router-dom";
-import {
-  type FooterConfig,
-  type FooterLinkSection,
-} from "@sudobility/building_blocks";
-import {
-  SystemStatusIndicator,
-  useNetwork,
-} from "@sudobility/devops-components";
-import { CONSTANTS } from "../../config/constants";
+import { Link } from 'react-router-dom';
+import { type FooterConfig, type FooterLinkSection } from '@sudobility/building_blocks';
+import { SystemStatusIndicator, useNetwork } from '@sudobility/devops-components';
+import { CONSTANTS } from '../../config/constants';
 
 const linkWrapper = ({
   href,
@@ -23,17 +17,17 @@ const linkWrapper = ({
   </Link>
 );
 
-export function useFooterConfig(variant: "full" | "compact"): FooterConfig {
+export function useFooterConfig(variant: 'full' | 'compact'): FooterConfig {
   const currentYear = String(new Date().getFullYear());
   const { isOnline } = useNetwork();
 
-  if (variant === "compact") {
+  if (variant === 'compact') {
     return {
-      variant: "compact",
+      variant: 'compact',
       version: CONSTANTS.APP_VERSION,
       copyrightYear: currentYear,
       companyName: CONSTANTS.COMPANY_NAME,
-      companyUrl: "/",
+      companyUrl: '/',
       statusIndicator: CONSTANTS.STATUS_PAGE_URL
         ? {
             statusPageUrl: CONSTANTS.STATUS_PAGE_URL,
@@ -43,8 +37,8 @@ export function useFooterConfig(variant: "full" | "compact"): FooterConfig {
         : undefined,
       StatusIndicatorComponent: SystemStatusIndicator,
       links: [
-        { label: "Privacy Policy", href: "/privacy" },
-        { label: "Terms of Service", href: "/terms" },
+        { label: 'Privacy Policy', href: '/privacy' },
+        { label: 'Terms of Service', href: '/terms' },
       ],
       LinkComponent: linkWrapper,
       isNetworkOnline: isOnline,
@@ -54,25 +48,25 @@ export function useFooterConfig(variant: "full" | "compact"): FooterConfig {
 
   const linkSections: FooterLinkSection[] = [
     {
-      title: "Product",
+      title: 'Product',
       links: [
-        { label: "Vendor", href: "/vendor" },
-        { label: "Documentation", href: "/docs" },
+        { label: 'Vendor', href: '/vendor' },
+        { label: 'Documentation', href: '/docs' },
       ],
     },
     {
-      title: "Company",
+      title: 'Company',
       links: [
-        { label: "Privacy Policy", href: "/privacy" },
-        { label: "Terms of Service", href: "/terms" },
+        { label: 'Privacy Policy', href: '/privacy' },
+        { label: 'Terms of Service', href: '/terms' },
       ],
     },
   ];
 
   return {
-    variant: "full",
+    variant: 'full',
     logo: {
-      src: "/logo.png",
+      src: '/logo.png',
       appName: CONSTANTS.APP_NAME,
     },
     linkSections,
@@ -89,7 +83,7 @@ export function useFooterConfig(variant: "full" | "compact"): FooterConfig {
     copyrightYear: currentYear,
     companyName: CONSTANTS.COMPANY_NAME,
     description:
-      "Device management, QR payments, and order tracking for laundry and vending vendors.",
+      'Device management, QR payments, and order tracking for laundry and vending vendors.',
     LinkComponent: linkWrapper,
     isNetworkOnline: isOnline,
     gridColumns: 2,

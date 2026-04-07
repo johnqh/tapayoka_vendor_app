@@ -1,6 +1,6 @@
-import type { ReactNode } from "react";
-import { ProtectedRoute as SharedProtectedRoute } from "@sudobility/components";
-import { useAuthStatus } from "@sudobility/auth-components";
+import type { ReactNode } from 'react';
+import { ProtectedRoute as SharedProtectedRoute } from '@sudobility/components';
+import { useAuthStatus } from '@sudobility/auth-components';
 
 interface ProtectedRouteProps {
   children: ReactNode;

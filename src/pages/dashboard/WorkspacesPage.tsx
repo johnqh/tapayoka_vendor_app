@@ -10,7 +10,7 @@ export function WorkspacesPage() {
 
   const entityClient = useMemo(
     () => new EntityClient({ baseUrl: `${baseUrl}/api/v1`, networkClient }),
-    [baseUrl, networkClient],
+    [baseUrl, networkClient]
   );
 
   return (

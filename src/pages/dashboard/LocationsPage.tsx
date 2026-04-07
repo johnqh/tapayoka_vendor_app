@@ -34,12 +34,7 @@ export function LocationsPage() {
   const { networkClient, baseUrl, token } = useApi();
   const { currentEntitySlug } = useCurrentEntity();
 
-  const manager = useVendorLocationsManager(
-    networkClient,
-    baseUrl,
-    currentEntitySlug,
-    token,
-  );
+  const manager = useVendorLocationsManager(networkClient, baseUrl, currentEntitySlug, token);
 
   const [modalOpen, setModalOpen] = useState(false);
   const [editingLocation, setEditingLocation] = useState<VendorLocation | null>(null);
@@ -109,7 +104,7 @@ export function LocationsPage() {
       return;
     }
     setDeletingId(location.id);
-    await new Promise(r => setTimeout(r, 300));
+    await new Promise((r) => setTimeout(r, 300));
     const ok = await manager.deleteLocation(location.id);
     setDeletingId(null);
     if (!ok && manager.error) {
@@ -190,7 +185,9 @@ export function LocationsPage() {
                   key={location.id}
                   onClick={() => handleRowClick(location)}
                   className="hover:bg-gray-50 cursor-pointer transition-all duration-300"
-                  style={deletingId === location.id ? { opacity: 0, transform: 'translateX(-20px)' } : {}}
+                  style={
+                    deletingId === location.id ? { opacity: 0, transform: 'translateX(-20px)' } : {}
+                  }
                 >
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                     {location.name}
@@ -243,10 +240,7 @@ export function LocationsPage() {
 
       {modalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
-          <div
-            className="absolute inset-0 bg-black bg-opacity-50"
-            onClick={closeModal}
-          />
+          <div className="absolute inset-0 bg-black bg-opacity-50" onClick={closeModal} />
           <div className="relative bg-white rounded-lg shadow-lg w-full max-w-md mx-4 p-6">
             <h2 className="text-lg font-semibold text-gray-900 mb-4">
               {editingLocation ? 'Edit Location' : 'Add Location'}
@@ -260,9 +254,7 @@ export function LocationsPage() {
 
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Name
-                </label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
                 <input
                   type="text"
                   value={form.name}
@@ -272,9 +264,7 @@ export function LocationsPage() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Address
-                </label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Address</label>
                 <input
                   type="text"
                   value={form.address}
@@ -285,9 +275,7 @@ export function LocationsPage() {
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    City
-                  </label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">City</label>
                   <input
                     type="text"
                     value={form.city}
@@ -311,9 +299,7 @@ export function LocationsPage() {
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Zip Code
-                  </label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Zip Code</label>
                   <input
                     type="text"
                     value={form.zipcode}
@@ -323,9 +309,7 @@ export function LocationsPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Country
-                  </label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Country</label>
                   <input
                     type="text"
                     value={form.country}

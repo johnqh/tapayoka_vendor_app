@@ -16,7 +16,15 @@ import type {
 } from '@sudobility/tapayoka_types';
 
 const DURATION_UNITS: DurationUnit[] = ['minutes', 'hours'];
-const DAYS_OF_WEEK: DayOfWeek[] = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+const DAYS_OF_WEEK: DayOfWeek[] = [
+  'Monday',
+  'Tuesday',
+  'Wednesday',
+  'Thursday',
+  'Friday',
+  'Saturday',
+  'Sunday',
+];
 
 let nextTierId = 1;
 function generateTierId(): string {
@@ -50,7 +58,11 @@ function makeDefaultFixedTier(currency: string, name: string): FixedPricingTier 
   };
 }
 
-function makeDefaultTier(pricingType: VendorModelPricing, currency: string, name: string): PricingTier {
+function makeDefaultTier(
+  pricingType: VendorModelPricing,
+  currency: string,
+  name: string
+): PricingTier {
   return pricingType === 'variable'
     ? makeDefaultVariableTier(currency, name)
     : makeDefaultFixedTier(currency, name);
@@ -72,14 +84,14 @@ function VariablePricingForm({
             type="text"
             className="w-20 border rounded px-2 py-1 text-sm"
             value={config.startPrice}
-            onChange={e => onChange({ ...config, startPrice: e.target.value })}
+            onChange={(e) => onChange({ ...config, startPrice: e.target.value })}
             placeholder="0.00"
           />
           <input
             type="text"
             className="w-14 border rounded px-2 py-1 text-sm uppercase"
             value={config.currencyCode}
-            onChange={e => onChange({ ...config, currencyCode: e.target.value.toUpperCase() })}
+            onChange={(e) => onChange({ ...config, currencyCode: e.target.value.toUpperCase() })}
             maxLength={3}
           />
           <span className="text-xs text-gray-500">for</span>
@@ -87,10 +99,12 @@ function VariablePricingForm({
             type="number"
             className="w-16 border rounded px-2 py-1 text-sm"
             value={config.startDuration}
-            onChange={e => onChange({ ...config, startDuration: parseInt(e.target.value, 10) || 1 })}
+            onChange={(e) =>
+              onChange({ ...config, startDuration: parseInt(e.target.value, 10) || 1 })
+            }
           />
           <div className="flex gap-1">
-            {DURATION_UNITS.map(u => (
+            {DURATION_UNITS.map((u) => (
               <button
                 key={u}
                 type="button"
@@ -110,14 +124,14 @@ function VariablePricingForm({
             type="text"
             className="w-20 border rounded px-2 py-1 text-sm"
             value={config.marginalPrice}
-            onChange={e => onChange({ ...config, marginalPrice: e.target.value })}
+            onChange={(e) => onChange({ ...config, marginalPrice: e.target.value })}
             placeholder="0.00"
           />
           <input
             type="text"
             className="w-14 border rounded px-2 py-1 text-sm uppercase"
             value={config.currencyCode}
-            onChange={e => onChange({ ...config, currencyCode: e.target.value.toUpperCase() })}
+            onChange={(e) => onChange({ ...config, currencyCode: e.target.value.toUpperCase() })}
             maxLength={3}
           />
           <span className="text-xs text-gray-500">for</span>
@@ -125,10 +139,12 @@ function VariablePricingForm({
             type="number"
             className="w-16 border rounded px-2 py-1 text-sm"
             value={config.marginalDuration}
-            onChange={e => onChange({ ...config, marginalDuration: parseInt(e.target.value, 10) || 1 })}
+            onChange={(e) =>
+              onChange({ ...config, marginalDuration: parseInt(e.target.value, 10) || 1 })
+            }
           />
           <div className="flex gap-1">
-            {DURATION_UNITS.map(u => (
+            {DURATION_UNITS.map((u) => (
               <button
                 key={u}
                 type="button"
@@ -149,7 +165,7 @@ function VariablePricingForm({
           value={config.pinNumber}
           min={0}
           max={25}
-          onChange={e => onChange({ ...config, pinNumber: parseInt(e.target.value, 10) || 0 })}
+          onChange={(e) => onChange({ ...config, pinNumber: parseInt(e.target.value, 10) || 0 })}
         />
       </div>
     </div>
@@ -182,14 +198,14 @@ function FixedPricingForm({
             type="text"
             className="w-20 border rounded px-2 py-1 text-sm"
             value={config.price}
-            onChange={e => onChange({ ...config, price: e.target.value })}
+            onChange={(e) => onChange({ ...config, price: e.target.value })}
             placeholder="0.00"
           />
           <input
             type="text"
             className="w-14 border rounded px-2 py-1 text-sm uppercase"
             value={config.currencyCode}
-            onChange={e => onChange({ ...config, currencyCode: e.target.value.toUpperCase() })}
+            onChange={(e) => onChange({ ...config, currencyCode: e.target.value.toUpperCase() })}
             maxLength={3}
           />
         </div>
@@ -205,14 +221,24 @@ function FixedPricingForm({
               value={signal.pinNumber}
               min={0}
               max={25}
-              onChange={e => handleUpdateSignal(index, { ...signal, pinNumber: parseInt(e.target.value, 10) || 0 })}
+              onChange={(e) =>
+                handleUpdateSignal(index, {
+                  ...signal,
+                  pinNumber: parseInt(e.target.value, 10) || 0,
+                })
+              }
             />
             <span className="text-xs text-gray-500">Duration (s)</span>
             <input
               type="number"
               className="w-16 border rounded px-2 py-1 text-sm"
               value={signal.duration}
-              onChange={e => handleUpdateSignal(index, { ...signal, duration: parseInt(e.target.value, 10) || 1 })}
+              onChange={(e) =>
+                handleUpdateSignal(index, {
+                  ...signal,
+                  duration: parseInt(e.target.value, 10) || 1,
+                })
+              }
             />
             <button
               type="button"
@@ -267,9 +293,8 @@ export function OfferingModal({
   const [saving, setSaving] = useState(false);
 
   // Resolve model to determine pricing type
-  const resolvedModel = parentType === 'model'
-    ? preselectedModel
-    : models?.find(m => m.id === pickerId);
+  const resolvedModel =
+    parentType === 'model' ? preselectedModel : models?.find((m) => m.id === pickerId);
 
   const modelPricing = resolvedModel?.pricing ?? null;
 
@@ -296,23 +321,23 @@ export function OfferingModal({
   }, [open, offering, parentType]);
 
   const handleTierChange = useCallback((index: number, tier: PricingTier) => {
-    setPricingTiers(prev => prev.map((t, i) => (i === index ? tier : t)));
+    setPricingTiers((prev) => prev.map((t, i) => (i === index ? tier : t)));
   }, []);
 
   const handleTierNameChange = useCallback((index: number, tierName: string) => {
-    setPricingTiers(prev => prev.map((t, i) => (i === index ? { ...t, name: tierName } : t)));
+    setPricingTiers((prev) => prev.map((t, i) => (i === index ? { ...t, name: tierName } : t)));
   }, []);
 
   const handleAddTier = useCallback(() => {
     if (!modelPricing) return;
-    setPricingTiers(prev => [
+    setPricingTiers((prev) => [
       ...prev,
       makeDefaultTier(modelPricing, 'USD', `Tier ${prev.length + 1}`),
     ]);
   }, [modelPricing]);
 
   const handleRemoveTier = useCallback((index: number) => {
-    setPricingTiers(prev => prev.filter((_, i) => i !== index));
+    setPricingTiers((prev) => prev.filter((_, i) => i !== index));
   }, []);
 
   const handleSave = async () => {
@@ -321,7 +346,11 @@ export function OfferingModal({
     setSaving(true);
     try {
       if (offering) {
-        await onSave({ name: name.trim(), pricingTiers, schedule: schedule.length > 0 ? schedule : null } as VendorOfferingUpdateRequest);
+        await onSave({
+          name: name.trim(),
+          pricingTiers,
+          schedule: schedule.length > 0 ? schedule : null,
+        } as VendorOfferingUpdateRequest);
       } else {
         const vendorLocationId = parentType === 'location' ? parentId : pickerId;
         const vendorModelId = parentType === 'model' ? parentId : pickerId;
@@ -340,9 +369,10 @@ export function OfferingModal({
 
   if (!open) return null;
 
-  const pickerItems = parentType === 'location'
-    ? (models ?? []).map(m => ({ id: m.id, label: m.name }))
-    : (locations ?? []).map(l => ({ id: l.id, label: l.name }));
+  const pickerItems =
+    parentType === 'location'
+      ? (models ?? []).map((m) => ({ id: m.id, label: m.name }))
+      : (locations ?? []).map((l) => ({ id: l.id, label: l.name }));
 
   const title = offering
     ? 'Edit Offering'
@@ -362,7 +392,7 @@ export function OfferingModal({
               type="text"
               className="w-full border rounded-lg px-3 py-2 text-sm"
               value={name}
-              onChange={e => setName(e.target.value)}
+              onChange={(e) => setName(e.target.value)}
               placeholder="Offering name"
             />
           </div>
@@ -375,17 +405,19 @@ export function OfferingModal({
               <select
                 className="w-full border rounded-lg px-3 py-2 text-sm"
                 value={pickerId}
-                onChange={e => {
+                onChange={(e) => {
                   setPickerId(e.target.value);
                   if (!name.trim() && e.target.value) {
-                    const item = pickerItems.find(i => i.id === e.target.value);
+                    const item = pickerItems.find((i) => i.id === e.target.value);
                     if (item) setName(`${item.label} at ${parentName}`);
                   }
                 }}
               >
                 <option value="">Select...</option>
-                {pickerItems.map(item => (
-                  <option key={item.id} value={item.id}>{item.label}</option>
+                {pickerItems.map((item) => (
+                  <option key={item.id} value={item.id}>
+                    {item.label}
+                  </option>
                 ))}
               </select>
             </div>
@@ -402,7 +434,7 @@ export function OfferingModal({
                       type="text"
                       className="flex-1 border rounded px-2 py-1 text-sm"
                       value={tier.name}
-                      onChange={e => handleTierNameChange(index, e.target.value)}
+                      onChange={(e) => handleTierNameChange(index, e.target.value)}
                       placeholder="Tier name"
                     />
                     {pricingTiers.length > 1 && (
@@ -416,9 +448,12 @@ export function OfferingModal({
                     )}
                   </div>
                   {tier.type === 'timed' ? (
-                    <VariablePricingForm config={tier} onChange={p => handleTierChange(index, p)} />
+                    <VariablePricingForm
+                      config={tier}
+                      onChange={(p) => handleTierChange(index, p)}
+                    />
                   ) : (
-                    <FixedPricingForm config={tier} onChange={p => handleTierChange(index, p)} />
+                    <FixedPricingForm config={tier} onChange={(p) => handleTierChange(index, p)} />
                   )}
                 </div>
               ))}
@@ -435,13 +470,20 @@ export function OfferingModal({
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Schedule</label>
             {schedule.map((entry, index) => (
-              <div key={`${entry.dayOfWeek}-${index}`} className="flex items-center gap-3 mb-2 bg-gray-50 rounded-lg px-3 py-2">
+              <div
+                key={`${entry.dayOfWeek}-${index}`}
+                className="flex items-center gap-3 mb-2 bg-gray-50 rounded-lg px-3 py-2"
+              >
                 <span className="text-sm font-medium text-gray-700 w-24">{entry.dayOfWeek}</span>
                 <input
                   type="text"
                   className="w-20 border rounded px-2 py-1 text-sm"
                   value={entry.startTime}
-                  onChange={e => setSchedule(prev => prev.map((s, i) => i === index ? { ...s, startTime: e.target.value } : s))}
+                  onChange={(e) =>
+                    setSchedule((prev) =>
+                      prev.map((s, i) => (i === index ? { ...s, startTime: e.target.value } : s))
+                    )
+                  }
                   placeholder="09:00"
                   maxLength={5}
                 />
@@ -450,28 +492,39 @@ export function OfferingModal({
                   type="text"
                   className="w-20 border rounded px-2 py-1 text-sm"
                   value={entry.endTime}
-                  onChange={e => setSchedule(prev => prev.map((s, i) => i === index ? { ...s, endTime: e.target.value } : s))}
+                  onChange={(e) =>
+                    setSchedule((prev) =>
+                      prev.map((s, i) => (i === index ? { ...s, endTime: e.target.value } : s))
+                    )
+                  }
                   placeholder="17:00"
                   maxLength={5}
                 />
                 <button
                   type="button"
                   className="text-red-500 text-xs hover:text-red-700"
-                  onClick={() => setSchedule(prev => prev.filter((_, i) => i !== index))}
+                  onClick={() => setSchedule((prev) => prev.filter((_, i) => i !== index))}
                 >
                   Remove
                 </button>
               </div>
             ))}
             <div className="flex flex-wrap gap-2 mt-2">
-              {DAYS_OF_WEEK.filter(d => !schedule.some(s => s.dayOfWeek === d)).map(day => (
+              {DAYS_OF_WEEK.filter((d) => !schedule.some((s) => s.dayOfWeek === d)).map((day) => (
                 <button
                   key={day}
                   type="button"
                   className="px-2 py-1 text-xs border border-dashed border-gray-300 rounded text-blue-600 hover:border-blue-400"
                   onClick={() => {
                     const last = schedule[schedule.length - 1];
-                    setSchedule(prev => [...prev, { dayOfWeek: day, startTime: last?.startTime ?? '09:00', endTime: last?.endTime ?? '17:00' }]);
+                    setSchedule((prev) => [
+                      ...prev,
+                      {
+                        dayOfWeek: day,
+                        startTime: last?.startTime ?? '09:00',
+                        endTime: last?.endTime ?? '17:00',
+                      },
+                    ]);
                   }}
                 >
                   + {day.slice(0, 3)}
@@ -482,10 +535,7 @@ export function OfferingModal({
         </div>
 
         <div className="flex justify-end gap-3 mt-6">
-          <button
-            className="px-4 py-2 text-sm text-gray-600 hover:text-gray-800"
-            onClick={onClose}
-          >
+          <button className="px-4 py-2 text-sm text-gray-600 hover:text-gray-800" onClick={onClose}>
             Cancel
           </button>
           <button

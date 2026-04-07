@@ -1,42 +1,51 @@
-import type { ReactNode } from "react";
-import { AppPageLayout } from "@sudobility/building_blocks";
-import { useTopBarConfig } from "./TopBar";
-import { useFooterConfig } from "./Footer";
-import { PageConfigProvider } from "../../context/PageConfigContext";
-import { usePageConfig } from "../../hooks/usePageConfig";
+import type { ReactNode } from 'react';
+import { useLocation } from 'react-router-dom';
+import { AppPageLayout } from '@sudobility/building_blocks';
+import { useTopBarConfig } from './TopBar';
+import { useFooterConfig } from './Footer';
+import { PageConfigProvider } from '../../context/PageConfigProvider';
+import { usePageConfig } from '../../hooks/usePageConfig';
 
 interface ScreenContainerProps {
   children: ReactNode;
-  footerVariant?: "full" | "compact";
-  showFooter?: boolean;
-  showBreadcrumbs?: boolean;
 }
 
-function ScreenContainerInner({
-  children,
-  footerVariant = "compact",
-  showFooter = true,
-}: ScreenContainerProps) {
+/**
+ * Page layout shell wrapping all routes at the route level.
+ * Provides PageConfigProvider so child pages can use useSetPageConfig
+ * for layout overrides.
+ */
+function ScreenContainer({ children }: ScreenContainerProps) {
+  return (
+    <PageConfigProvider>
+      <ScreenContainerInner>{children}</ScreenContainerInner>
+    </PageConfigProvider>
+  );
+}
+
+function ScreenContainerInner({ children }: { children: ReactNode }) {
+  const location = useLocation();
   const topBarConfig = useTopBarConfig();
-  const footerConfig = useFooterConfig(footerVariant);
-  const pageConfigOverrides = usePageConfig();
+  const { pageConfig } = usePageConfig();
+
+  const isPublicPage = ['/', '/vendor', '/docs'].some(
+    (p) => location.pathname === p || location.pathname.startsWith('/docs/')
+  );
+  const footerConfig = useFooterConfig(isPublicPage ? 'full' : 'compact');
 
   return (
     <AppPageLayout
       topBar={topBarConfig}
-      footer={showFooter ? footerConfig : undefined}
-      page={{ maxWidth: "full", contentPadding: "none", contentClassName: "w-full min-w-0", ...pageConfigOverrides }}
+      footer={footerConfig}
+      page={{
+        maxWidth: 'full',
+        contentPadding: 'none',
+        contentClassName: 'w-full min-w-0',
+        ...pageConfig,
+      }}
     >
       {children}
     </AppPageLayout>
-  );
-}
-
-function ScreenContainer(props: ScreenContainerProps) {
-  return (
-    <PageConfigProvider>
-      <ScreenContainerInner {...props} />
-    </PageConfigProvider>
   );
 }
 

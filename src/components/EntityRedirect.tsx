@@ -1,7 +1,6 @@
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { useCurrentEntity } from "@sudobility/entity_client";
-import ScreenContainer from "./layout/ScreenContainer";
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useCurrentEntity } from '@sudobility/entity_client';
 
 function EntityRedirect() {
   const navigate = useNavigate();
@@ -11,7 +10,7 @@ function EntityRedirect() {
     if (isLoading || !isInitialized) return;
 
     if (!currentEntity) {
-      navigate("/tos", { replace: true });
+      navigate('/tos', { replace: true });
       return;
     }
 
@@ -19,11 +18,9 @@ function EntityRedirect() {
   }, [currentEntity, isLoading, isInitialized, navigate]);
 
   return (
-    <ScreenContainer>
-      <div className="flex-1 flex items-center justify-center min-h-[60vh]">
-        <p className="text-gray-500">Loading...</p>
-      </div>
-    </ScreenContainer>
+    <div className="flex-1 flex items-center justify-center min-h-[60vh]">
+      <p className="text-gray-500">Loading...</p>
+    </div>
   );
 }
 
