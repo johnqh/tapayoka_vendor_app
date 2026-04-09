@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import { ProtectedRoute as SharedProtectedRoute } from '@sudobility/components';
 import { useAuthStatus } from '@sudobility/auth-components';
+import { ui } from '@sudobility/design';
 
 interface ProtectedRouteProps {
   children: ReactNode;
@@ -16,7 +17,7 @@ function ProtectedRoute({ children }: ProtectedRouteProps) {
       redirectPath="/login"
       loadingComponent={
         <div className="min-h-screen flex items-center justify-center">
-          <p className="text-gray-500">Loading...</p>
+          <p className={ui.text.muted}>Loading...</p>
         </div>
       }
     >

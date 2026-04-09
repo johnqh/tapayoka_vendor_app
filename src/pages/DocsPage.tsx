@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { MasterDetailLayout } from '@sudobility/components';
+import { ui } from '@sudobility/design';
 import { useSetPageConfig } from '../hooks/usePageConfig';
 
 type DocSection = 'getting-started' | 'device-setup' | 'api-reference';
@@ -22,7 +23,7 @@ function DocsSidebar({ onNavigate }: { onNavigate?: () => void }) {
           key={item.id}
           to={`/docs/${item.id}`}
           onClick={onNavigate}
-          className={`block px-3 py-2 rounded-lg text-sm font-medium transition ${
+          className={`block px-3 py-2 rounded-lg text-sm font-medium ${ui.transition.default} ${
             currentSection === item.id
               ? 'bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-400'
               : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800'
@@ -65,7 +66,7 @@ function GettingStartedContent() {
 
   return (
     <div className="space-y-8 max-w-3xl">
-      <p className="text-gray-600">Get up and running with Tapayoka in five simple steps.</p>
+      <p className={ui.text.body}>Get up and running with Tapayoka in five simple steps.</p>
       <div className="space-y-4">
         {steps.map((step, index) => (
           <div key={index} className="flex gap-4 p-5 bg-gray-50 rounded-xl border border-gray-200">
@@ -73,8 +74,8 @@ function GettingStartedContent() {
               {index + 1}
             </div>
             <div>
-              <h3 className="font-semibold text-gray-900 mb-1">{step.title}</h3>
-              <p className="text-gray-600 text-sm">{step.description}</p>
+              <h3 className={`${ui.text.strong} mb-1`}>{step.title}</h3>
+              <p className={ui.text.bodySmall}>{step.description}</p>
             </div>
           </div>
         ))}
@@ -87,7 +88,7 @@ function DeviceSetupContent() {
   return (
     <div className="space-y-10 max-w-3xl">
       <div>
-        <h2 className="text-xl font-semibold text-gray-900 mb-3">Device Models</h2>
+        <h2 className={`${ui.text.h4} mb-3`}>Device Models</h2>
         <p className="text-gray-600 mb-4">
           Device models define the type and behavior of your machines. Each model specifies:
         </p>
@@ -118,8 +119,8 @@ function DeviceSetupContent() {
       </div>
 
       <div>
-        <h2 className="text-xl font-semibold text-gray-900 mb-3">BLE Protocol</h2>
-        <p className="text-gray-600">
+        <h2 className={`${ui.text.h4} mb-3`}>BLE Protocol</h2>
+        <p className={ui.text.body}>
           Tapayoka uses Bluetooth Low Energy (BLE) to communicate between the Raspberry Pi
           controller and customer devices. The Pi advertises a GATT service that handles session
           initiation, payment verification, and device control signals.
@@ -127,8 +128,8 @@ function DeviceSetupContent() {
       </div>
 
       <div>
-        <h2 className="text-xl font-semibold text-gray-900 mb-3">Offerings</h2>
-        <p className="text-gray-600">
+        <h2 className={`${ui.text.h4} mb-3`}>Offerings</h2>
+        <p className={ui.text.body}>
           Offerings are individual device instances assigned to a location or model. Each offering
           can override the model&apos;s default pricing with custom pricing configurations
           (variable, fixed, or multi-slot).
@@ -141,13 +142,13 @@ function DeviceSetupContent() {
 function ApiReferenceContent() {
   return (
     <div className="space-y-8 max-w-3xl">
-      <p className="text-gray-600">
+      <p className={ui.text.body}>
         The Tapayoka API provides RESTful endpoints for managing locations, models, offerings, and
         orders.
       </p>
 
       <div>
-        <h2 className="text-lg font-semibold text-gray-900 mb-3">Endpoints</h2>
+        <h2 className={`${ui.text.h5} mb-3`}>Endpoints</h2>
         <div className="space-y-3">
           {[
             { method: 'GET', path: '/api/v1/vendor/locations', description: 'List all locations' },
@@ -172,7 +173,7 @@ function ApiReferenceContent() {
       </div>
 
       <div>
-        <h2 className="text-lg font-semibold text-gray-900 mb-3">WebSocket Protocol</h2>
+        <h2 className={`${ui.text.h5} mb-3`}>WebSocket Protocol</h2>
         <p className="text-gray-600 mb-4">
           Real-time updates are delivered via WebSocket connections. Subscribe to order status
           changes and device state updates.
@@ -188,8 +189,8 @@ function ApiReferenceContent() {
       </div>
 
       <div>
-        <h2 className="text-lg font-semibold text-gray-900 mb-3">Authentication</h2>
-        <p className="text-gray-600">
+        <h2 className={`${ui.text.h5} mb-3`}>Authentication</h2>
+        <p className={ui.text.body}>
           All API requests require a Firebase ID token in the Authorization header:
         </p>
         <div className="mt-3 p-4 bg-gray-900 rounded-lg text-gray-100 text-sm font-mono overflow-x-auto">

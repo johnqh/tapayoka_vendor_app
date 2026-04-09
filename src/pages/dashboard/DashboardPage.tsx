@@ -3,6 +3,7 @@ import { Outlet, useLocation, useParams, useNavigate, Link } from 'react-router-
 import { MasterDetailLayout } from '@sudobility/components';
 import { useApi } from '@sudobility/building_blocks/firebase';
 import { useCurrentEntity } from '@sudobility/entity_client';
+import { ui } from '@sudobility/design';
 import { useSetPageConfig } from '../../hooks/usePageConfig';
 
 // Sidebar icons
@@ -123,7 +124,7 @@ function DashboardMasterList({ onNavigate }: { onNavigate?: () => void }) {
       key={item.id}
       to={item.path}
       onClick={onNavigate}
-      className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition ${
+      className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium ${ui.transition.default} ${
         isActive(item)
           ? 'bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-400'
           : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800'
@@ -138,7 +139,7 @@ function DashboardMasterList({ onNavigate }: { onNavigate?: () => void }) {
     <nav className="p-4 space-y-6">
       <div className="space-y-1">{mainItems.map(renderItem)}</div>
       <div>
-        <p className="px-3 mb-2 text-xs font-semibold text-gray-400 uppercase tracking-wider">
+        <p className={`px-3 mb-2 ${ui.text.uppercase}`}>
           Settings
         </p>
         <div className="space-y-1">{settingsItems.map(renderItem)}</div>

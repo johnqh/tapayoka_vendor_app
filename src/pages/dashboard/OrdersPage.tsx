@@ -1,6 +1,7 @@
 import { useApi } from '@sudobility/building_blocks/firebase';
 import { useCurrentEntity } from '@sudobility/entity_client';
 import { useOrdersManager } from '@sudobility/tapayoka_lib';
+import { ui, buttonVariant, colors } from '@sudobility/design';
 import type { Order, OrderStatus } from '@sudobility/tapayoka_types';
 
 const STATUS_BADGE: Record<OrderStatus, string> = {
@@ -45,17 +46,17 @@ export function OrdersPage() {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-gray-900">Orders</h1>
+        <h1 className={ui.text.h3}>Orders</h1>
         <button
           onClick={refresh}
-          className="px-4 py-2 text-sm text-gray-600 hover:text-gray-900 border rounded-lg hover:bg-gray-50 transition"
+          className={`px-4 py-2 text-sm rounded-lg ${buttonVariant('outline')}`}
         >
           Refresh
         </button>
       </div>
 
       {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+        <div className={`px-4 py-3 rounded-lg border ${colors.component.alert.error.base} ${colors.component.alert.error.dark}`}>
           {error}
         </div>
       )}

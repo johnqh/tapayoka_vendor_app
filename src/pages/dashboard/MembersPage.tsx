@@ -4,6 +4,7 @@ import { MembersManagementPage } from '@sudobility/entity_pages';
 import { useApi } from '@sudobility/building_blocks/firebase';
 import { useAuthStatus } from '@sudobility/auth-components';
 import { useCurrentEntity } from '@sudobility/entity_client';
+import { ui } from '@sudobility/design';
 
 export function MembersPage() {
   const { networkClient, baseUrl } = useApi();
@@ -16,7 +17,7 @@ export function MembersPage() {
   );
 
   if (!currentEntity) {
-    return <div className="text-gray-500">No organization selected</div>;
+    return <div className={ui.text.muted}>No organization selected</div>;
   }
 
   return (

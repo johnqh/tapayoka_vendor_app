@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStatus } from '@sudobility/auth-components';
 import { getFirebaseAuth } from '@sudobility/auth_lib';
+import { variants, ui } from '@sudobility/design';
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
@@ -28,7 +29,7 @@ export default function LoginPage() {
         <div
           role="status"
           aria-label="Loading authentication"
-          className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"
+          className={variants.loading.spinner.default()}
         />
       </div>
     );
@@ -37,7 +38,7 @@ export default function LoginPage() {
   if (!auth) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-theme-bg-primary">
-        <p role="alert" className="text-red-600">
+        <p role="alert" className={ui.text.error}>
           Firebase not configured
         </p>
       </div>

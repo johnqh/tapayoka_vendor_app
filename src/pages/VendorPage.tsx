@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useAuthStatus } from '@sudobility/auth-components';
+import { ui, buttonVariant } from '@sudobility/design';
 
 const sections = [
   {
@@ -76,8 +77,8 @@ function VendorPage() {
               }`}
             >
               <div className="flex-1">
-                <h2 className="text-2xl font-bold text-gray-900 mb-4">{section.title}</h2>
-                <p className="text-gray-600 mb-6">{section.description}</p>
+                <h2 className={`${ui.text.h3} mb-4`}>{section.title}</h2>
+                <p className={`${ui.text.body} mb-6`}>{section.description}</p>
                 <ul className="space-y-3">
                   {section.items.map((item) => (
                     <li key={item} className="flex items-start gap-3">
@@ -94,13 +95,13 @@ function VendorPage() {
                           d="m4.5 12.75 6 6 9-13.5"
                         />
                       </svg>
-                      <span className="text-gray-700">{item}</span>
+                      <span className={ui.text.body}>{item}</span>
                     </li>
                   ))}
                 </ul>
               </div>
               <div className="flex-1 bg-gray-100 rounded-xl p-8 flex items-center justify-center min-h-[200px]">
-                <span className="text-gray-400 text-sm">{section.title} illustration</span>
+                <span className={`text-sm ${ui.text.muted}`}>{section.title} illustration</span>
               </div>
             </div>
           ))}
@@ -108,17 +109,17 @@ function VendorPage() {
       </section>
 
       {/* CTA */}
-      <section className="py-16 bg-gray-50">
+      <section className={`${ui.section.subtle} py-16`}>
         <div className="max-w-4xl mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">
+          <h2 className={`${ui.text.h2} mb-4`}>
             Start Managing Your Devices Today
           </h2>
-          <p className="text-lg text-gray-600 mb-8">
+          <p className={`${ui.text.bodyLarge} mb-8`}>
             Create your account and add your first location in minutes.
           </p>
           <button
             onClick={() => navigate(user ? '/dashboard' : '/login')}
-            className="px-8 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition"
+            className={`px-8 py-3 rounded-lg font-semibold ${buttonVariant('primary')}`}
           >
             {user ? 'Go to Dashboard' : 'Get Started Free'}
           </button>

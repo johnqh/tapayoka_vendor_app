@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { TapayokaClient } from '@sudobility/tapayoka_client';
 import { useApi } from '@sudobility/building_blocks/firebase';
 import { useAuthStatus } from '@sudobility/auth-components';
+import { ui, buttonVariant, colors } from '@sudobility/design';
 
 function TosPage() {
   const navigate = useNavigate();
@@ -30,33 +31,33 @@ function TosPage() {
 
   return (
     <div className="flex-1 max-w-3xl mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold text-gray-900 mb-8">Terms of Service</h1>
+      <h1 className={`${ui.text.h1} mb-8`}>Terms of Service</h1>
 
-      <div className="bg-white rounded-lg shadow-sm border p-8 space-y-6 mb-8">
-        <p className="text-gray-600">
+      <div className={`${ui.card.bordered} p-8 space-y-6 mb-8`}>
+        <p className={ui.text.body}>
           Welcome to Tapayoka. By using this application, you agree to the following terms and
           conditions.
         </p>
 
         <div>
-          <h2 className="text-lg font-semibold text-gray-900 mb-2">1. Acceptance of Terms</h2>
-          <p className="text-gray-600">
+          <h2 className={`${ui.text.h5} mb-2`}>1. Acceptance of Terms</h2>
+          <p className={ui.text.body}>
             By accessing or using the Tapayoka vendor platform, you agree to be bound by these Terms
             of Service and all applicable laws and regulations.
           </p>
         </div>
 
         <div>
-          <h2 className="text-lg font-semibold text-gray-900 mb-2">2. Use of Service</h2>
-          <p className="text-gray-600">
+          <h2 className={`${ui.text.h5} mb-2`}>2. Use of Service</h2>
+          <p className={ui.text.body}>
             You agree to use the service only for lawful purposes and in accordance with these
             terms. You are responsible for maintaining the security of your account credentials.
           </p>
         </div>
 
         <div>
-          <h2 className="text-lg font-semibold text-gray-900 mb-2">3. Vendor Responsibilities</h2>
-          <p className="text-gray-600">
+          <h2 className={`${ui.text.h5} mb-2`}>3. Vendor Responsibilities</h2>
+          <p className={ui.text.body}>
             As a vendor, you are responsible for the accuracy of your service listings, pricing, and
             device configurations. You agree to provide services as described and maintain your
             installation in working order.
@@ -64,16 +65,16 @@ function TosPage() {
         </div>
 
         <div>
-          <h2 className="text-lg font-semibold text-gray-900 mb-2">4. Privacy</h2>
-          <p className="text-gray-600">
+          <h2 className={`${ui.text.h5} mb-2`}>4. Privacy</h2>
+          <p className={ui.text.body}>
             Your privacy is important to us. We collect and process data as described in our Privacy
             Policy, which is incorporated into these terms by reference.
           </p>
         </div>
 
         <div>
-          <h2 className="text-lg font-semibold text-gray-900 mb-2">5. Limitation of Liability</h2>
-          <p className="text-gray-600">
+          <h2 className={`${ui.text.h5} mb-2`}>5. Limitation of Liability</h2>
+          <p className={ui.text.body}>
             Tapayoka shall not be liable for any indirect, incidental, special, consequential, or
             punitive damages resulting from your use of the service.
           </p>
@@ -81,7 +82,7 @@ function TosPage() {
       </div>
 
       {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4">
+        <div className={`px-4 py-3 rounded-lg mb-4 border ${colors.component.alert.error.base} ${colors.component.alert.error.dark}`}>
           {error}
         </div>
       )}
@@ -90,14 +91,14 @@ function TosPage() {
         <button
           onClick={() => navigate('/login')}
           disabled={isLoading}
-          className="px-6 py-3 border border-gray-300 rounded-lg text-gray-700 font-medium hover:bg-gray-50 transition"
+          className={`px-6 py-3 rounded-lg font-medium ${buttonVariant('outline')}`}
         >
           Cancel
         </button>
         <button
           onClick={handleAccept}
           disabled={isLoading}
-          className="px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition disabled:opacity-50"
+          className={`px-6 py-3 rounded-lg font-medium disabled:opacity-50 ${buttonVariant('primary')}`}
         >
           {isLoading ? 'Please wait...' : 'Accept & Continue'}
         </button>

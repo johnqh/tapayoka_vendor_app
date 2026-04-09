@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useAuthStatus } from '@sudobility/auth-components';
+import { ui, buttonVariant } from '@sudobility/design';
 import { CONSTANTS } from '../config/constants';
 
 const features = [
@@ -116,7 +117,7 @@ function HomePage() {
             {user ? (
               <button
                 onClick={() => navigate('/dashboard')}
-                className="px-8 py-3 bg-white text-blue-700 font-semibold rounded-lg hover:bg-blue-50 transition"
+                className={`px-8 py-3 bg-white text-blue-700 font-semibold rounded-lg hover:bg-blue-50 ${ui.transition.fast}`}
               >
                 Go to Dashboard
               </button>
@@ -124,13 +125,13 @@ function HomePage() {
               <>
                 <button
                   onClick={() => navigate('/login')}
-                  className="px-8 py-3 bg-white text-blue-700 font-semibold rounded-lg hover:bg-blue-50 transition"
+                  className={`px-8 py-3 bg-white text-blue-700 font-semibold rounded-lg hover:bg-blue-50 ${ui.transition.fast}`}
                 >
                   Get Started
                 </button>
                 <button
                   onClick={() => navigate('/vendor')}
-                  className="px-8 py-3 border-2 border-white text-white font-semibold rounded-lg hover:bg-white/10 transition"
+                  className={`px-8 py-3 border-2 border-white text-white font-semibold rounded-lg hover:bg-white/10 ${ui.transition.fast}`}
                 >
                   Learn More
                 </button>
@@ -141,13 +142,13 @@ function HomePage() {
       </section>
 
       {/* Features */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className={ui.section.default + ' py-20'}>
+        <div className={ui.layout.container}>
           <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+            <h2 className={`${ui.text.h2} mb-4`}>
               Everything You Need to Run Your Business
             </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            <p className={`${ui.text.bodyLarge} max-w-2xl mx-auto`}>
               From device setup to payment processing, {CONSTANTS.APP_NAME} handles it all.
             </p>
           </div>
@@ -155,11 +156,11 @@ function HomePage() {
             {features.map((feature) => (
               <div
                 key={feature.title}
-                className="p-6 bg-gray-50 rounded-xl border border-gray-100 hover:shadow-md transition"
+                className={`${ui.card.feature}`}
               >
                 <div className="mb-4">{feature.icon}</div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">{feature.title}</h3>
-                <p className="text-gray-600 text-sm">{feature.description}</p>
+                <h3 className={`${ui.text.h5} mb-2`}>{feature.title}</h3>
+                <p className={ui.text.bodySmall}>{feature.description}</p>
               </div>
             ))}
           </div>
@@ -167,15 +168,15 @@ function HomePage() {
       </section>
 
       {/* CTA */}
-      <section className="py-16 bg-gray-50">
+      <section className={ui.section.subtle + ' py-16'}>
         <div className="max-w-4xl mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">Ready to Get Started?</h2>
-          <p className="text-lg text-gray-600 mb-8">
+          <h2 className={`${ui.text.h2} mb-4`}>Ready to Get Started?</h2>
+          <p className={`${ui.text.bodyLarge} mb-8`}>
             Set up your first location in minutes. No hardware changes needed.
           </p>
           <button
             onClick={() => navigate(user ? '/dashboard' : '/login')}
-            className="px-8 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition"
+            className={`px-8 py-3 rounded-lg font-semibold ${buttonVariant('primary')}`}
           >
             {user ? 'Go to Dashboard' : 'Create Free Account'}
           </button>

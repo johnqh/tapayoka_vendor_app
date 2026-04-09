@@ -4,6 +4,7 @@ import { EmptyState } from '@sudobility/building_blocks';
 import { useApi } from '@sudobility/building_blocks/firebase';
 import { useCurrentEntity } from '@sudobility/entity_client';
 import { useVendorModelsManager } from '@sudobility/tapayoka_lib';
+import { ui, buttonVariant } from '@sudobility/design';
 import type {
   VendorModel,
   VendorModelCreateRequest,
@@ -98,10 +99,10 @@ function Chip<T extends string>({
     <button
       type="button"
       onClick={() => onSelect(value)}
-      className={`px-3 py-1.5 rounded-lg border text-sm font-medium transition ${
+      className={`px-3 py-1.5 rounded-lg border text-sm font-medium ${ui.transition.default} ${
         isActive
-          ? 'bg-blue-600 border-blue-600 text-white'
-          : 'bg-white border-gray-300 text-gray-700 hover:border-gray-400'
+          ? `${buttonVariant('primary')}`
+          : `${buttonVariant('outline')} hover:border-gray-400`
       }`}
     >
       {label}
@@ -124,7 +125,7 @@ function ChipGroup<T extends string>({
 }) {
   return (
     <div>
-      <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
+      <label className={`block text-sm font-medium mb-1 ${ui.text.label}`}>{label}</label>
       <div className="flex flex-wrap gap-2">
         {allowNone && <Chip label="None" value={null} selected={value} onSelect={onChange} />}
         {options.map((opt) => (
@@ -222,14 +223,14 @@ function ModelFormModal({ visible, model, onClose, onSave }: ModelFormModalProps
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
       <div className="bg-white rounded-lg shadow-xl w-full max-w-lg mx-4 max-h-[90vh] overflow-y-auto">
         <div className="p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">
+          <h2 className={`${ui.text.h5} mb-4`}>
             {isEditing ? 'Edit Model' : 'Add Model'}
           </h2>
 
           <div className="space-y-4">
             {/* Name */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+              <label className={`block text-sm font-medium mb-1 ${ui.text.label}`}>Name</label>
               <input
                 type="text"
                 value={name}
@@ -308,7 +309,7 @@ function ModelFormModal({ visible, model, onClose, onSave }: ModelFormModalProps
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 transition"
+              className={`px-4 py-2 text-sm font-medium ${buttonVariant('ghost')}`}
             >
               Cancel
             </button>
@@ -316,7 +317,7 @@ function ModelFormModal({ visible, model, onClose, onSave }: ModelFormModalProps
               type="button"
               onClick={handleSave}
               disabled={saving || !name.trim()}
-              className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition"
+              className={`px-4 py-2 text-sm font-medium rounded-lg disabled:opacity-50 disabled:cursor-not-allowed ${buttonVariant('primary')}`}
             >
               {saving ? 'Saving...' : 'Save'}
             </button>
@@ -383,10 +384,10 @@ export function ModelsPage() {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-gray-900">Models</h1>
+        <h1 className={ui.text.h3}>Models</h1>
         <button
           onClick={handleAdd}
-          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+          className={`px-4 py-2 rounded-lg ${buttonVariant('primary')}`}
         >
           Add Model
         </button>
@@ -468,7 +469,7 @@ export function ModelsPage() {
                         e.stopPropagation();
                         handleEdit(model);
                       }}
-                      className="text-blue-600 hover:text-blue-800 font-medium mr-3"
+                      className={`font-medium mr-3 ${ui.text.linkSubtle}`}
                     >
                       Edit
                     </button>
@@ -477,7 +478,7 @@ export function ModelsPage() {
                         e.stopPropagation();
                         handleDelete(model);
                       }}
-                      className="text-red-600 hover:text-red-800 font-medium"
+                      className={`font-medium ${ui.text.error} hover:opacity-80`}
                     >
                       Delete
                     </button>

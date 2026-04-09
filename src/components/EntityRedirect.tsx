@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCurrentEntity } from '@sudobility/entity_client';
+import { ui } from '@sudobility/design';
 
 function EntityRedirect() {
   const navigate = useNavigate();
@@ -19,7 +20,7 @@ function EntityRedirect() {
 
   return (
     <div className="flex-1 flex items-center justify-center min-h-[60vh]">
-      <p className="text-gray-500">Loading...</p>
+      <p className={ui.text.muted}>Loading...</p>
     </div>
   );
 }

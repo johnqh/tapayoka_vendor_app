@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { buttonVariant, ui } from '@sudobility/design';
 import type {
   VendorOffering,
   VendorOfferingCreateRequest,
@@ -78,7 +79,7 @@ function VariablePricingForm({
   return (
     <div className="space-y-3">
       <div>
-        <label className="block text-xs font-medium text-gray-500 mb-1">Start with</label>
+        <label className={`block text-xs font-medium mb-1 ${ui.text.muted}`}>Start with</label>
         <div className="flex items-center gap-2">
           <input
             type="text"
@@ -94,7 +95,7 @@ function VariablePricingForm({
             onChange={(e) => onChange({ ...config, currencyCode: e.target.value.toUpperCase() })}
             maxLength={3}
           />
-          <span className="text-xs text-gray-500">for</span>
+          <span className={`text-xs ${ui.text.muted}`}>for</span>
           <input
             type="number"
             className="w-16 border rounded px-2 py-1 text-sm"
@@ -108,7 +109,7 @@ function VariablePricingForm({
               <button
                 key={u}
                 type="button"
-                className={`px-2 py-1 text-xs rounded border ${config.startDurationUnit === u ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-gray-700 border-gray-300'}`}
+                className={`px-2 py-1 text-xs rounded border ${config.startDurationUnit === u ? `${buttonVariant('primary')}` : `${buttonVariant('outline')}`}`}
                 onClick={() => onChange({ ...config, startDurationUnit: u })}
               >
                 {u}
@@ -118,7 +119,7 @@ function VariablePricingForm({
         </div>
       </div>
       <div>
-        <label className="block text-xs font-medium text-gray-500 mb-1">Additional</label>
+        <label className={`block text-xs font-medium mb-1 ${ui.text.muted}`}>Additional</label>
         <div className="flex items-center gap-2">
           <input
             type="text"
@@ -134,7 +135,7 @@ function VariablePricingForm({
             onChange={(e) => onChange({ ...config, currencyCode: e.target.value.toUpperCase() })}
             maxLength={3}
           />
-          <span className="text-xs text-gray-500">for</span>
+          <span className={`text-xs ${ui.text.muted}`}>for</span>
           <input
             type="number"
             className="w-16 border rounded px-2 py-1 text-sm"
@@ -148,7 +149,7 @@ function VariablePricingForm({
               <button
                 key={u}
                 type="button"
-                className={`px-2 py-1 text-xs rounded border ${config.marginalDurationUnit === u ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-gray-700 border-gray-300'}`}
+                className={`px-2 py-1 text-xs rounded border ${config.marginalDurationUnit === u ? `${buttonVariant('primary')}` : `${buttonVariant('outline')}`}`}
                 onClick={() => onChange({ ...config, marginalDurationUnit: u })}
               >
                 {u}
@@ -158,7 +159,7 @@ function VariablePricingForm({
         </div>
       </div>
       <div>
-        <label className="block text-xs font-medium text-gray-500 mb-1">Pin Number (0–25)</label>
+        <label className={`block text-xs font-medium mb-1 ${ui.text.muted}`}>Pin Number (0–25)</label>
         <input
           type="number"
           className="w-16 border rounded px-2 py-1 text-sm"
@@ -192,7 +193,7 @@ function FixedPricingForm({
   return (
     <div className="space-y-3">
       <div>
-        <label className="block text-xs font-medium text-gray-500 mb-1">Price</label>
+        <label className={`block text-xs font-medium mb-1 ${ui.text.muted}`}>Price</label>
         <div className="flex items-center gap-2">
           <input
             type="text"
@@ -211,10 +212,10 @@ function FixedPricingForm({
         </div>
       </div>
       <div>
-        <label className="block text-xs font-medium text-gray-500 mb-1">Signals</label>
+        <label className={`block text-xs font-medium mb-1 ${ui.text.muted}`}>Signals</label>
         {config.signals.map((signal, index) => (
           <div key={index} className="flex items-center gap-2 mb-2">
-            <span className="text-xs text-gray-500">Pin</span>
+            <span className={`text-xs ${ui.text.muted}`}>Pin</span>
             <input
               type="number"
               className="w-14 border rounded px-2 py-1 text-sm"
@@ -228,7 +229,7 @@ function FixedPricingForm({
                 })
               }
             />
-            <span className="text-xs text-gray-500">Duration (s)</span>
+            <span className={`text-xs ${ui.text.muted}`}>Duration (s)</span>
             <input
               type="number"
               className="w-16 border rounded px-2 py-1 text-sm"
@@ -242,7 +243,7 @@ function FixedPricingForm({
             />
             <button
               type="button"
-              className="text-red-500 text-xs hover:text-red-700"
+              className={`text-xs ${ui.text.error} hover:opacity-80`}
               onClick={() => handleRemoveSignal(index)}
             >
               Remove
@@ -251,7 +252,7 @@ function FixedPricingForm({
         ))}
         <button
           type="button"
-          className="text-blue-600 text-xs hover:text-blue-800"
+          className={`text-xs ${ui.text.linkSubtle}`}
           onClick={handleAddSignal}
         >
           + Add Signal
@@ -381,13 +382,13 @@ export function OfferingModal({
       : `Add ${parentName} Offering`;
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg shadow-xl w-full max-w-lg max-h-[90vh] overflow-y-auto p-6">
-        <h2 className="text-lg font-semibold mb-4">{title}</h2>
+    <div className={`fixed inset-0 flex items-center justify-center z-50 ${ui.background.overlay}`}>
+      <div className={`${ui.background.surface} rounded-lg ${ui.shadow.xl} w-full max-w-lg max-h-[90vh] overflow-y-auto p-6`}>
+        <h2 className={`${ui.text.h4} mb-4`}>{title}</h2>
 
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+            <label className={`block text-sm font-medium mb-1 ${ui.text.label}`}>Name</label>
             <input
               type="text"
               className="w-full border rounded-lg px-3 py-2 text-sm"
@@ -399,7 +400,7 @@ export function OfferingModal({
 
           {!offering && (
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className={`block text-sm font-medium mb-1 ${ui.text.label}`}>
                 {parentType === 'location' ? 'Model' : 'Location'}
               </label>
               <select
@@ -426,7 +427,7 @@ export function OfferingModal({
           {/* Pricing Tiers Section */}
           {pricingTiers.length > 0 && (
             <div>
-              <h3 className="text-sm font-semibold text-gray-700 mb-2">Pricing Tiers</h3>
+              <h3 className={`text-sm font-semibold mb-2 ${ui.text.emphasis}`}>Pricing Tiers</h3>
               {pricingTiers.map((tier, index) => (
                 <div key={tier.id} className="border rounded-lg p-3 mb-3">
                   <div className="flex items-center gap-2 mb-2">
@@ -440,7 +441,7 @@ export function OfferingModal({
                     {pricingTiers.length > 1 && (
                       <button
                         type="button"
-                        className="text-red-500 text-xs hover:text-red-700"
+                        className={`text-xs ${ui.text.error} hover:opacity-80`}
                         onClick={() => handleRemoveTier(index)}
                       >
                         Remove
@@ -459,7 +460,7 @@ export function OfferingModal({
               ))}
               <button
                 type="button"
-                className="text-blue-600 text-sm hover:text-blue-800"
+                className={`text-sm ${ui.text.linkSubtle}`}
                 onClick={handleAddTier}
               >
                 + Add Tier
@@ -468,13 +469,13 @@ export function OfferingModal({
           )}
           {/* Schedule Section */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Schedule</label>
+            <label className={`block text-sm font-medium mb-2 ${ui.text.label}`}>Schedule</label>
             {schedule.map((entry, index) => (
               <div
                 key={`${entry.dayOfWeek}-${index}`}
                 className="flex items-center gap-3 mb-2 bg-gray-50 rounded-lg px-3 py-2"
               >
-                <span className="text-sm font-medium text-gray-700 w-24">{entry.dayOfWeek}</span>
+                <span className={`text-sm font-medium w-24 ${ui.text.label}`}>{entry.dayOfWeek}</span>
                 <input
                   type="text"
                   className="w-20 border rounded px-2 py-1 text-sm"
@@ -487,7 +488,7 @@ export function OfferingModal({
                   placeholder="09:00"
                   maxLength={5}
                 />
-                <span className="text-xs text-gray-400">to</span>
+                <span className={`text-xs ${ui.text.muted}`}>to</span>
                 <input
                   type="text"
                   className="w-20 border rounded px-2 py-1 text-sm"
@@ -502,7 +503,7 @@ export function OfferingModal({
                 />
                 <button
                   type="button"
-                  className="text-red-500 text-xs hover:text-red-700"
+                  className={`text-xs ${ui.text.error} hover:opacity-80`}
                   onClick={() => setSchedule((prev) => prev.filter((_, i) => i !== index))}
                 >
                   Remove
@@ -514,7 +515,7 @@ export function OfferingModal({
                 <button
                   key={day}
                   type="button"
-                  className="px-2 py-1 text-xs border border-dashed border-gray-300 rounded text-blue-600 hover:border-blue-400"
+                  className={`px-2 py-1 text-xs border border-dashed rounded hover:border-blue-400 ${ui.border.default} ${ui.text.linkSubtle}`}
                   onClick={() => {
                     const last = schedule[schedule.length - 1];
                     setSchedule((prev) => [
@@ -535,11 +536,11 @@ export function OfferingModal({
         </div>
 
         <div className="flex justify-end gap-3 mt-6">
-          <button className="px-4 py-2 text-sm text-gray-600 hover:text-gray-800" onClick={onClose}>
+          <button className={`px-4 py-2 text-sm ${buttonVariant('ghost')}`} onClick={onClose}>
             Cancel
           </button>
           <button
-            className="px-4 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 disabled:opacity-50"
+            className={`px-4 py-2 text-sm rounded-lg disabled:opacity-50 ${buttonVariant('primary')}`}
             onClick={handleSave}
             disabled={saving || !name.trim()}
           >

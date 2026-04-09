@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { EmptyState } from '@sudobility/building_blocks';
 import { useApi } from '@sudobility/building_blocks/firebase';
 import { useCurrentEntity } from '@sudobility/entity_client';
+import { ui, buttonVariant } from '@sudobility/design';
 import {
   useVendorModelsManager,
   useVendorLocationsManager,
@@ -32,10 +33,10 @@ function Chip({ label, active, onClick }: { label: string; active: boolean; onCl
   return (
     <button
       type="button"
-      className={`px-3 py-1.5 text-sm rounded-lg border transition ${
+      className={`px-3 py-1.5 text-sm rounded-lg border ${ui.transition.default} ${
         active
-          ? 'bg-blue-600 text-white border-blue-600'
-          : 'bg-white text-gray-700 border-gray-300 hover:border-gray-400'
+          ? `${buttonVariant('primary')}`
+          : `${buttonVariant('outline')} hover:border-gray-400`
       }`}
       onClick={onClick}
     >
@@ -170,7 +171,7 @@ export function ModelDetailPage() {
     return (
       <div className="text-center text-gray-500 mt-12">
         Model not found.{' '}
-        <Link to={`/dashboard/${entitySlug}/models`} className="text-blue-600 hover:underline">
+        <Link to={`/dashboard/${entitySlug}/models`} className={ui.text.linkSubtle}>
           Back to models
         </Link>
       </div>
@@ -183,16 +184,16 @@ export function ModelDetailPage() {
         <Link to={`/dashboard/${entitySlug}/models`} className="text-gray-400 hover:text-gray-600">
           &larr;
         </Link>
-        <h1 className="text-2xl font-bold text-gray-900 flex-1">{model?.name ?? 'Loading...'}</h1>
+        <h1 className={`${ui.text.h3} flex-1`}>{model?.name ?? 'Loading...'}</h1>
       </div>
 
       {/* Model Settings */}
       <div className="bg-white rounded-lg shadow-sm border p-6">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-lg font-semibold text-gray-900">Settings</h2>
+          <h2 className={ui.text.h5}>Settings</h2>
           {settingsDirty && (
             <button
-              className="px-4 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 disabled:opacity-50"
+              className={`px-4 py-2 text-sm rounded-lg disabled:opacity-50 ${buttonVariant('primary')}`}
               onClick={handleSaveSettings}
               disabled={saving}
             >
@@ -203,7 +204,7 @@ export function ModelDetailPage() {
 
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-500 mb-2">Slot</label>
+            <label className={`block text-sm font-medium mb-2 ${ui.text.muted}`}>Slot</label>
             <div className="flex gap-2">
               {SLOT_OPTIONS.map((s) => (
                 <Chip
@@ -220,7 +221,7 @@ export function ModelDetailPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-500 mb-2">Pricing</label>
+            <label className={`block text-sm font-medium mb-2 ${ui.text.muted}`}>Pricing</label>
             <div className="flex gap-2">
               {PRICING_OPTIONS.map((p) => (
                 <Chip
@@ -238,7 +239,7 @@ export function ModelDetailPage() {
 
           {slot && slot !== 'single' && (
             <div>
-              <label className="block text-sm font-medium text-gray-500 mb-2">Slot Pricing</label>
+              <label className={`block text-sm font-medium mb-2 ${ui.text.muted}`}>Slot Pricing</label>
               <div className="flex gap-2">
                 {SLOT_PRICING_OPTIONS.map((sp) => (
                   <Chip
@@ -256,7 +257,7 @@ export function ModelDetailPage() {
           )}
 
           <div>
-            <label className="block text-sm font-medium text-gray-500 mb-2">Action</label>
+            <label className={`block text-sm font-medium mb-2 ${ui.text.muted}`}>Action</label>
             <div className="flex gap-2">
               {ACTION_OPTIONS.map((a) => (
                 <Chip
@@ -271,7 +272,7 @@ export function ModelDetailPage() {
 
           {action === 'timed' && (
             <div>
-              <label className="block text-sm font-medium text-gray-500 mb-2">Interruption</label>
+              <label className={`block text-sm font-medium mb-2 ${ui.text.muted}`}>Interruption</label>
               <div className="flex gap-2">
                 {INTERRUPTION_OPTIONS.map((i) => (
                   <Chip
@@ -289,7 +290,7 @@ export function ModelDetailPage() {
           )}
 
           <div>
-            <label className="block text-sm font-medium text-gray-500 mb-2">Payment</label>
+            <label className={`block text-sm font-medium mb-2 ${ui.text.muted}`}>Payment</label>
             <div className="flex gap-2">
               {PAYMENT_OPTIONS.map((p) => (
                 <Chip
@@ -310,9 +311,9 @@ export function ModelDetailPage() {
       {/* Offerings */}
       <div className="bg-white rounded-lg shadow-sm border">
         <div className="flex justify-between items-center px-4 py-3 border-b">
-          <h2 className="text-lg font-semibold text-gray-900">Offerings</h2>
+          <h2 className={ui.text.h5}>Offerings</h2>
           <button
-            className="px-3 py-1.5 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition"
+            className={`px-3 py-1.5 text-sm rounded-lg ${buttonVariant('primary')}`}
             onClick={handleAddOffering}
           >
             Add Offering
@@ -361,13 +362,13 @@ export function ModelDetailPage() {
                   </td>
                   <td className="px-4 py-3 text-right">
                     <button
-                      className="text-blue-600 text-sm hover:text-blue-800 mr-3"
+                      className={`text-sm mr-3 ${ui.text.linkSubtle}`}
                       onClick={() => handleEditOffering(inst)}
                     >
                       Edit
                     </button>
                     <button
-                      className="text-red-600 text-sm hover:text-red-800"
+                      className={`text-sm ${ui.text.error} hover:opacity-80`}
                       onClick={() => handleDeleteOffering(inst)}
                     >
                       Delete

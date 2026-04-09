@@ -4,6 +4,7 @@ import { EmptyState } from '@sudobility/building_blocks';
 import { useApi } from '@sudobility/building_blocks/firebase';
 import { useCurrentEntity } from '@sudobility/entity_client';
 import { useVendorLocationsManager } from '@sudobility/tapayoka_lib';
+import { ui, buttonVariant, colors } from '@sudobility/design';
 import type {
   VendorLocation,
   VendorLocationCreateRequest,
@@ -124,7 +125,7 @@ export function LocationsPage() {
     return (
       <div className="space-y-6">
         <div className="flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-gray-900">Locations</h1>
+          <h1 className={ui.text.h3}>Locations</h1>
         </div>
         <div className="bg-white rounded-lg shadow-sm border p-8 text-center text-gray-500">
           Loading...
@@ -136,10 +137,10 @@ export function LocationsPage() {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-gray-900">Locations</h1>
+        <h1 className={ui.text.h3}>Locations</h1>
         <button
           onClick={openAddModal}
-          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+          className={`px-4 py-2 rounded-lg ${buttonVariant('primary')}`}
         >
           Add Location
         </button>
@@ -217,7 +218,7 @@ export function LocationsPage() {
                         e.stopPropagation();
                         openEditModal(location);
                       }}
-                      className="text-blue-600 hover:text-blue-800 font-medium mr-4"
+                      className={`font-medium mr-4 ${ui.text.linkSubtle}`}
                     >
                       Edit
                     </button>
@@ -226,7 +227,7 @@ export function LocationsPage() {
                         e.stopPropagation();
                         handleDelete(location);
                       }}
-                      className="text-red-600 hover:text-red-800 font-medium"
+                      className={`font-medium ${ui.text.error} hover:opacity-80`}
                     >
                       Delete
                     </button>
@@ -242,19 +243,19 @@ export function LocationsPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center">
           <div className="absolute inset-0 bg-black bg-opacity-50" onClick={closeModal} />
           <div className="relative bg-white rounded-lg shadow-lg w-full max-w-md mx-4 p-6">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">
+            <h2 className={`${ui.text.h5} mb-4`}>
               {editingLocation ? 'Edit Location' : 'Add Location'}
             </h2>
 
             {manager.error && (
-              <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">
+              <div className={`mb-4 p-3 rounded-lg text-sm border ${colors.component.alert.error.base} ${colors.component.alert.error.dark}`}>
                 {String(manager.error)}
               </div>
             )}
 
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                <label className={`block text-sm font-medium mb-1 ${ui.text.label}`}>Name</label>
                 <input
                   type="text"
                   value={form.name}
@@ -264,7 +265,7 @@ export function LocationsPage() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Address</label>
+                <label className={`block text-sm font-medium mb-1 ${ui.text.label}`}>Address</label>
                 <input
                   type="text"
                   value={form.address}
@@ -275,7 +276,7 @@ export function LocationsPage() {
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">City</label>
+                  <label className={`block text-sm font-medium mb-1 ${ui.text.label}`}>City</label>
                   <input
                     type="text"
                     value={form.city}
@@ -285,7 +286,7 @@ export function LocationsPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className={`block text-sm font-medium mb-1 ${ui.text.label}`}>
                     State/Province
                   </label>
                   <input
@@ -299,7 +300,7 @@ export function LocationsPage() {
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Zip Code</label>
+                  <label className={`block text-sm font-medium mb-1 ${ui.text.label}`}>Zip Code</label>
                   <input
                     type="text"
                     value={form.zipcode}
@@ -309,7 +310,7 @@ export function LocationsPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Country</label>
+                  <label className={`block text-sm font-medium mb-1 ${ui.text.label}`}>Country</label>
                   <input
                     type="text"
                     value={form.country}
@@ -324,14 +325,14 @@ export function LocationsPage() {
             <div className="flex justify-end space-x-3 mt-6">
               <button
                 onClick={closeModal}
-                className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition"
+                className={`px-4 py-2 text-sm font-medium rounded-lg ${buttonVariant('outline')}`}
               >
                 Cancel
               </button>
               <button
                 onClick={handleSave}
                 disabled={saving || !form.name.trim()}
-                className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                className={`px-4 py-2 text-sm font-medium rounded-lg disabled:opacity-50 disabled:cursor-not-allowed ${buttonVariant('primary')}`}
               >
                 {saving ? 'Saving...' : 'Save'}
               </button>

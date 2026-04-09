@@ -5,6 +5,7 @@ import { SudobilityAppWithFirebaseAuthAndEntities } from '@sudobility/building_b
 import { CONSTANTS } from './config/constants';
 import i18n from './i18n';
 import { AuthProviderWrapper } from './components/providers/AuthProviderWrapper';
+import { ui } from '@sudobility/design';
 
 // Lazy load pages
 const HomePage = lazy(() => import('./pages/HomePage'));
@@ -28,7 +29,7 @@ const EntityRedirect = lazy(() => import('./components/EntityRedirect'));
 
 const LoadingFallback = () => (
   <div className="min-h-screen flex items-center justify-center">
-    <p className="text-gray-500">Loading...</p>
+    <p className={ui.text.muted}>Loading...</p>
   </div>
 );
 

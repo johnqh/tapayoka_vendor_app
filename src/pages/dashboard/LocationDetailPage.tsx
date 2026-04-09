@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { EmptyState } from '@sudobility/building_blocks';
 import { useApi } from '@sudobility/building_blocks/firebase';
 import { useCurrentEntity } from '@sudobility/entity_client';
+import { ui, buttonVariant } from '@sudobility/design';
 import {
   useVendorLocationsManager,
   useVendorModelsManager,
@@ -91,7 +92,7 @@ export function LocationDetailPage() {
     return (
       <div className="text-center text-gray-500 mt-12">
         Location not found.{' '}
-        <Link to={`/dashboard/${entitySlug}/locations`} className="text-blue-600 hover:underline">
+        <Link to={`/dashboard/${entitySlug}/locations`} className={ui.text.linkSubtle}>
           Back to locations
         </Link>
       </div>
@@ -108,16 +109,16 @@ export function LocationDetailPage() {
           &larr;
         </Link>
         <div className="flex-1">
-          <h1 className="text-2xl font-bold text-gray-900">{location?.name ?? 'Loading...'}</h1>
+          <h1 className={ui.text.h3}>{location?.name ?? 'Loading...'}</h1>
           {location && (
-            <p className="text-sm text-gray-500">
+            <p className={ui.text.bodySmall}>
               {location.address}, {location.city}, {location.stateProvince} {location.zipcode},{' '}
               {location.country}
             </p>
           )}
         </div>
         <button
-          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition text-sm"
+          className={`px-4 py-2 rounded-lg text-sm ${buttonVariant('primary')}`}
           onClick={handleAdd}
         >
           Add Offering
@@ -167,13 +168,13 @@ export function LocationDetailPage() {
                   </td>
                   <td className="px-4 py-3 text-right">
                     <button
-                      className="text-blue-600 text-sm hover:text-blue-800 mr-3"
+                      className={`text-sm mr-3 ${ui.text.linkSubtle}`}
                       onClick={() => handleEdit(inst)}
                     >
                       Edit
                     </button>
                     <button
-                      className="text-red-600 text-sm hover:text-red-800"
+                      className={`text-sm ${ui.text.error} hover:opacity-80`}
                       onClick={() => handleDelete(inst)}
                     >
                       Delete
