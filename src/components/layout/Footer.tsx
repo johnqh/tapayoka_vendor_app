@@ -86,6 +86,5 @@ export function useFooterConfig(variant: 'full' | 'compact'): FooterConfig {
       'Device management, QR payments, and order tracking for laundry and vending vendors.',
     LinkComponent: linkWrapper,
     isNetworkOnline: isOnline,
-    gridColumns: 2,
   };
 }
