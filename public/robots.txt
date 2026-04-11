@@ -7,7 +7,8 @@
 
 User-agent: *
 Allow: /
-Disallow: /*/dashboard/
+Disallow: /dashboard/
+Disallow: /tos
 
 Crawl-delay: 2
 
@@ -17,7 +18,8 @@ Crawl-delay: 2
 
 User-agent: Googlebot
 Allow: /
-Disallow: /*/dashboard/
+Disallow: /dashboard/
+Disallow: /tos
 Crawl-delay: 1
 
 User-agent: Googlebot-Image
@@ -29,7 +31,8 @@ Allow: /
 
 User-agent: Bingbot
 Allow: /
-Disallow: /*/dashboard/
+Disallow: /dashboard/
+Disallow: /tos
 Crawl-delay: 2
 
 # ===========================================
@@ -40,80 +43,92 @@ Crawl-delay: 2
 User-agent: GPTBot
 Allow: /
 Allow: /llms.txt
-Disallow: /*/dashboard/
+Disallow: /dashboard/
+Disallow: /tos
 Crawl-delay: 5
 
 User-agent: ChatGPT-User
 Allow: /
 Allow: /llms.txt
-Disallow: /*/dashboard/
+Disallow: /dashboard/
+Disallow: /tos
 Crawl-delay: 5
 
 # Anthropic Claude
 User-agent: Claude-Web
 Allow: /
 Allow: /llms.txt
-Disallow: /*/dashboard/
+Disallow: /dashboard/
+Disallow: /tos
 Crawl-delay: 5
 
 User-agent: ClaudeBot
 Allow: /
 Allow: /llms.txt
-Disallow: /*/dashboard/
+Disallow: /dashboard/
+Disallow: /tos
 Crawl-delay: 5
 
 User-agent: anthropic-ai
 Allow: /
 Allow: /llms.txt
-Disallow: /*/dashboard/
+Disallow: /dashboard/
+Disallow: /tos
 Crawl-delay: 5
 
 # Google Gemini/Bard
 User-agent: Google-Extended
 Allow: /
 Allow: /llms.txt
-Disallow: /*/dashboard/
+Disallow: /dashboard/
+Disallow: /tos
 Crawl-delay: 5
 
 # Perplexity
 User-agent: PerplexityBot
 Allow: /
 Allow: /llms.txt
-Disallow: /*/dashboard/
+Disallow: /dashboard/
+Disallow: /tos
 Crawl-delay: 5
 
 # You.com
 User-agent: YouBot
 Allow: /
 Allow: /llms.txt
-Disallow: /*/dashboard/
+Disallow: /dashboard/
+Disallow: /tos
 Crawl-delay: 5
 
 # Cohere
 User-agent: CohereBot
 Allow: /
 Allow: /llms.txt
-Disallow: /*/dashboard/
+Disallow: /dashboard/
+Disallow: /tos
 Crawl-delay: 5
 
 # Common Crawl
 User-agent: CCBot
 Allow: /
 Allow: /llms.txt
-Disallow: /*/dashboard/
+Disallow: /dashboard/
+Disallow: /tos
 Crawl-delay: 5
 
 # Meta AI
 User-agent: Meta-ExternalAgent
 Allow: /
 Allow: /llms.txt
-Disallow: /*/dashboard/
+Disallow: /dashboard/
+Disallow: /tos
 Crawl-delay: 5
 
 User-agent: FacebookBot
 Allow: /
 Allow: /llms.txt
-Disallow: /*/dashboard/
+Disallow: /dashboard/
+Disallow: /tos
 Crawl-delay: 5
 
 # ===========================================

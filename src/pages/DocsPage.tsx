@@ -1,8 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
+import { useTranslation } from 'react-i18next';
 import { MasterDetailLayout } from '@sudobility/components';
 import { ui } from '@sudobility/design';
 import { useSetPageConfig } from '../hooks/usePageConfig';
+import { CONSTANTS } from '../config/constants';
 
 type DocSection = 'getting-started' | 'device-setup' | 'api-reference';
 
@@ -204,6 +207,7 @@ function ApiReferenceContent() {
 function DocsPage() {
   const { section } = useParams<{ section?: string }>();
   const navigate = useNavigate();
+  const { t } = useTranslation('docsPage');
   const [mobileView, setMobileView] = useState<'navigation' | 'content'>('navigation');
   useSetPageConfig({ scrollable: false, contentPadding: 'sm', maxWidth: '7xl' });
 
@@ -247,8 +251,20 @@ function DocsPage() {
   );
 
   return (
-    <div className="w-full min-w-0 overflow-x-hidden flex-1 flex flex-col min-h-0">
-      <MasterDetailLayout
+    <>
+      <Helmet>
+        <title>{t('seo.title', { appName: CONSTANTS.APP_NAME })}</title>
+        <meta
+          name="description"
+          content={t('seo.description', { appName: CONSTANTS.APP_NAME })}
+        />
+        <meta
+          name="keywords"
+          content={(t('seo.keywords', { returnObjects: true }) as string[]).join(', ')}
+        />
+      </Helmet>
+      <div className="w-full min-w-0 overflow-x-hidden flex-1 flex flex-col min-h-0">
+        <MasterDetailLayout
         masterTitle="Documentation"
         backButtonText="Documentation"
         masterContent={masterContent}
@@ -261,7 +277,8 @@ function DocsPage() {
         masterWidth={260}
         stickyTopOffset={80}
       />
-    </div>
+      </div>
+    </>
   );
 }
 

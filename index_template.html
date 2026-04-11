@@ -19,8 +19,15 @@
     <meta name="msapplication-navbutton-color" content="#1e40af" />
     <meta name="apple-mobile-web-app-status-bar-style" content="#1e40af" />
 
-    <!-- Canonical -->
-    <link rel="canonical" href="https://%VITE_APP_DOMAIN%/" />
+    <!-- Canonical URL - dynamically set by Helmet based on current route -->
+
+    <!-- Application Meta -->
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="application-name" content="%VITE_APP_NAME%" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="%VITE_APP_NAME%" />
+    <meta name="copyright" content="%VITE_COMPANY_NAME%. All rights reserved." />
 
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
@@ -58,7 +65,17 @@
         "@type": "Organization",
         "name": "%VITE_COMPANY_NAME%"
       },
-      "inLanguage": "en"
+      "inLanguage": "en",
+      "datePublished": "2025-01-01",
+      "dateModified": "{{TODAY}}",
+      "isAccessibleForFree": true,
+      "featureList": [
+        "Device management for washers, dryers, parking, lockers, vending machines",
+        "QR code contactless payments",
+        "Multi-location management",
+        "Real-time device monitoring via BLE and WebSocket",
+        "Order tracking and analytics"
+      ]
     }
     </script>
 

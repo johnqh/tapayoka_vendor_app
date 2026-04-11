@@ -1,0 +1,13 @@
+{
+  "seo": {
+    "title": "Documentation & API Reference | {{appName}}",
+    "description": "{{appName}} developer documentation. Getting started guides, device setup instructions, and API reference for vendor integration.",
+    "keywords": [
+      "vendor API documentation",
+      "device setup guide",
+      "vending machine API",
+      "QR payment integration",
+      "vendor developer docs"
+    ]
+  }
+}

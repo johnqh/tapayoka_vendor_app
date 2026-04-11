@@ -1,67 +1,42 @@
 import { useNavigate } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
+import { useTranslation } from 'react-i18next';
 import { useAuthStatus } from '@sudobility/auth-components';
 import { ui, buttonVariant } from '@sudobility/design';
+import { CONSTANTS } from '../config/constants';
 
-const sections = [
-  {
-    title: 'Device Management',
-    description:
-      'Register and configure all your devices from one central dashboard. Support for washers, dryers, parking meters, lockers, and vending machines. Set pricing strategies, slot modes, and operating schedules per device model.',
-    items: [
-      'Define device models with custom pricing (fixed or timed)',
-      'Assign devices to locations with unique configurations',
-      'Set daily operating schedules per model',
-      'Track device status in real-time',
-    ],
-  },
-  {
-    title: 'Payment Processing',
-    description:
-      'Accept contactless QR code payments without requiring customers to download an app. Customers simply scan, pay, and use the service.',
-    items: [
-      'Generate QR codes for each offering',
-      'Support both pre-pay and post-pay models',
-      'Real-time payment confirmation via BLE',
-      'Automatic receipt generation',
-    ],
-  },
-  {
-    title: 'Multi-Location Support',
-    description:
-      'Manage multiple business locations from a single account. Each location can have its own set of devices with independent configurations.',
-    items: [
-      'Add unlimited locations with address details',
-      'Manage offerings per location',
-      'View location-specific analytics',
-      'Invite team members to specific workspaces',
-    ],
-  },
-  {
-    title: 'Analytics & Reporting',
-    description:
-      'Track revenue, order volume, and device utilization across all your locations. Make data-driven decisions to optimize your business.',
-    items: [
-      'Real-time order monitoring with status tracking',
-      'Revenue reporting by location and device',
-      'Device utilization metrics',
-      'Export data for accounting',
-    ],
-  },
-];
+const sectionKeys = [
+  'sections.deviceManagement',
+  'sections.payment',
+  'sections.multiLocation',
+  'sections.analytics',
+] as const;
 
 function VendorPage() {
   const navigate = useNavigate();
   const { user } = useAuthStatus();
+  const { t } = useTranslation('vendorPage');
 
   return (
     <>
+      <Helmet>
+        <title>{t('seo.title', { appName: CONSTANTS.APP_NAME })}</title>
+        <meta
+          name="description"
+          content={t('seo.description', { appName: CONSTANTS.APP_NAME })}
+        />
+        <meta
+          name="keywords"
+          content={(t('seo.keywords', { returnObjects: true }) as string[]).join(', ')}
+        />
+      </Helmet>
+
       {/* Header */}
       <section className="bg-gradient-to-br from-blue-600 to-indigo-700 text-white py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-6">Built for Vendors</h1>
+          <h1 className="text-4xl md:text-5xl font-bold mb-6">{t('hero.title')}</h1>
           <p className="text-lg md:text-xl text-blue-100 max-w-2xl mx-auto">
-            Everything you need to manage your self-service business — from device configuration to
-            payment collection.
+            {t('hero.description')}
           </p>
         </div>
       </section>
@@ -69,18 +44,18 @@ function VendorPage() {
       {/* Sections */}
       <section className="py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
-          {sections.map((section, index) => (
+          {sectionKeys.map((key, index) => (
             <div
-              key={section.title}
+              key={key}
               className={`flex flex-col lg:flex-row gap-8 items-start ${
                 index % 2 === 1 ? 'lg:flex-row-reverse' : ''
               }`}
             >
               <div className="flex-1">
-                <h2 className={`${ui.text.h3} mb-4`}>{section.title}</h2>
-                <p className={`${ui.text.body} mb-6`}>{section.description}</p>
+                <h2 className={`${ui.text.h3} mb-4`}>{t(`${key}.title`)}</h2>
+                <p className={`${ui.text.body} mb-6`}>{t(`${key}.description`)}</p>
                 <ul className="space-y-3">
-                  {section.items.map((item) => (
+                  {(t(`${key}.items`, { returnObjects: true }) as string[]).map((item) => (
                     <li key={item} className="flex items-start gap-3">
                       <svg
                         className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0"
@@ -101,7 +76,9 @@ function VendorPage() {
                 </ul>
               </div>
               <div className="flex-1 bg-gray-100 rounded-xl p-8 flex items-center justify-center min-h-[200px]">
-                <span className={`text-sm ${ui.text.muted}`}>{section.title} illustration</span>
+                <span className={`text-sm ${ui.text.muted}`}>
+                  {t(`${key}.title`)} illustration
+                </span>
               </div>
             </div>
           ))}
@@ -111,17 +88,13 @@ function VendorPage() {
       {/* CTA */}
       <section className={`${ui.section.subtle} py-16`}>
         <div className="max-w-4xl mx-auto px-4 text-center">
-          <h2 className={`${ui.text.h2} mb-4`}>
-            Start Managing Your Devices Today
-          </h2>
-          <p className={`${ui.text.bodyLarge} mb-8`}>
-            Create your account and add your first location in minutes.
-          </p>
+          <h2 className={`${ui.text.h2} mb-4`}>{t('cta.title')}</h2>
+          <p className={`${ui.text.bodyLarge} mb-8`}>{t('cta.description')}</p>
           <button
             onClick={() => navigate(user ? '/dashboard' : '/login')}
             className={`px-8 py-3 rounded-lg font-semibold ${buttonVariant('primary')}`}
           >
-            {user ? 'Go to Dashboard' : 'Get Started Free'}
+            {user ? t('cta.ctaDashboard') : t('cta.ctaGetStarted')}
           </button>
         </div>
       </section>

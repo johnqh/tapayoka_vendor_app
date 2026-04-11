@@ -1,6 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <!-- Login page -->
+  <!-- Homepage -->
+  <url>
+    <loc>https://{{VITE_APP_DOMAIN}}/</loc>
+    <lastmod>{{TODAY}}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- Vendor Features -->
+  <url>
+    <loc>https://{{VITE_APP_DOMAIN}}/vendor</loc>
+    <lastmod>{{TODAY}}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Documentation -->
+  <url>
+    <loc>https://{{VITE_APP_DOMAIN}}/docs/getting-started</loc>
+    <lastmod>{{TODAY}}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://{{VITE_APP_DOMAIN}}/docs/device-setup</loc>
+    <lastmod>{{TODAY}}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://{{VITE_APP_DOMAIN}}/docs/api-reference</loc>
+    <lastmod>{{TODAY}}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Login -->
   <url>
     <loc>https://{{VITE_APP_DOMAIN}}/login</loc>
     <lastmod>{{TODAY}}</lastmod>

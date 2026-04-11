@@ -1,0 +1,13 @@
+{
+  "navigation": {
+    "home": "Home",
+    "vendor": "Vendor",
+    "docs": "Docs",
+    "dashboard": "Dashboard",
+    "login": "Login"
+  },
+  "footer": {
+    "privacyPolicy": "Privacy Policy",
+    "termsOfService": "Terms of Service"
+  }
+}

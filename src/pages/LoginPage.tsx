@@ -1,5 +1,7 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
+import { useTranslation } from 'react-i18next';
 import { useAuthStatus } from '@sudobility/auth-components';
 import { getFirebaseAuth } from '@sudobility/auth_lib';
 import { variants, ui } from '@sudobility/design';
@@ -15,6 +17,7 @@ import { CONSTANTS } from '../config/constants';
 export default function LoginPage() {
   const { user, loading } = useAuthStatus();
   const navigate = useNavigate();
+  const { t } = useTranslation('loginPage');
   const auth = getFirebaseAuth();
 
   useEffect(() => {
@@ -46,7 +49,15 @@ export default function LoginPage() {
   }
 
   return (
-    <LoginPageComponent
+    <>
+      <Helmet>
+        <title>{t('seo.title', { appName: CONSTANTS.APP_NAME })}</title>
+        <meta
+          name="description"
+          content={t('seo.description', { appName: CONSTANTS.APP_NAME })}
+        />
+      </Helmet>
+      <LoginPageComponent
       appName={CONSTANTS.APP_NAME}
       onEmailSignIn={async (email, password) => {
         await signInWithEmailAndPassword(auth, email, password);
@@ -59,5 +70,6 @@ export default function LoginPage() {
       }}
       onSuccess={() => navigate('/dashboard', { replace: true })}
     />
+    </>
   );
 }

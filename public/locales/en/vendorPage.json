@@ -1,0 +1,65 @@
+{
+  "seo": {
+    "title": "Vendor Features | {{appName}} - Self-Service Business Tools",
+    "description": "Explore {{appName}} vendor features: device management for washers, dryers, parking, lockers, and vending machines. QR payments, multi-location support, and analytics.",
+    "keywords": [
+      "self-service vendor platform",
+      "laundry machine management",
+      "parking meter system",
+      "locker management software",
+      "QR payment vendor"
+    ]
+  },
+  "hero": {
+    "title": "Built for Vendors",
+    "description": "Everything you need to manage your self-service business — from device configuration to payment collection."
+  },
+  "sections": {
+    "deviceManagement": {
+      "title": "Device Management",
+      "description": "Register and configure all your devices from one central dashboard. Support for washers, dryers, parking meters, lockers, and vending machines. Set pricing strategies, slot modes, and operating schedules per device model.",
+      "items": [
+        "Define device models with custom pricing (fixed or timed)",
+        "Assign devices to locations with unique configurations",
+        "Set daily operating schedules per model",
+        "Track device status in real-time"
+      ]
+    },
+    "payment": {
+      "title": "Payment Processing",
+      "description": "Accept contactless QR code payments without requiring customers to download an app. Customers simply scan, pay, and use the service.",
+      "items": [
+        "Generate QR codes for each offering",
+        "Support both pre-pay and post-pay models",
+        "Real-time payment confirmation via BLE",
+        "Automatic receipt generation"
+      ]
+    },
+    "multiLocation": {
+      "title": "Multi-Location Support",
+      "description": "Manage multiple business locations from a single account. Each location can have its own set of devices with independent configurations.",
+      "items": [
+        "Add unlimited locations with address details",
+        "Manage offerings per location",
+        "View location-specific analytics",
+        "Invite team members to specific workspaces"
+      ]
+    },
+    "analytics": {
+      "title": "Analytics & Reporting",
+      "description": "Track revenue, order volume, and device utilization across all your locations. Make data-driven decisions to optimize your business.",
+      "items": [
+        "Real-time order monitoring with status tracking",
+        "Revenue reporting by location and device",
+        "Device utilization metrics",
+        "Export data for accounting"
+      ]
+    }
+  },
+  "cta": {
+    "title": "Start Managing Your Devices Today",
+    "description": "Create your account and add your first location in minutes.",
+    "ctaDashboard": "Go to Dashboard",
+    "ctaGetStarted": "Get Started Free"
+  }
+}

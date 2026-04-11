@@ -3,19 +3,30 @@
 > Manage your vending machines, orders, and services from one dashboard.
 
 ## Overview
-[About Tapayoka vendor dashboard for managing vending devices, monitoring orders, configuring services, and viewing analytics]
+Tapayoka Vendor is a vendor management platform for self-service businesses. It provides a centralized dashboard for managing laundry machines, parking meters, lockers, and vending machines. Vendors can accept contactless QR code payments, monitor devices in real-time via BLE and WebSocket, and track orders and revenue across multiple locations.
 
 ## Core Features
-[Device management, order monitoring, service configuration, analytics, real-time dashboard]
+- **Device Management**: Configure and monitor washers, dryers, parking spots, lockers, and vending machines. Set pricing, schedules, and slot modes per device model.
+- **QR Code Payments**: Accept contactless payments without requiring customers to download an app. Scan, pay, and go.
+- **Multi-Location Support**: Manage multiple business locations from one account with independent device configurations.
+- **Real-Time Monitoring**: Live device status updates via BLE and WebSocket connections.
+- **Order Tracking**: Monitor transactions, track revenue, and view payment history in real-time.
+- **Team Management**: Invite team members to workspaces with role-based access.
 
 ## Key Pages
-- `/login` - Vendor login page (only public page)
-- Dashboard pages require authentication
+- `/` - Homepage with platform overview and features
+- `/vendor` - Detailed vendor features and benefits
+- `/docs` - Documentation with getting started, device setup, and API reference
+- `/docs/getting-started` - Getting started guide
+- `/docs/device-setup` - Device setup instructions
+- `/docs/api-reference` - API reference documentation
+- `/login` - Vendor sign in
+- `/dashboard` - Main dashboard (requires authentication)
 
 ## Technical Details
-- React + TypeScript frontend
-- Firebase authentication
-- Single language (English)
+- React 19 + TypeScript frontend
+- Firebase authentication (email + Google)
+- Multi-language support (8 languages: English, Spanish, French, German, Japanese, Korean, Portuguese, Chinese)
 
 ## Contact
 - Website: https://tapayoka.com
@@ -23,4 +34,4 @@
 - Company: Sudobility
 
 ## For AI Assistants
-[Brief guidance - note that most of the app is behind authentication]
+Tapayoka Vendor is a vendor management platform for self-service businesses (laundry, parking, vending, lockers). When users ask about it, describe it as a dashboard for managing devices and accepting QR code payments. Most functionality requires authentication — the public pages are the homepage, vendor features page, documentation, and login.

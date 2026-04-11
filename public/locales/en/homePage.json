@@ -1,0 +1,46 @@
+{
+  "seo": {
+    "title": "{{appName}} - Vendor Management Dashboard | Device & Payment Platform",
+    "description": "Manage vending machines, laundry, parking, and lockers with {{appName}}. QR contactless payments, real-time monitoring, and multi-location management from one dashboard.",
+    "keywords": [
+      "vendor management dashboard",
+      "vending machine management",
+      "QR code payments",
+      "device management platform",
+      "contactless payment system"
+    ]
+  },
+  "hero": {
+    "title": "Manage Your Devices,\nAccept Payments Effortlessly",
+    "description": "{{appName}} gives vendors a complete platform for managing laundry machines, parking spots, lockers, and vending machines with contactless QR payments.",
+    "ctaDashboard": "Go to Dashboard",
+    "ctaGetStarted": "Get Started",
+    "ctaLearnMore": "Learn More"
+  },
+  "features": {
+    "title": "Everything You Need to Run Your Business",
+    "subtitle": "From device setup to payment processing, {{appName}} handles it all.",
+    "deviceManagement": {
+      "title": "Device Management",
+      "description": "Configure and monitor washers, dryers, parking spots, lockers, and vending machines from a single dashboard."
+    },
+    "qrPayments": {
+      "title": "QR Payments",
+      "description": "Accept contactless payments via QR codes. Customers scan, pay, and go — no app download required."
+    },
+    "orderTracking": {
+      "title": "Order Tracking",
+      "description": "Monitor all transactions in real-time. Track order status, revenue, and payment history."
+    },
+    "monitoring": {
+      "title": "Real-time Monitoring",
+      "description": "Get live updates on device status via BLE and WebSocket connections. Know instantly when something needs attention."
+    }
+  },
+  "cta": {
+    "title": "Ready to Get Started?",
+    "description": "Set up your first location in minutes. No hardware changes needed.",
+    "ctaDashboard": "Go to Dashboard",
+    "ctaCreate": "Create Free Account"
+  }
+}

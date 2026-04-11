@@ -1,7 +1,7 @@
 {
   "name": "tapayoka_vendor_app",
   "private": true,
-  "version": "0.0.86",
+  "version": "0.0.87",
   "type": "module",
   "scripts": {
     "process:static": "curl -sL https://raw.githubusercontent.com/johnqh/workflows/main/scripts/process-static-files.ts -o /tmp/process-static-files.ts && bunx tsx /tmp/process-static-files.ts",
@@ -11,6 +11,7 @@
     "preview": "vite preview",
     "typecheck": "tsc -b --noEmit",
     "test": "vitest run",
+    "localize": "SCRIPT=$(mktemp) && curl -fsSL https://raw.githubusercontent.com/johnqh/workflows/main/scripts/localize_batch.cjs -o $SCRIPT && node $SCRIPT ./public/locales https://api.whisperly.dev/api/v1/translate/jie9cytr/starter --word-limit 40 && rm -f $SCRIPT && prettier . --write",
     "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,json}\"",
     "format:check": "prettier --check \"src/**/*.{ts,tsx,js,jsx,json}\""
   },
@@ -18,7 +19,7 @@
     "@sudobility/auth-components": "^1.0.10",
     "@sudobility/auth_lib": "^0.0.68",
     "@sudobility/building_blocks": "^0.0.210",
-    "@sudobility/components": "^5.0.56",
+    "@sudobility/components": "^5.0.57",
     "@sudobility/design": "^1.1.28",
     "@sudobility/devops-components": "^2.0.19",
     "@sudobility/di": "^1.5.52",
