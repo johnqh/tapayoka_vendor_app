@@ -1,9 +1,11 @@
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { useTranslation } from 'react-i18next';
 import { useAuthStatus } from '@sudobility/auth-components';
 import { ui, buttonVariant } from '@sudobility/design';
 import { CONSTANTS } from '../config/constants';
+import { analyticsService } from '../config/analytics';
 
 const sectionKeys = [
   'sections.deviceManagement',
@@ -17,14 +19,15 @@ function VendorPage() {
   const { user } = useAuthStatus();
   const { t } = useTranslation('vendorPage');
 
+  useEffect(() => {
+    analyticsService.trackPageView('/vendor', 'Vendor Page');
+  }, []);
+
   return (
     <>
       <Helmet>
         <title>{t('seo.title', { appName: CONSTANTS.APP_NAME })}</title>
-        <meta
-          name="description"
-          content={t('seo.description', { appName: CONSTANTS.APP_NAME })}
-        />
+        <meta name="description" content={t('seo.description', { appName: CONSTANTS.APP_NAME })} />
         <meta
           name="keywords"
           content={(t('seo.keywords', { returnObjects: true }) as string[]).join(', ')}
@@ -76,9 +79,7 @@ function VendorPage() {
                 </ul>
               </div>
               <div className="flex-1 bg-gray-100 rounded-xl p-8 flex items-center justify-center min-h-[200px]">
-                <span className={`text-sm ${ui.text.muted}`}>
-                  {t(`${key}.title`)} illustration
-                </span>
+                <span className={`text-sm ${ui.text.muted}`}>{t(`${key}.title`)} illustration</span>
               </div>
             </div>
           ))}
@@ -91,7 +92,12 @@ function VendorPage() {
           <h2 className={`${ui.text.h2} mb-4`}>{t('cta.title')}</h2>
           <p className={`${ui.text.bodyLarge} mb-8`}>{t('cta.description')}</p>
           <button
-            onClick={() => navigate(user ? '/dashboard' : '/login')}
+            onClick={() => {
+              analyticsService.trackButtonClick('vendor_cta', {
+                target: user ? 'dashboard' : 'login',
+              });
+              navigate(user ? '/dashboard' : '/login');
+            }}
             className={`px-8 py-3 rounded-lg font-semibold ${buttonVariant('primary')}`}
           >
             {user ? t('cta.ctaDashboard') : t('cta.ctaGetStarted')}

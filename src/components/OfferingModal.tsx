@@ -159,7 +159,9 @@ function VariablePricingForm({
         </div>
       </div>
       <div>
-        <label className={`block text-xs font-medium mb-1 ${ui.text.muted}`}>Pin Number (0–25)</label>
+        <label className={`block text-xs font-medium mb-1 ${ui.text.muted}`}>
+          Pin Number (0–25)
+        </label>
         <input
           type="number"
           className="w-16 border rounded px-2 py-1 text-sm"
@@ -250,11 +252,7 @@ function FixedPricingForm({
             </button>
           </div>
         ))}
-        <button
-          type="button"
-          className={`text-xs ${ui.text.linkSubtle}`}
-          onClick={handleAddSignal}
-        >
+        <button type="button" className={`text-xs ${ui.text.linkSubtle}`} onClick={handleAddSignal}>
           + Add Signal
         </button>
       </div>
@@ -383,7 +381,9 @@ export function OfferingModal({
 
   return (
     <div className={`fixed inset-0 flex items-center justify-center z-50 ${ui.background.overlay}`}>
-      <div className={`${ui.background.surface} rounded-lg ${ui.shadow.xl} w-full max-w-lg max-h-[90vh] overflow-y-auto p-6`}>
+      <div
+        className={`${ui.background.surface} rounded-lg ${ui.shadow.xl} w-full max-w-lg max-h-[90vh] overflow-y-auto p-6`}
+      >
         <h2 className={`${ui.text.h4} mb-4`}>{title}</h2>
 
         <div className="space-y-4">
@@ -475,7 +475,9 @@ export function OfferingModal({
                 key={`${entry.dayOfWeek}-${index}`}
                 className="flex items-center gap-3 mb-2 bg-gray-50 rounded-lg px-3 py-2"
               >
-                <span className={`text-sm font-medium w-24 ${ui.text.label}`}>{entry.dayOfWeek}</span>
+                <span className={`text-sm font-medium w-24 ${ui.text.label}`}>
+                  {entry.dayOfWeek}
+                </span>
                 <input
                   type="text"
                   className="w-20 border rounded px-2 py-1 text-sm"

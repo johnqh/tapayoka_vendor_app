@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { EmptyState } from '@sudobility/building_blocks';
 import { useApi } from '@sudobility/building_blocks/firebase';
 import { useCurrentEntity } from '@sudobility/entity_client';
 import { useVendorLocationsManager } from '@sudobility/tapayoka_lib';
 import { ui, buttonVariant, colors } from '@sudobility/design';
+import { analyticsService } from '../../config/analytics';
 import type {
   VendorLocation,
   VendorLocationCreateRequest,
@@ -37,6 +38,10 @@ export function LocationsPage() {
 
   const manager = useVendorLocationsManager(networkClient, baseUrl, currentEntitySlug, token);
 
+  useEffect(() => {
+    analyticsService.trackPageView('/dashboard/locations', 'Locations');
+  }, []);
+
   const [modalOpen, setModalOpen] = useState(false);
   const [editingLocation, setEditingLocation] = useState<VendorLocation | null>(null);
   const [form, setForm] = useState<FormFields>(emptyForm);
@@ -44,6 +49,7 @@ export function LocationsPage() {
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const openAddModal = () => {
+    analyticsService.trackButtonClick('add_location');
     setEditingLocation(null);
     setForm(emptyForm);
     setModalOpen(true);
@@ -248,7 +254,9 @@ export function LocationsPage() {
             </h2>
 
             {manager.error && (
-              <div className={`mb-4 p-3 rounded-lg text-sm border ${colors.component.alert.error.base} ${colors.component.alert.error.dark}`}>
+              <div
+                className={`mb-4 p-3 rounded-lg text-sm border ${colors.component.alert.error.base} ${colors.component.alert.error.dark}`}
+              >
                 {String(manager.error)}
               </div>
             )}
@@ -300,7 +308,9 @@ export function LocationsPage() {
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className={`block text-sm font-medium mb-1 ${ui.text.label}`}>Zip Code</label>
+                  <label className={`block text-sm font-medium mb-1 ${ui.text.label}`}>
+                    Zip Code
+                  </label>
                   <input
                     type="text"
                     value={form.zipcode}
@@ -310,7 +320,9 @@ export function LocationsPage() {
                   />
                 </div>
                 <div>
-                  <label className={`block text-sm font-medium mb-1 ${ui.text.label}`}>Country</label>
+                  <label className={`block text-sm font-medium mb-1 ${ui.text.label}`}>
+                    Country
+                  </label>
                   <input
                     type="text"
                     value={form.country}

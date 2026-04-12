@@ -4,6 +4,7 @@ import { EmptyState } from '@sudobility/building_blocks';
 import { useApi } from '@sudobility/building_blocks/firebase';
 import { useCurrentEntity } from '@sudobility/entity_client';
 import { ui, buttonVariant } from '@sudobility/design';
+import { analyticsService } from '../../config/analytics';
 import {
   useVendorModelsManager,
   useVendorLocationsManager,
@@ -34,9 +35,7 @@ function Chip({ label, active, onClick }: { label: string; active: boolean; onCl
     <button
       type="button"
       className={`px-3 py-1.5 text-sm rounded-lg border ${ui.transition.default} ${
-        active
-          ? `${buttonVariant('primary')}`
-          : `${buttonVariant('outline')} hover:border-gray-400`
+        active ? `${buttonVariant('primary')}` : `${buttonVariant('outline')} hover:border-gray-400`
       }`}
       onClick={onClick}
     >
@@ -68,6 +67,10 @@ export function ModelDetailPage() {
 
   const model = modelsManager.models.find((m) => m.id === modelId);
 
+  useEffect(() => {
+    analyticsService.trackPageView(`/dashboard/models/${modelId}`, 'Model Detail');
+  }, [modelId]);
+
   // Settings state
   const [pricing, setPricing] = useState<VendorModelPricing | null>(null);
   const [slot, setSlot] = useState<VendorModelSlot | null>(null);
@@ -98,6 +101,7 @@ export function ModelDetailPage() {
 
   const handleSaveSettings = useCallback(async () => {
     if (!modelId) return;
+    analyticsService.trackButtonClick('save_model_settings', { model_id: modelId });
     setSaving(true);
     try {
       const result = await modelsManager.updateModel(modelId, {
@@ -124,6 +128,7 @@ export function ModelDetailPage() {
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const handleAddOffering = useCallback(() => {
+    analyticsService.trackButtonClick('add_offering', { context: 'model_detail' });
     setEditingOffering(null);
     setModalOpen(true);
   }, []);
@@ -239,7 +244,9 @@ export function ModelDetailPage() {
 
           {slot && slot !== 'single' && (
             <div>
-              <label className={`block text-sm font-medium mb-2 ${ui.text.muted}`}>Slot Pricing</label>
+              <label className={`block text-sm font-medium mb-2 ${ui.text.muted}`}>
+                Slot Pricing
+              </label>
               <div className="flex gap-2">
                 {SLOT_PRICING_OPTIONS.map((sp) => (
                   <Chip
@@ -272,7 +279,9 @@ export function ModelDetailPage() {
 
           {action === 'timed' && (
             <div>
-              <label className={`block text-sm font-medium mb-2 ${ui.text.muted}`}>Interruption</label>
+              <label className={`block text-sm font-medium mb-2 ${ui.text.muted}`}>
+                Interruption
+              </label>
               <div className="flex gap-2">
                 {INTERRUPTION_OPTIONS.map((i) => (
                   <Chip

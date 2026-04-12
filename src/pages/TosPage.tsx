@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { TapayokaClient } from '@sudobility/tapayoka_client';
 import { useApi } from '@sudobility/building_blocks/firebase';
 import { useAuthStatus } from '@sudobility/auth-components';
 import { ui, buttonVariant, colors } from '@sudobility/design';
+import { analyticsService } from '../config/analytics';
 
 function TosPage() {
   const navigate = useNavigate();
@@ -15,16 +16,25 @@ function TosPage() {
   // Suppress unused variable warning
   void user;
 
+  useEffect(() => {
+    analyticsService.trackPageView('/tos', 'Terms of Service');
+  }, []);
+
   const handleAccept = async () => {
     if (!token) return;
     setIsLoading(true);
     setError(null);
+    analyticsService.trackButtonClick('accept_tos');
     try {
       const client = new TapayokaClient({ networkClient, baseUrl });
       await client.acceptTosAndCreateEntity({ acceptTos: true }, token);
+      analyticsService.trackEvent('tos_accepted');
       navigate('/dashboard');
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to accept terms. Please try again.');
+      const errorMessage =
+        err instanceof Error ? err.message : 'Failed to accept terms. Please try again.';
+      analyticsService.trackError(errorMessage, 'tos_accept_failed');
+      setError(errorMessage);
       setIsLoading(false);
     }
   };
@@ -82,14 +92,19 @@ function TosPage() {
       </div>
 
       {error && (
-        <div className={`px-4 py-3 rounded-lg mb-4 border ${colors.component.alert.error.base} ${colors.component.alert.error.dark}`}>
+        <div
+          className={`px-4 py-3 rounded-lg mb-4 border ${colors.component.alert.error.base} ${colors.component.alert.error.dark}`}
+        >
           {error}
         </div>
       )}
 
       <div className="flex justify-end gap-4">
         <button
-          onClick={() => navigate('/login')}
+          onClick={() => {
+            analyticsService.trackButtonClick('tos_cancel');
+            navigate('/login');
+          }}
           disabled={isLoading}
           className={`px-6 py-3 rounded-lg font-medium ${buttonVariant('outline')}`}
         >

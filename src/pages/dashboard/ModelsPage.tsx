@@ -5,6 +5,7 @@ import { useApi } from '@sudobility/building_blocks/firebase';
 import { useCurrentEntity } from '@sudobility/entity_client';
 import { useVendorModelsManager } from '@sudobility/tapayoka_lib';
 import { ui, buttonVariant } from '@sudobility/design';
+import { analyticsService } from '../../config/analytics';
 import type {
   VendorModel,
   VendorModelCreateRequest,
@@ -223,9 +224,7 @@ function ModelFormModal({ visible, model, onClose, onSave }: ModelFormModalProps
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
       <div className="bg-white rounded-lg shadow-xl w-full max-w-lg mx-4 max-h-[90vh] overflow-y-auto">
         <div className="p-6">
-          <h2 className={`${ui.text.h5} mb-4`}>
-            {isEditing ? 'Edit Model' : 'Add Model'}
-          </h2>
+          <h2 className={`${ui.text.h5} mb-4`}>{isEditing ? 'Edit Model' : 'Add Model'}</h2>
 
           <div className="space-y-4">
             {/* Name */}
@@ -335,11 +334,16 @@ export function ModelsPage() {
   const { currentEntitySlug } = useCurrentEntity();
   const manager = useVendorModelsManager(networkClient, baseUrl, currentEntitySlug, token);
 
+  useEffect(() => {
+    analyticsService.trackPageView('/dashboard/models', 'Models');
+  }, []);
+
   const [modalVisible, setModalVisible] = useState(false);
   const [editingModel, setEditingModel] = useState<VendorModel | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const handleAdd = () => {
+    analyticsService.trackButtonClick('add_model');
     setEditingModel(null);
     setModalVisible(true);
   };
@@ -385,10 +389,7 @@ export function ModelsPage() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h1 className={ui.text.h3}>Models</h1>
-        <button
-          onClick={handleAdd}
-          className={`px-4 py-2 rounded-lg ${buttonVariant('primary')}`}
-        >
+        <button onClick={handleAdd} className={`px-4 py-2 rounded-lg ${buttonVariant('primary')}`}>
           Add Model
         </button>
       </div>

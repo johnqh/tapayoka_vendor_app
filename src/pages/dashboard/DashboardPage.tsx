@@ -5,6 +5,7 @@ import { useApi } from '@sudobility/building_blocks/firebase';
 import { useCurrentEntity } from '@sudobility/entity_client';
 import { ui } from '@sudobility/design';
 import { useSetPageConfig } from '../../hooks/usePageConfig';
+import { analyticsService } from '../../config/analytics';
 
 // Sidebar icons
 const MapPinIcon = () => (
@@ -139,9 +140,7 @@ function DashboardMasterList({ onNavigate }: { onNavigate?: () => void }) {
     <nav className="p-4 space-y-6">
       <div className="space-y-1">{mainItems.map(renderItem)}</div>
       <div>
-        <p className={`px-3 mb-2 ${ui.text.uppercase}`}>
-          Settings
-        </p>
+        <p className={`px-3 mb-2 ${ui.text.uppercase}`}>Settings</p>
         <div className="space-y-1">{settingsItems.map(renderItem)}</div>
       </div>
     </nav>
@@ -155,6 +154,10 @@ function DashboardPage() {
   const { isReady } = useApi();
   const { selectEntity } = useCurrentEntity();
   useSetPageConfig({ scrollable: false, contentPadding: 'sm', maxWidth: '7xl' });
+
+  useEffect(() => {
+    analyticsService.trackPageView('/dashboard', 'Dashboard');
+  }, []);
 
   // Sync URL entity slug with context
   useEffect(() => {

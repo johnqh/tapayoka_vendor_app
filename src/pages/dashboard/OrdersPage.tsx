@@ -1,8 +1,10 @@
+import { useEffect } from 'react';
 import { useApi } from '@sudobility/building_blocks/firebase';
 import { useCurrentEntity } from '@sudobility/entity_client';
 import { useOrdersManager } from '@sudobility/tapayoka_lib';
 import { ui, buttonVariant, colors } from '@sudobility/design';
 import type { Order, OrderStatus } from '@sudobility/tapayoka_types';
+import { analyticsService } from '../../config/analytics';
 
 const STATUS_BADGE: Record<OrderStatus, string> = {
   CREATED: 'bg-gray-100 text-gray-700',
@@ -36,6 +38,11 @@ function truncateId(id: string): string {
 export function OrdersPage() {
   const { networkClient, baseUrl, token } = useApi();
   const { currentEntitySlug } = useCurrentEntity();
+
+  useEffect(() => {
+    analyticsService.trackPageView('/dashboard/orders', 'Orders');
+  }, []);
+
   const { orders, isLoading, error, refresh } = useOrdersManager(
     networkClient,
     baseUrl,
@@ -48,7 +55,10 @@ export function OrdersPage() {
       <div className="flex justify-between items-center">
         <h1 className={ui.text.h3}>Orders</h1>
         <button
-          onClick={refresh}
+          onClick={() => {
+            analyticsService.trackButtonClick('refresh_orders');
+            refresh();
+          }}
           className={`px-4 py-2 text-sm rounded-lg ${buttonVariant('outline')}`}
         >
           Refresh
@@ -56,7 +66,9 @@ export function OrdersPage() {
       </div>
 
       {error && (
-        <div className={`px-4 py-3 rounded-lg border ${colors.component.alert.error.base} ${colors.component.alert.error.dark}`}>
+        <div
+          className={`px-4 py-3 rounded-lg border ${colors.component.alert.error.base} ${colors.component.alert.error.dark}`}
+        >
           {error}
         </div>
       )}

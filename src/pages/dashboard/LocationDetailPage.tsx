@@ -1,9 +1,10 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { EmptyState } from '@sudobility/building_blocks';
 import { useApi } from '@sudobility/building_blocks/firebase';
 import { useCurrentEntity } from '@sudobility/entity_client';
 import { ui, buttonVariant } from '@sudobility/design';
+import { analyticsService } from '../../config/analytics';
 import {
   useVendorLocationsManager,
   useVendorModelsManager,
@@ -40,11 +41,16 @@ export function LocationDetailPage() {
 
   const location = locationsManager.locations.find((l) => l.id === locationId);
 
+  useEffect(() => {
+    analyticsService.trackPageView(`/dashboard/locations/${locationId}`, 'Location Detail');
+  }, [locationId]);
+
   const [modalOpen, setModalOpen] = useState(false);
   const [editingOffering, setEditingOffering] = useState<VendorOffering | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const handleAdd = useCallback(() => {
+    analyticsService.trackButtonClick('add_offering', { context: 'location_detail' });
     setEditingOffering(null);
     setModalOpen(true);
   }, []);

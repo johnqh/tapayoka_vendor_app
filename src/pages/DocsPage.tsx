@@ -6,6 +6,7 @@ import { MasterDetailLayout } from '@sudobility/components';
 import { ui } from '@sudobility/design';
 import { useSetPageConfig } from '../hooks/usePageConfig';
 import { CONSTANTS } from '../config/constants';
+import { analyticsService } from '../config/analytics';
 
 type DocSection = 'getting-started' | 'device-setup' | 'api-reference';
 
@@ -214,6 +215,10 @@ function DocsPage() {
   const currentSection = (section as DocSection) || 'getting-started';
 
   useEffect(() => {
+    analyticsService.trackPageView(`/docs/${currentSection}`, `Docs - ${currentSection}`);
+  }, [currentSection]);
+
+  useEffect(() => {
     if (!section) {
       navigate('/docs/getting-started', { replace: true });
     }
@@ -254,10 +259,7 @@ function DocsPage() {
     <>
       <Helmet>
         <title>{t('seo.title', { appName: CONSTANTS.APP_NAME })}</title>
-        <meta
-          name="description"
-          content={t('seo.description', { appName: CONSTANTS.APP_NAME })}
-        />
+        <meta name="description" content={t('seo.description', { appName: CONSTANTS.APP_NAME })} />
         <meta
           name="keywords"
           content={(t('seo.keywords', { returnObjects: true }) as string[]).join(', ')}
@@ -265,18 +267,18 @@ function DocsPage() {
       </Helmet>
       <div className="w-full min-w-0 overflow-x-hidden flex-1 flex flex-col min-h-0">
         <MasterDetailLayout
-        masterTitle="Documentation"
-        backButtonText="Documentation"
-        masterContent={masterContent}
-        detailContent={detailContent}
-        detailTitle={getDetailTitle()}
-        mobileView={mobileView}
-        onBackToNavigation={handleBackToNavigation}
-        enableAnimations={true}
-        animationDuration={150}
-        masterWidth={260}
-        stickyTopOffset={80}
-      />
+          masterTitle="Documentation"
+          backButtonText="Documentation"
+          masterContent={masterContent}
+          detailContent={detailContent}
+          detailTitle={getDetailTitle()}
+          mobileView={mobileView}
+          onBackToNavigation={handleBackToNavigation}
+          enableAnimations={true}
+          animationDuration={150}
+          masterWidth={260}
+          stickyTopOffset={80}
+        />
       </div>
     </>
   );
