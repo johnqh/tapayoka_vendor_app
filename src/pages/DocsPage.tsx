@@ -1,10 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { Helmet } from 'react-helmet-async';
 import { useTranslation } from 'react-i18next';
-import { useSEOUpdate } from '@sudobility/seo_lib';
 import { MasterDetailLayout } from '@sudobility/components';
 import { ui } from '@sudobility/design';
+import SEOHead from '../components/SEOHead';
 import { useSetPageConfig } from '../hooks/usePageConfig';
 import { CONSTANTS } from '../config/constants';
 import { analyticsService } from '../config/analytics';
@@ -251,13 +250,7 @@ function DocsPage() {
     `seo.sections.${currentSection}`,
     t('seo.description', { appName: CONSTANTS.APP_NAME })
   );
-
-  // React 19 + react-helmet-async workaround
-  useSEOUpdate({
-    title: seoTitle,
-    description: seoDescription,
-    appName: CONSTANTS.APP_NAME,
-  });
+  const seoKeywords = t('seo.keywords', { returnObjects: true }) as string[];
 
   const masterContent = <DocsSidebar onNavigate={handleNavigate} />;
 
@@ -271,14 +264,11 @@ function DocsPage() {
 
   return (
     <>
-      <Helmet>
-        <title>{seoTitle}</title>
-        <meta name="description" content={seoDescription} />
-        <meta
-          name="keywords"
-          content={(t('seo.keywords', { returnObjects: true }) as string[]).join(', ')}
-        />
-      </Helmet>
+      <SEOHead
+        title={seoTitle}
+        description={seoDescription}
+        keywords={seoKeywords}
+      />
       <div className="w-full min-w-0 overflow-x-hidden flex-1 flex flex-col min-h-0">
         <MasterDetailLayout
           masterTitle="Documentation"

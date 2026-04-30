@@ -5,6 +5,8 @@ export const CONSTANTS = {
   APP_DOMAIN: import.meta.env.VITE_APP_DOMAIN || 'tapayoka.com',
   COMPANY_NAME: import.meta.env.VITE_COMPANY_NAME || 'Sudobility',
   APP_VERSION: packageJson.version,
+  SUPPORT_EMAIL: import.meta.env.VITE_SUPPORT_EMAIL || 'support@tapayoka.com',
+  TWITTER_HANDLE: import.meta.env.VITE_TWITTER_HANDLE || '',
   API_BASE_URL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:8025',
 
   SOCIAL_LINKS: {

@@ -26,7 +26,7 @@ export async function initializeI18n(): Promise<typeof i18next> {
       fallbackLng: 'en',
       supportedLngs: [...SUPPORTED_LANGUAGES],
       defaultNS: 'common',
-      ns: ['common', 'homePage', 'vendorPage', 'docsPage', 'loginPage'],
+      ns: ['common', 'homePage', 'vendorPage', 'docsPage', 'loginPage', 'howto'],
       backend: {
         loadPath: '/locales/{{lng}}/{{ns}}.json',
       },

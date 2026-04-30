@@ -1,0 +1,39 @@
+{
+  "webApp": {
+    "description": "Tapayoka Vendor is a management dashboard for self-service businesses. Configure devices, accept QR payments, and monitor operations across multiple locations.",
+    "features": [
+      "Device management for washers, dryers, parking, lockers, and vending machines",
+      "QR code contactless payments",
+      "Real-time order monitoring",
+      "Multi-location management",
+      "Team collaboration with workspace invitations",
+      "Analytics and revenue reporting"
+    ]
+  },
+  "home": {
+    "name": "How to Get Started with Tapayoka Vendor",
+    "description": "Set up your self-service business on Tapayoka in a few simple steps.",
+    "steps": [
+      {
+        "name": "Create Your Account",
+        "text": "Sign up with your email or Google account. You will be prompted to accept the terms of service and create your first workspace."
+      },
+      {
+        "name": "Add a Location",
+        "text": "Go to Locations in your dashboard and add your first business location with its address details."
+      },
+      {
+        "name": "Define Device Models",
+        "text": "Create device models such as Standard Washer or Parking Meter. Configure pricing strategy, slot mode, and action type for each model."
+      },
+      {
+        "name": "Add Offerings",
+        "text": "Assign device instances to locations. Configure individual pricing and generate QR codes for each offering."
+      },
+      {
+        "name": "Start Accepting Payments",
+        "text": "Print QR codes and place them on your devices. Customers scan to pay and start their session instantly."
+      }
+    ]
+  }
+}

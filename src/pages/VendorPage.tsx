@@ -1,9 +1,9 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Helmet } from 'react-helmet-async';
 import { useTranslation } from 'react-i18next';
 import { useAuthStatus } from '@sudobility/auth-components';
 import { ui, buttonVariant } from '@sudobility/design';
+import SEOHead from '../components/SEOHead';
 import { CONSTANTS } from '../config/constants';
 import { analyticsService } from '../config/analytics';
 
@@ -23,16 +23,17 @@ function VendorPage() {
     analyticsService.trackPageView('/vendor', 'Vendor Page');
   }, []);
 
+  const seoTitle = t('seo.title', { appName: CONSTANTS.APP_NAME });
+  const seoDescription = t('seo.description', { appName: CONSTANTS.APP_NAME });
+  const seoKeywords = t('seo.keywords', { returnObjects: true }) as string[];
+
   return (
     <>
-      <Helmet>
-        <title>{t('seo.title', { appName: CONSTANTS.APP_NAME })}</title>
-        <meta name="description" content={t('seo.description', { appName: CONSTANTS.APP_NAME })} />
-        <meta
-          name="keywords"
-          content={(t('seo.keywords', { returnObjects: true }) as string[]).join(', ')}
-        />
-      </Helmet>
+      <SEOHead
+        title={seoTitle}
+        description={seoDescription}
+        keywords={seoKeywords}
+      />
 
       {/* Header */}
       <section className="bg-gradient-to-br from-blue-600 to-indigo-700 text-white py-20">

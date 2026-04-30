@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Helmet } from 'react-helmet-async';
 import { useTranslation } from 'react-i18next';
 import { useAuthStatus } from '@sudobility/auth-components';
 import { getFirebaseAuth } from '@sudobility/auth_lib';
@@ -12,6 +11,7 @@ import {
   signInWithPopup,
 } from 'firebase/auth';
 import { LoginPage as LoginPageComponent } from '@sudobility/building_blocks';
+import SEOHead from '../components/SEOHead';
 import { CONSTANTS } from '../config/constants';
 import { analyticsService } from '../config/analytics';
 
@@ -55,10 +55,11 @@ export default function LoginPage() {
 
   return (
     <>
-      <Helmet>
-        <title>{t('seo.title', { appName: CONSTANTS.APP_NAME })}</title>
-        <meta name="description" content={t('seo.description', { appName: CONSTANTS.APP_NAME })} />
-      </Helmet>
+      <SEOHead
+        title={t('seo.title', { appName: CONSTANTS.APP_NAME })}
+        description={t('seo.description', { appName: CONSTANTS.APP_NAME })}
+        noIndex
+      />
       <LoginPageComponent
         appName={CONSTANTS.APP_NAME}
         onEmailSignIn={async (email, password) => {

@@ -4,6 +4,8 @@ import { MasterDetailLayout } from '@sudobility/components';
 import { useApi } from '@sudobility/building_blocks/firebase';
 import { useCurrentEntity } from '@sudobility/entity_client';
 import { ui } from '@sudobility/design';
+import SEOHead from '../../components/SEOHead';
+import { CONSTANTS } from '../../config/constants';
 import { useSetPageConfig } from '../../hooks/usePageConfig';
 import { analyticsService } from '../../config/analytics';
 
@@ -223,6 +225,12 @@ function DashboardPage() {
   );
 
   return (
+    <>
+    <SEOHead
+      title={`${getDetailTitle()} | ${CONSTANTS.APP_NAME}`}
+      description=""
+      noIndex
+    />
     <div className="w-full min-w-0 overflow-x-hidden flex-1 flex flex-col min-h-0">
       <MasterDetailLayout
         masterTitle="Dashboard"
@@ -239,6 +247,7 @@ function DashboardPage() {
         stickyTopOffset={80}
       />
     </div>
+    </>
   );
 }
 

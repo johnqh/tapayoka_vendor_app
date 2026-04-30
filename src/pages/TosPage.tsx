@@ -4,6 +4,8 @@ import { TapayokaClient } from '@sudobility/tapayoka_client';
 import { useApi } from '@sudobility/building_blocks/firebase';
 import { useAuthStatus } from '@sudobility/auth-components';
 import { ui, buttonVariant, colors } from '@sudobility/design';
+import SEOHead from '../components/SEOHead';
+import { CONSTANTS } from '../config/constants';
 import { analyticsService } from '../config/analytics';
 
 function TosPage() {
@@ -40,6 +42,12 @@ function TosPage() {
   };
 
   return (
+    <>
+    <SEOHead
+      title={`Terms of Service | ${CONSTANTS.APP_NAME}`}
+      description=""
+      noIndex
+    />
     <div className="flex-1 max-w-3xl mx-auto px-4 py-8">
       <h1 className={`${ui.text.h1} mb-8`}>Terms of Service</h1>
 
@@ -119,6 +127,7 @@ function TosPage() {
         </button>
       </div>
     </div>
+    </>
   );
 }
 
