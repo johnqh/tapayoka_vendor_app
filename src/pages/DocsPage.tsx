@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { useTranslation } from 'react-i18next';
+import { useSEOUpdate } from '@sudobility/seo_lib';
 import { MasterDetailLayout } from '@sudobility/components';
 import { ui } from '@sudobility/design';
 import { useSetPageConfig } from '../hooks/usePageConfig';
@@ -245,6 +246,19 @@ function DocsPage() {
     }
   };
 
+  const seoTitle = `${getDetailTitle()} - ${t('seo.title', { appName: CONSTANTS.APP_NAME })}`;
+  const seoDescription = t(
+    `seo.sections.${currentSection}`,
+    t('seo.description', { appName: CONSTANTS.APP_NAME })
+  );
+
+  // React 19 + react-helmet-async workaround
+  useSEOUpdate({
+    title: seoTitle,
+    description: seoDescription,
+    appName: CONSTANTS.APP_NAME,
+  });
+
   const masterContent = <DocsSidebar onNavigate={handleNavigate} />;
 
   const detailContent = (
@@ -258,8 +272,8 @@ function DocsPage() {
   return (
     <>
       <Helmet>
-        <title>{t('seo.title', { appName: CONSTANTS.APP_NAME })}</title>
-        <meta name="description" content={t('seo.description', { appName: CONSTANTS.APP_NAME })} />
+        <title>{seoTitle}</title>
+        <meta name="description" content={seoDescription} />
         <meta
           name="keywords"
           content={(t('seo.keywords', { returnObjects: true }) as string[]).join(', ')}

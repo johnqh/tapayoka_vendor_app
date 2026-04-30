@@ -8,6 +8,11 @@
       "vending machine API",
       "QR payment integration",
       "vendor developer docs"
-    ]
+    ],
+    "sections": {
+      "getting-started": "Get started with {{appName}}. Create your account, add locations, define device models, and configure QR payment offerings.",
+      "device-setup": "Set up vending devices with {{appName}}. Hardware configuration, network connectivity, and device registration guide.",
+      "api-reference": "{{appName}} REST API reference. Endpoints for device management, transaction processing, and payment integration."
+    }
   }
 }
