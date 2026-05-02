@@ -264,11 +264,7 @@ function DocsPage() {
 
   return (
     <>
-      <SEOHead
-        title={seoTitle}
-        description={seoDescription}
-        keywords={seoKeywords}
-      />
+      <SEOHead title={seoTitle} description={seoDescription} keywords={seoKeywords} />
       <div className="w-full min-w-0 overflow-x-hidden flex-1 flex flex-col min-h-0">
         <MasterDetailLayout
           masterTitle="Documentation"

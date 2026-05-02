@@ -29,11 +29,7 @@ function VendorPage() {
 
   return (
     <>
-      <SEOHead
-        title={seoTitle}
-        description={seoDescription}
-        keywords={seoKeywords}
-      />
+      <SEOHead title={seoTitle} description={seoDescription} keywords={seoKeywords} />
 
       {/* Header */}
       <section className="bg-gradient-to-br from-blue-600 to-indigo-700 text-white py-20">

@@ -226,27 +226,23 @@ function DashboardPage() {
 
   return (
     <>
-    <SEOHead
-      title={`${getDetailTitle()} | ${CONSTANTS.APP_NAME}`}
-      description=""
-      noIndex
-    />
-    <div className="w-full min-w-0 overflow-x-hidden flex-1 flex flex-col min-h-0">
-      <MasterDetailLayout
-        masterTitle="Dashboard"
-        backButtonText="Dashboard"
-        masterContent={masterContent}
-        detailContent={detailContent}
-        detailTitle={getDetailTitle()}
-        mobileView={mobileView}
-        onBackToNavigation={handleBackToNavigation}
-        animationRef={animationRef}
-        enableAnimations={true}
-        animationDuration={150}
-        masterWidth={260}
-        stickyTopOffset={80}
-      />
-    </div>
+      <SEOHead title={`${getDetailTitle()} | ${CONSTANTS.APP_NAME}`} description="" noIndex />
+      <div className="w-full min-w-0 overflow-x-hidden flex-1 flex flex-col min-h-0">
+        <MasterDetailLayout
+          masterTitle="Dashboard"
+          backButtonText="Dashboard"
+          masterContent={masterContent}
+          detailContent={detailContent}
+          detailTitle={getDetailTitle()}
+          mobileView={mobileView}
+          onBackToNavigation={handleBackToNavigation}
+          animationRef={animationRef}
+          enableAnimations={true}
+          animationDuration={150}
+          masterWidth={260}
+          stickyTopOffset={80}
+        />
+      </div>
     </>
   );
 }
