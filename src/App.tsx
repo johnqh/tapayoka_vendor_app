@@ -1,8 +1,10 @@
 import { Suspense, lazy } from 'react';
 import { Routes, Route, Navigate, Outlet } from 'react-router-dom';
+import { SEOHeadProvider } from '@sudobility/seo_lib';
 import ScreenContainer from './components/layout/ScreenContainer';
 import { SudobilityAppWithFirebaseAuthAndEntities } from '@sudobility/building_blocks/firebase';
 import { CONSTANTS } from './config/constants';
+import { seoHeadConfig } from './config/seo';
 import i18n from './i18n';
 import { AuthProviderWrapper } from './components/providers/AuthProviderWrapper';
 import { ui } from '@sudobility/design';
@@ -109,7 +111,9 @@ function App() {
       testMode={false}
       AuthProviderWrapper={AuthProviderWrapper}
     >
-      <AppRoutes />
+      <SEOHeadProvider config={seoHeadConfig}>
+        <AppRoutes />
+      </SEOHeadProvider>
     </SudobilityAppWithFirebaseAuthAndEntities>
   );
 }

@@ -3,8 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuthStatus } from '@sudobility/auth-components';
 import { ui, buttonVariant } from '@sudobility/design';
-import SEOHead from '../components/SEOHead';
-import { buildHowToSchema } from '../components/buildHowToSchema';
+import { SEOHead, buildHowToSchema } from '@sudobility/seo_lib';
 import { CONSTANTS } from '../config/constants';
 import { analyticsService } from '../config/analytics';
 
@@ -92,13 +91,17 @@ function HomePage() {
 
   const seoTitle = t('seo.title', { appName: CONSTANTS.APP_NAME });
   const seoDescription = t('seo.description', { appName: CONSTANTS.APP_NAME });
-  const seoKeywords = t('seo.keywords', { returnObjects: true }) as string[];
+  const rawKeywords = t('seo.keywords', { returnObjects: true });
+  const seoKeywords = Array.isArray(rawKeywords) ? rawKeywords : undefined;
 
-  const howToSchema = buildHowToSchema(
-    tHowTo('home.name'),
-    tHowTo('home.description'),
-    tHowTo('home.steps', { returnObjects: true }) as { name: string; text: string }[]
-  );
+  const rawSteps = tHowTo('home.steps', { returnObjects: true });
+  const howToSchema = Array.isArray(rawSteps)
+    ? buildHowToSchema(
+        tHowTo('home.name'),
+        tHowTo('home.description'),
+        rawSteps as { name: string; text: string }[]
+      )
+    : undefined;
 
   return (
     <>

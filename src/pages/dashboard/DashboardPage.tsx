@@ -4,7 +4,7 @@ import { MasterDetailLayout } from '@sudobility/components';
 import { useApi } from '@sudobility/building_blocks/firebase';
 import { useCurrentEntity } from '@sudobility/entity_client';
 import { ui } from '@sudobility/design';
-import SEOHead from '../../components/SEOHead';
+import { SEOHead } from '@sudobility/seo_lib';
 import { CONSTANTS } from '../../config/constants';
 import { useSetPageConfig } from '../../hooks/usePageConfig';
 import { analyticsService } from '../../config/analytics';

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuthStatus } from '@sudobility/auth-components';
 import { ui, buttonVariant } from '@sudobility/design';
-import SEOHead from '../components/SEOHead';
+import { SEOHead } from '@sudobility/seo_lib';
 import { CONSTANTS } from '../config/constants';
 import { analyticsService } from '../config/analytics';
 
@@ -25,7 +25,8 @@ function VendorPage() {
 
   const seoTitle = t('seo.title', { appName: CONSTANTS.APP_NAME });
   const seoDescription = t('seo.description', { appName: CONSTANTS.APP_NAME });
-  const seoKeywords = t('seo.keywords', { returnObjects: true }) as string[];
+  const rawKeywords = t('seo.keywords', { returnObjects: true });
+  const seoKeywords = Array.isArray(rawKeywords) ? rawKeywords : undefined;
 
   return (
     <>
@@ -55,7 +56,10 @@ function VendorPage() {
                 <h2 className={`${ui.text.h3} mb-4`}>{t(`${key}.title`)}</h2>
                 <p className={`${ui.text.body} mb-6`}>{t(`${key}.description`)}</p>
                 <ul className="space-y-3">
-                  {(t(`${key}.items`, { returnObjects: true }) as string[]).map((item) => (
+                  {(Array.isArray(t(`${key}.items`, { returnObjects: true }))
+                    ? (t(`${key}.items`, { returnObjects: true }) as string[])
+                    : []
+                  ).map((item) => (
                     <li key={item} className="flex items-start gap-3">
                       <svg
                         className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0"

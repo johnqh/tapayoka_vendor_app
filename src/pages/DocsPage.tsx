@@ -3,7 +3,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { MasterDetailLayout } from '@sudobility/components';
 import { ui } from '@sudobility/design';
-import SEOHead from '../components/SEOHead';
+import { SEOHead } from '@sudobility/seo_lib';
 import { useSetPageConfig } from '../hooks/usePageConfig';
 import { CONSTANTS } from '../config/constants';
 import { analyticsService } from '../config/analytics';
@@ -250,7 +250,8 @@ function DocsPage() {
     `seo.sections.${currentSection}`,
     t('seo.description', { appName: CONSTANTS.APP_NAME })
   );
-  const seoKeywords = t('seo.keywords', { returnObjects: true }) as string[];
+  const rawKeywords = t('seo.keywords', { returnObjects: true });
+  const seoKeywords = Array.isArray(rawKeywords) ? rawKeywords : undefined;
 
   const masterContent = <DocsSidebar onNavigate={handleNavigate} />;
 

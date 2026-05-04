@@ -4,7 +4,7 @@ import { TapayokaClient } from '@sudobility/tapayoka_client';
 import { useApi } from '@sudobility/building_blocks/firebase';
 import { useAuthStatus } from '@sudobility/auth-components';
 import { ui, buttonVariant, colors } from '@sudobility/design';
-import SEOHead from '../components/SEOHead';
+import { SEOHead } from '@sudobility/seo_lib';
 import { CONSTANTS } from '../config/constants';
 import { analyticsService } from '../config/analytics';
 
