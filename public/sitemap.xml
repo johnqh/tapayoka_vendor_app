@@ -1,48 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <!-- Homepage -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+
   <url>
-    <loc>https://tapayoka.com/</loc>
-    <lastmod>2026-05-11</lastmod>
+    <loc>https://tapayoka.com/en</loc>
+    <lastmod>2026-05-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://tapayoka.com/en" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://tapayoka.com/en" />
   </url>
-
-  <!-- Vendor Features -->
   <url>
-    <loc>https://tapayoka.com/vendor</loc>
-    <lastmod>2026-05-11</lastmod>
+    <loc>https://tapayoka.com/en/vendor</loc>
+    <lastmod>2026-05-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://tapayoka.com/en/vendor" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://tapayoka.com/en/vendor" />
   </url>
-
-  <!-- Documentation -->
   <url>
-    <loc>https://tapayoka.com/docs/getting-started</loc>
-    <lastmod>2026-05-11</lastmod>
+    <loc>https://tapayoka.com/en/docs/getting-started</loc>
+    <lastmod>2026-05-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://tapayoka.com/en/docs/getting-started" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://tapayoka.com/en/docs/getting-started" />
+  </url>
+  <url>
+    <loc>https://tapayoka.com/en/docs/getting-started</loc>
+    <lastmod>2026-05-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://tapayoka.com/en/docs/getting-started" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://tapayoka.com/en/docs/getting-started" />
+  </url>
+  <url>
+    <loc>https://tapayoka.com/en/docs/device-setup</loc>
+    <lastmod>2026-05-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://tapayoka.com/en/docs/device-setup" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://tapayoka.com/en/docs/device-setup" />
   </url>
-
   <url>
-    <loc>https://tapayoka.com/docs/device-setup</loc>
-    <lastmod>2026-05-11</lastmod>
+    <loc>https://tapayoka.com/en/docs/api-reference</loc>
+    <lastmod>2026-05-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
-  </url>
-
-  <url>
-    <loc>https://tapayoka.com/docs/api-reference</loc>
-    <lastmod>2026-05-11</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-
-  <!-- Login -->
-  <url>
-    <loc>https://tapayoka.com/login</loc>
-    <lastmod>2026-05-11</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://tapayoka.com/en/docs/api-reference" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://tapayoka.com/en/docs/api-reference" />
   </url>
 </urlset>
