@@ -4,7 +4,7 @@
 
   <url>
     <loc>https://tapayoka.com/en</loc>
-    <lastmod>2026-06-09</lastmod>
+    <lastmod>2026-06-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://tapayoka.com/en" />
@@ -12,7 +12,7 @@
   </url>
   <url>
     <loc>https://tapayoka.com/en/vendor</loc>
-    <lastmod>2026-06-09</lastmod>
+    <lastmod>2026-06-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://tapayoka.com/en/vendor" />
@@ -20,7 +20,7 @@
   </url>
   <url>
     <loc>https://tapayoka.com/en/docs/getting-started</loc>
-    <lastmod>2026-06-09</lastmod>
+    <lastmod>2026-06-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://tapayoka.com/en/docs/getting-started" />
@@ -28,7 +28,7 @@
   </url>
   <url>
     <loc>https://tapayoka.com/en/docs/getting-started</loc>
-    <lastmod>2026-06-09</lastmod>
+    <lastmod>2026-06-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://tapayoka.com/en/docs/getting-started" />
@@ -36,7 +36,7 @@
   </url>
   <url>
     <loc>https://tapayoka.com/en/docs/device-setup</loc>
-    <lastmod>2026-06-09</lastmod>
+    <lastmod>2026-06-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://tapayoka.com/en/docs/device-setup" />
@@ -44,7 +44,7 @@
   </url>
   <url>
     <loc>https://tapayoka.com/en/docs/api-reference</loc>
-    <lastmod>2026-06-09</lastmod>
+    <lastmod>2026-06-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://tapayoka.com/en/docs/api-reference" />
