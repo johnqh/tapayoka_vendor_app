@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useApi } from '@sudobility/building_blocks/firebase';
 import { useCurrentEntity } from '@sudobility/entity_client';
 import { ui } from '@sudobility/design';
-import { Badge, Button, Spinner, Table, Alert, type TableColumn } from '@sudobility/components';
+import { Badge, Spinner, Table, Alert, type TableColumn } from '@sudobility/components';
 import {
   useVendorOfferingsManager,
   useVendorModelsManager,
@@ -11,7 +11,9 @@ import {
   useVendorInstallationsManager,
 } from '@sudobility/tapayoka_lib';
 import { DashboardBreadcrumb, type Crumb } from '../../components/DashboardBreadcrumb';
+import { DashboardPageHeader } from '../../components/DashboardPageHeader';
 import { InstallationFormModal } from '../../components/InstallationFormModal';
+import { OfferingModal } from '../../components/OfferingModal';
 import { analyticsService } from '../../config/analytics';
 import {
   resolveOfferingParent,
@@ -22,6 +24,8 @@ import {
 import type {
   VendorInstallation,
   VendorInstallationUpdateRequest,
+  VendorOfferingCreateRequest,
+  VendorOfferingUpdateRequest,
 } from '@sudobility/tapayoka_types';
 
 export function OfferingDetailPage() {
@@ -63,6 +67,9 @@ export function OfferingDetailPage() {
   );
 
   const offering = offeringsManager.offerings.find((o) => o.id === offeringId) ?? null;
+  const offeringModel = offering
+    ? modelsManager.models.find((m) => m.id === offering.vendorModelId)
+    : undefined;
   const parentName =
     parent.parentType === 'model'
       ? modelsManager.models.find((m) => m.id === parent.parentId)?.name
@@ -94,6 +101,20 @@ export function OfferingDetailPage() {
       return;
     }
     setModalOpen(false);
+  };
+
+  const [offeringEditOpen, setOfferingEditOpen] = useState(false);
+
+  const handleSaveOffering = async (
+    data: VendorOfferingCreateRequest | VendorOfferingUpdateRequest
+  ) => {
+    if (!offering) return;
+    const result = await offeringsManager.updateOffering(offering.id, data);
+    if (!result && offeringsManager.error) {
+      alert(offeringsManager.error);
+      return;
+    }
+    setOfferingEditOpen(false);
   };
 
   const crumbs: Crumb[] = [
@@ -153,17 +174,23 @@ export function OfferingDetailPage() {
   return (
     <div className="space-y-6">
       <DashboardBreadcrumb crumbs={crumbs} />
-      <h1 className={ui.text.h3}>{offering?.name ?? 'Offering'}</h1>
+      <DashboardPageHeader
+        title={offering?.name ?? 'Offering'}
+        onBack={() => navigate(parentDetailPath(entitySlug, parent))}
+        onRefresh={() => installationsManager.refresh()}
+        refreshing={installationsManager.isLoading}
+        onSettings={() => setOfferingEditOpen(true)}
+        onAdd={() => undefined}
+        addDisabled
+        addTitle="Pair a device in the mobile app"
+        addLabel="Installation"
+      />
 
       {installationsManager.error && <Alert variant="error">{installationsManager.error}</Alert>}
 
       <div className="bg-white rounded-lg shadow-sm border">
-        <div className="flex justify-between items-center px-4 py-3 border-b">
+        <div className="px-4 py-3 border-b">
           <h2 className={ui.text.h5}>Installations</h2>
-          {/* Installation creation is via device pairing (QR) in the mobile app — deferred here. */}
-          <Button variant="primary" size="sm" disabled title="Pair a device in the mobile app">
-            Add (mobile app)
-          </Button>
         </div>
 
         {installationsManager.isLoading ? (
@@ -192,6 +219,19 @@ export function OfferingDetailPage() {
         installation={editing}
         onClose={() => setModalOpen(false)}
         onSave={handleSave}
+      />
+
+      <OfferingModal
+        open={offeringEditOpen}
+        offering={offering}
+        parentType={parent.parentType}
+        parentId={parent.parentId}
+        parentName={parentName ?? ''}
+        models={modelsManager.models}
+        locations={locationsManager.locations}
+        selectedModel={offeringModel}
+        onClose={() => setOfferingEditOpen(false)}
+        onSave={handleSaveOffering}
       />
     </div>
   );

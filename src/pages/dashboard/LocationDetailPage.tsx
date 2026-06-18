@@ -4,7 +4,7 @@ import { EmptyState } from '@sudobility/building_blocks';
 import { useApi } from '@sudobility/building_blocks/firebase';
 import { useCurrentEntity } from '@sudobility/entity_client';
 import { ui } from '@sudobility/design';
-import { Badge, Button, Spinner, Table, type TableColumn } from '@sudobility/components';
+import { Badge, Spinner, Table, type TableColumn } from '@sudobility/components';
 import { analyticsService } from '../../config/analytics';
 import {
   useVendorLocationsManager,
@@ -13,6 +13,7 @@ import {
 } from '@sudobility/tapayoka_lib';
 import { OfferingModal } from '../../components/OfferingModal';
 import { DashboardBreadcrumb, type Crumb } from '../../components/DashboardBreadcrumb';
+import { DashboardPageHeader } from '../../components/DashboardPageHeader';
 import { offeringPath, sectionPath } from '../../lib/dashboardPaths';
 import { formatPricingSubtitle } from '../../components/pricingUtils';
 import type {
@@ -167,20 +168,20 @@ export function LocationDetailPage() {
           ] as Crumb[]
         }
       />
-      <div className="flex items-center gap-3">
-        <div className="flex-1">
-          <h1 className={ui.text.h3}>{location?.name ?? 'Loading...'}</h1>
-          {location && (
-            <p className={ui.text.bodySmall}>
-              {location.address}, {location.city}, {location.stateProvince} {location.zipcode},{' '}
-              {location.country}
-            </p>
-          )}
-        </div>
-        <Button variant="primary" size="sm" onClick={handleAdd}>
-          Add Offering
-        </Button>
-      </div>
+      <DashboardPageHeader
+        title={location?.name ?? 'Loading...'}
+        onBack={() => navigate(sectionPath(entitySlug ?? '', 'location'))}
+        onRefresh={() => offeringsManager.refresh()}
+        refreshing={offeringsManager.isLoading}
+        onAdd={handleAdd}
+        addLabel="Offering"
+      />
+      {location && (
+        <p className={ui.text.bodySmall}>
+          {location.address}, {location.city}, {location.stateProvince} {location.zipcode},{' '}
+          {location.country}
+        </p>
+      )}
 
       <div className="bg-white rounded-lg shadow-sm border overflow-hidden">
         {offeringsManager.isLoading ? (

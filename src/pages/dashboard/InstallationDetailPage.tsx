@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useApi } from '@sudobility/building_blocks/firebase';
 import { useCurrentEntity } from '@sudobility/entity_client';
 import { ui } from '@sudobility/design';
-import { Button, Spinner, Alert, Table, type TableColumn } from '@sudobility/components';
+import { Spinner, Alert, Table, type TableColumn } from '@sudobility/components';
 import {
   useVendorOfferingsManager,
   useVendorModelsManager,
@@ -12,7 +12,9 @@ import {
   useVendorInstallationSlotsManager,
 } from '@sudobility/tapayoka_lib';
 import { DashboardBreadcrumb, type Crumb } from '../../components/DashboardBreadcrumb';
+import { DashboardPageHeader } from '../../components/DashboardPageHeader';
 import { SlotFormModal } from '../../components/SlotFormModal';
+import { InstallationFormModal } from '../../components/InstallationFormModal';
 import { analyticsService } from '../../config/analytics';
 import {
   resolveOfferingParent,
@@ -23,6 +25,7 @@ import {
 import type {
   VendorInstallationSlot,
   VendorInstallationSlotCreateRequest,
+  VendorInstallationUpdateRequest,
 } from '@sudobility/tapayoka_types';
 
 export function InstallationDetailPage() {
@@ -33,6 +36,7 @@ export function InstallationDetailPage() {
     offeringId: string;
     wallet: string;
   }>();
+  const navigate = useNavigate();
   const entitySlug = params.entitySlug ?? '';
   const offeringId = params.offeringId ?? '';
   const wallet = params.wallet ?? '';
@@ -123,6 +127,17 @@ export function InstallationDetailPage() {
     setModalOpen(false);
   };
 
+  const [installEditOpen, setInstallEditOpen] = useState(false);
+
+  const handleSaveInstall = async (data: VendorInstallationUpdateRequest) => {
+    const result = await installationsManager.updateInstallation(wallet, data);
+    if (!result && installationsManager.error) {
+      alert(installationsManager.error);
+      return;
+    }
+    setInstallEditOpen(false);
+  };
+
   const crumbs: Crumb[] = [
     {
       label: parent.parentType === 'model' ? 'Models' : 'Locations',
@@ -167,27 +182,23 @@ export function InstallationDetailPage() {
   return (
     <div className="space-y-6">
       <DashboardBreadcrumb crumbs={crumbs} />
-      <h1 className={ui.text.h3}>{installation?.label ?? 'Installation'}</h1>
+      <DashboardPageHeader
+        title={installation?.label ?? 'Installation'}
+        onBack={() => navigate(offeringPath(entitySlug, parent, offeringId))}
+        onRefresh={() => slotsManager.refresh()}
+        refreshing={slotsManager.isLoading}
+        onSettings={() => setInstallEditOpen(true)}
+        onAdd={handleAdd}
+        addDisabled={isGrid}
+        addTitle={isGrid ? 'Generate the grid in the mobile app' : undefined}
+        addLabel="Slot"
+      />
 
       {slotsManager.error && <Alert variant="error">{slotsManager.error}</Alert>}
 
       <div className="bg-white rounded-lg shadow-sm border">
-        <div className="flex justify-between items-center px-4 py-3 border-b">
+        <div className="px-4 py-3 border-b">
           <h2 className={ui.text.h5}>Slots</h2>
-          {isGrid ? (
-            <Button
-              variant="primary"
-              size="sm"
-              disabled
-              title="Grid generation is available in the mobile app"
-            >
-              Generate grid (mobile app)
-            </Button>
-          ) : (
-            <Button variant="primary" size="sm" onClick={handleAdd}>
-              Add Slot
-            </Button>
-          )}
         </div>
 
         {slotsManager.isLoading ? (
@@ -213,6 +224,13 @@ export function InstallationDetailPage() {
         slot={editing}
         onClose={() => setModalOpen(false)}
         onSave={handleSave}
+      />
+
+      <InstallationFormModal
+        open={installEditOpen}
+        installation={installation}
+        onClose={() => setInstallEditOpen(false)}
+        onSave={handleSaveInstall}
       />
     </div>
   );

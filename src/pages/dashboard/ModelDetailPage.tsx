@@ -3,8 +3,8 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { EmptyState } from '@sudobility/building_blocks';
 import { useApi } from '@sudobility/building_blocks/firebase';
 import { useCurrentEntity } from '@sudobility/entity_client';
-import { ui, buttonVariant } from '@sudobility/design';
-import { Badge, Button, Spinner, Table, type TableColumn } from '@sudobility/components';
+import { ui } from '@sudobility/design';
+import { Badge, Spinner, Table, type TableColumn } from '@sudobility/components';
 import { analyticsService } from '../../config/analytics';
 import {
   useVendorModelsManager,
@@ -12,40 +12,17 @@ import {
   useVendorOfferingsManager,
 } from '@sudobility/tapayoka_lib';
 import { OfferingModal } from '../../components/OfferingModal';
+import { ModelSettingsModal } from '../../components/ModelSettingsModal';
 import { DashboardBreadcrumb, type Crumb } from '../../components/DashboardBreadcrumb';
+import { DashboardPageHeader } from '../../components/DashboardPageHeader';
 import { offeringPath, sectionPath } from '../../lib/dashboardPaths';
 import { formatPricingSubtitle } from '../../components/pricingUtils';
 import type {
   VendorOffering,
   VendorOfferingCreateRequest,
   VendorOfferingUpdateRequest,
-  VendorModelPricing,
-  VendorModelSlot,
-  VendorModelSlotPricing,
-  VendorModelAction,
-  VendorModelInterruption,
-  VendorModelPayment,
+  VendorModelUpdateRequest,
 } from '@sudobility/tapayoka_types';
-
-const PRICING_OPTIONS: VendorModelPricing[] = ['fixed', 'variable'];
-const SLOT_OPTIONS: VendorModelSlot[] = ['single', 'multi1D', 'multi2D'];
-const SLOT_PRICING_OPTIONS: VendorModelSlotPricing[] = ['Tiered', 'Unique'];
-const ACTION_OPTIONS: VendorModelAction[] = ['timed', 'sequence'];
-const INTERRUPTION_OPTIONS: VendorModelInterruption[] = ['stop', 'continue'];
-const PAYMENT_OPTIONS: VendorModelPayment[] = ['atStart', 'atEnd'];
-function Chip({ label, active, onClick }: { label: string; active: boolean; onClick: () => void }) {
-  return (
-    <button
-      type="button"
-      className={`px-3 py-1.5 text-sm rounded-lg border ${ui.transition.default} ${
-        active ? `${buttonVariant('primary')}` : `${buttonVariant('outline')} hover:border-gray-400`
-      }`}
-      onClick={onClick}
-    >
-      {label}
-    </button>
-  );
-}
 
 export function ModelDetailPage() {
   const { entitySlug, modelId } = useParams<{ entitySlug: string; modelId: string }>();
@@ -75,56 +52,21 @@ export function ModelDetailPage() {
     analyticsService.trackPageView(`/dashboard/models/${modelId}`, 'Model Detail');
   }, [modelId]);
 
-  // Settings state
-  const [pricing, setPricing] = useState<VendorModelPricing | null>(null);
-  const [slot, setSlot] = useState<VendorModelSlot | null>(null);
-  const [slotPricing, setSlotPricing] = useState<VendorModelSlotPricing | null>(null);
-  const [action, setAction] = useState<VendorModelAction | null>(null);
-  const [interruption, setInterruption] = useState<VendorModelInterruption | null>(null);
-  const [payment, setPayment] = useState<VendorModelPayment | null>(null);
-  const [saving, setSaving] = useState(false);
-  const [settingsDirty, setSettingsDirty] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
 
-  useEffect(() => {
-    if (model) {
-      setPricing(model.pricing ?? null);
-      setSlot(model.slot ?? null);
-      setSlotPricing(model.slotPricing ?? null);
-      setAction(model.action ?? null);
-      setInterruption(model.interruption ?? null);
-      setPayment(model.payment ?? null);
-      setSettingsDirty(false);
-    }
-  }, [model?.id]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  const handleActionSelect = useCallback((a: VendorModelAction) => {
-    setAction(a);
-    if (a === 'sequence') setInterruption(null);
-    setSettingsDirty(true);
-  }, []);
-
-  const handleSaveSettings = useCallback(async () => {
-    if (!modelId) return;
-    analyticsService.trackButtonClick('save_model_settings', { model_id: modelId });
-    setSaving(true);
-    try {
-      const result = await modelsManager.updateModel(modelId, {
-        pricing: pricing || undefined,
-        slot: slot || undefined,
-        slotPricing: slot && slot !== 'single' ? slotPricing || undefined : undefined,
-        action: action || undefined,
-        interruption: action === 'timed' ? interruption || undefined : undefined,
-        payment: payment || undefined,
-      });
+  const handleSaveSettings = useCallback(
+    async (data: VendorModelUpdateRequest) => {
+      if (!modelId) return;
+      analyticsService.trackButtonClick('save_model_settings', { model_id: modelId });
+      const result = await modelsManager.updateModel(modelId, data);
       if (!result && modelsManager.error) {
         alert(modelsManager.error);
-      } else {
-        setSettingsDirty(false);
+        return;
       }
-    } finally {
-      setSaving(false);
-    }
-  }, [modelsManager, modelId, pricing, slot, slotPricing, action, interruption, payment]);
+      setSettingsOpen(false);
+    },
+    [modelsManager, modelId]
+  );
 
   // Offerings
   const [modalOpen, setModalOpen] = useState(false);
@@ -245,136 +187,19 @@ export function ModelDetailPage() {
           ] as Crumb[]
         }
       />
-      <h1 className={`${ui.text.h3} flex-1`}>{model?.name ?? 'Loading...'}</h1>
+      <DashboardPageHeader
+        title={model?.name ?? 'Loading...'}
+        onBack={() => navigate(sectionPath(entitySlug ?? '', 'model'))}
+        onRefresh={() => offeringsManager.refresh()}
+        refreshing={offeringsManager.isLoading}
+        onSettings={() => setSettingsOpen(true)}
+        onAdd={handleAddOffering}
+        addLabel="Offering"
+      />
 
-      {/* Model Settings */}
-      <div className="bg-white rounded-lg shadow-sm border p-6">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className={ui.text.h5}>Settings</h2>
-          {settingsDirty && (
-            <Button variant="primary" size="sm" onClick={handleSaveSettings} disabled={saving}>
-              {saving ? 'Saving...' : 'Save Settings'}
-            </Button>
-          )}
-        </div>
-
-        <div className="space-y-4">
-          <div>
-            <label className={`block text-sm font-medium mb-2 ${ui.text.muted}`}>Slot</label>
-            <div className="flex gap-2">
-              {SLOT_OPTIONS.map((s) => (
-                <Chip
-                  key={s}
-                  label={s === 'multi1D' ? 'Multi 1D' : s === 'multi2D' ? 'Multi 2D' : 'Single'}
-                  active={slot === s}
-                  onClick={() => {
-                    setSlot(s);
-                    setSettingsDirty(true);
-                  }}
-                />
-              ))}
-            </div>
-          </div>
-
-          <div>
-            <label className={`block text-sm font-medium mb-2 ${ui.text.muted}`}>Pricing</label>
-            <div className="flex gap-2">
-              {PRICING_OPTIONS.map((p) => (
-                <Chip
-                  key={p}
-                  label={p === 'fixed' ? 'Fixed' : 'Variable'}
-                  active={pricing === p}
-                  onClick={() => {
-                    setPricing(p);
-                    setSettingsDirty(true);
-                  }}
-                />
-              ))}
-            </div>
-          </div>
-
-          {slot && slot !== 'single' && (
-            <div>
-              <label className={`block text-sm font-medium mb-2 ${ui.text.muted}`}>
-                Slot Pricing
-              </label>
-              <div className="flex gap-2">
-                {SLOT_PRICING_OPTIONS.map((sp) => (
-                  <Chip
-                    key={sp}
-                    label={sp}
-                    active={slotPricing === sp}
-                    onClick={() => {
-                      setSlotPricing(sp);
-                      setSettingsDirty(true);
-                    }}
-                  />
-                ))}
-              </div>
-            </div>
-          )}
-
-          <div>
-            <label className={`block text-sm font-medium mb-2 ${ui.text.muted}`}>Action</label>
-            <div className="flex gap-2">
-              {ACTION_OPTIONS.map((a) => (
-                <Chip
-                  key={a}
-                  label={a === 'timed' ? 'Timed' : 'Sequence'}
-                  active={action === a}
-                  onClick={() => handleActionSelect(a)}
-                />
-              ))}
-            </div>
-          </div>
-
-          {action === 'timed' && (
-            <div>
-              <label className={`block text-sm font-medium mb-2 ${ui.text.muted}`}>
-                Interruption
-              </label>
-              <div className="flex gap-2">
-                {INTERRUPTION_OPTIONS.map((i) => (
-                  <Chip
-                    key={i}
-                    label={i === 'stop' ? 'Stop' : 'Continue'}
-                    active={interruption === i}
-                    onClick={() => {
-                      setInterruption(i);
-                      setSettingsDirty(true);
-                    }}
-                  />
-                ))}
-              </div>
-            </div>
-          )}
-
-          <div>
-            <label className={`block text-sm font-medium mb-2 ${ui.text.muted}`}>Payment</label>
-            <div className="flex gap-2">
-              {PAYMENT_OPTIONS.map((p) => (
-                <Chip
-                  key={p}
-                  label={p === 'atStart' ? 'At Start' : 'At End'}
-                  active={payment === p}
-                  onClick={() => {
-                    setPayment(p);
-                    setSettingsDirty(true);
-                  }}
-                />
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Offerings */}
       <div className="bg-white rounded-lg shadow-sm border">
-        <div className="flex justify-between items-center px-4 py-3 border-b">
+        <div className="px-4 py-3 border-b">
           <h2 className={ui.text.h5}>Offerings</h2>
-          <Button variant="primary" size="sm" onClick={handleAddOffering}>
-            Add Offering
-          </Button>
         </div>
 
         {offeringsManager.isLoading ? (
@@ -412,6 +237,13 @@ export function ModelDetailPage() {
         selectedModel={model ?? undefined}
         onClose={() => setModalOpen(false)}
         onSave={handleSaveOffering}
+      />
+
+      <ModelSettingsModal
+        open={settingsOpen}
+        model={model}
+        onClose={() => setSettingsOpen(false)}
+        onSave={handleSaveSettings}
       />
     </div>
   );
