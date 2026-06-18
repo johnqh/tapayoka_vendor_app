@@ -229,8 +229,7 @@ function DashboardPage() {
       <SEOHead title={`${getDetailTitle()} | ${CONSTANTS.APP_NAME}`} description="" noIndex />
       <div className="w-full min-w-0 overflow-x-hidden flex-1 flex flex-col min-h-0">
         <MasterDetailLayout
-          masterTitle="Dashboard"
-          backButtonText="Dashboard"
+          backButtonText="Back"
           masterContent={masterContent}
           detailContent={detailContent}
           detailTitle={getDetailTitle()}

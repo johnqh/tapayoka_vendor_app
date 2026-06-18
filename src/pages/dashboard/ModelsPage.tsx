@@ -18,6 +18,7 @@ import {
   type TableColumn,
 } from '@sudobility/components';
 import { analyticsService } from '../../config/analytics';
+import { DashboardPageHeader } from '../../components/DashboardPageHeader';
 import type {
   VendorModel,
   VendorModelCreateRequest,
@@ -452,12 +453,13 @@ export function ModelsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h1 className={ui.text.h3}>Models</h1>
-        <Button variant="primary" onClick={handleAdd}>
-          Add Model
-        </Button>
-      </div>
+      <DashboardPageHeader
+        title="Models"
+        onRefresh={() => manager.refresh()}
+        refreshing={manager.isLoading}
+        onAdd={handleAdd}
+        addLabel="Model"
+      />
 
       {manager.isLoading && manager.models.length === 0 ? (
         <div className="bg-white rounded-lg shadow-sm border p-8 flex justify-center">

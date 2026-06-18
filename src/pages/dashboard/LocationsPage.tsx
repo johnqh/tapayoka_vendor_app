@@ -19,6 +19,7 @@ import {
   type TableColumn,
 } from '@sudobility/components';
 import { analyticsService } from '../../config/analytics';
+import { DashboardPageHeader } from '../../components/DashboardPageHeader';
 import type {
   VendorLocation,
   VendorLocationCreateRequest,
@@ -139,9 +140,13 @@ export function LocationsPage() {
   if (manager.isLoading) {
     return (
       <div className="space-y-6">
-        <div className="flex justify-between items-center">
-          <h1 className={ui.text.h3}>Locations</h1>
-        </div>
+        <DashboardPageHeader
+          title="Locations"
+          onRefresh={() => manager.refresh()}
+          refreshing
+          onAdd={openAddModal}
+          addLabel="Location"
+        />
         <div className="bg-white rounded-lg shadow-sm border p-8 flex justify-center">
           <Spinner ariaLabel="Loading locations" />
         </div>
@@ -216,12 +221,13 @@ export function LocationsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h1 className={ui.text.h3}>Locations</h1>
-        <Button variant="primary" onClick={openAddModal}>
-          Add Location
-        </Button>
-      </div>
+      <DashboardPageHeader
+        title="Locations"
+        onRefresh={() => manager.refresh()}
+        refreshing={manager.isLoading}
+        onAdd={openAddModal}
+        addLabel="Location"
+      />
 
       {manager.locations.length === 0 ? (
         <EmptyState

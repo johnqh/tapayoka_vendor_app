@@ -2,10 +2,10 @@ import { useEffect } from 'react';
 import { useApi } from '@sudobility/building_blocks/firebase';
 import { useCurrentEntity } from '@sudobility/entity_client';
 import { useOrdersManager } from '@sudobility/tapayoka_lib';
-import { ui } from '@sudobility/design';
-import { Alert, Button, Spinner, Table, type TableColumn } from '@sudobility/components';
+import { Alert, Spinner, Table, type TableColumn } from '@sudobility/components';
 import type { Order, OrderStatus } from '@sudobility/tapayoka_types';
 import { analyticsService } from '../../config/analytics';
+import { DashboardPageHeader } from '../../components/DashboardPageHeader';
 
 const STATUS_BADGE: Record<OrderStatus, string> = {
   CREATED: 'bg-gray-100 text-gray-700',
@@ -86,19 +86,14 @@ export function OrdersPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h1 className={ui.text.h3}>Orders</h1>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => {
-            analyticsService.trackButtonClick('refresh_orders');
-            refresh();
-          }}
-        >
-          Refresh
-        </Button>
-      </div>
+      <DashboardPageHeader
+        title="Orders"
+        onRefresh={() => {
+          analyticsService.trackButtonClick('refresh_orders');
+          refresh();
+        }}
+        refreshing={isLoading}
+      />
 
       {error && <Alert variant="error" description={error} />}
 
