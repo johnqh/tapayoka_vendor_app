@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { EmptyState } from '@sudobility/building_blocks';
 import { useApi } from '@sudobility/building_blocks/firebase';
 import { useCurrentEntity } from '@sudobility/entity_client';
@@ -12,6 +12,8 @@ import {
   useVendorOfferingsManager,
 } from '@sudobility/tapayoka_lib';
 import { OfferingModal } from '../../components/OfferingModal';
+import { DashboardBreadcrumb, type Crumb } from '../../components/DashboardBreadcrumb';
+import { offeringPath, sectionPath } from '../../lib/dashboardPaths';
 import { formatPricingSubtitle } from '../../components/pricingUtils';
 import type {
   VendorOffering,
@@ -21,6 +23,7 @@ import type {
 
 export function LocationDetailPage() {
   const { entitySlug, locationId } = useParams<{ entitySlug: string; locationId: string }>();
+  const navigate = useNavigate();
   const { networkClient, baseUrl, token } = useApi();
   const { currentEntitySlug } = useCurrentEntity();
 
@@ -120,12 +123,21 @@ export function LocationDetailPage() {
       align: 'right',
       render: (inst) => (
         <>
-          <button className={`text-sm mr-3 ${ui.text.linkSubtle}`} onClick={() => handleEdit(inst)}>
+          <button
+            className={`text-sm mr-3 ${ui.text.linkSubtle}`}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleEdit(inst);
+            }}
+          >
             Edit
           </button>
           <button
             className={`text-sm ${ui.text.error} hover:opacity-80`}
-            onClick={() => handleDelete(inst)}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleDelete(inst);
+            }}
           >
             Delete
           </button>
@@ -147,13 +159,15 @@ export function LocationDetailPage() {
 
   return (
     <div className="space-y-6">
+      <DashboardBreadcrumb
+        crumbs={
+          [
+            { label: 'Locations', to: sectionPath(entitySlug ?? '', 'location') },
+            { label: location?.name ?? 'Loading...' },
+          ] as Crumb[]
+        }
+      />
       <div className="flex items-center gap-3">
-        <Link
-          to={`/dashboard/${entitySlug}/locations`}
-          className="text-gray-400 hover:text-gray-600"
-        >
-          &larr;
-        </Link>
         <div className="flex-1">
           <h1 className={ui.text.h3}>{location?.name ?? 'Loading...'}</h1>
           {location && (
@@ -184,6 +198,15 @@ export function LocationDetailPage() {
             columns={offeringColumns}
             data={offeringsManager.offerings}
             keyExtractor={(inst) => inst.id}
+            onRowClick={(inst) =>
+              navigate(
+                offeringPath(
+                  entitySlug ?? '',
+                  { parentType: 'location', parentId: locationId ?? '' },
+                  inst.id
+                )
+              )
+            }
             hoverable
           />
         )}
