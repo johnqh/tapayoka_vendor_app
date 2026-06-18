@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { EmptyState } from '@sudobility/building_blocks';
+import { EmptyState, AppBreadcrumbs } from '@sudobility/building_blocks';
 import { useApi } from '@sudobility/building_blocks/firebase';
 import { useCurrentEntity } from '@sudobility/entity_client';
 import { ui } from '@sudobility/design';
@@ -12,7 +12,6 @@ import {
   useVendorOfferingsManager,
 } from '@sudobility/tapayoka_lib';
 import { OfferingModal } from '../../components/OfferingModal';
-import { DashboardBreadcrumb, type Crumb } from '../../components/DashboardBreadcrumb';
 import { DashboardPageHeader } from '../../components/DashboardPageHeader';
 import { offeringPath, sectionPath } from '../../lib/dashboardPaths';
 import { formatPricingSubtitle } from '../../components/pricingUtils';
@@ -160,13 +159,11 @@ export function LocationDetailPage() {
 
   return (
     <div className="space-y-6">
-      <DashboardBreadcrumb
-        crumbs={
-          [
-            { label: 'Locations', to: sectionPath(entitySlug ?? '', 'location') },
-            { label: location?.name ?? 'Loading...' },
-          ] as Crumb[]
-        }
+      <AppBreadcrumbs
+        items={[
+          { label: 'Locations', href: sectionPath(entitySlug ?? '', 'location') },
+          { label: location?.name ?? 'Loading...', current: true },
+        ]}
       />
       <DashboardPageHeader
         title={location?.name ?? 'Loading...'}

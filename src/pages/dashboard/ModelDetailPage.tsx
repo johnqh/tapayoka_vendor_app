@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { EmptyState } from '@sudobility/building_blocks';
+import { EmptyState, AppBreadcrumbs } from '@sudobility/building_blocks';
 import { useApi } from '@sudobility/building_blocks/firebase';
 import { useCurrentEntity } from '@sudobility/entity_client';
 import { ui } from '@sudobility/design';
@@ -13,7 +13,6 @@ import {
 } from '@sudobility/tapayoka_lib';
 import { OfferingModal } from '../../components/OfferingModal';
 import { ModelSettingsModal } from '../../components/ModelSettingsModal';
-import { DashboardBreadcrumb, type Crumb } from '../../components/DashboardBreadcrumb';
 import { DashboardPageHeader } from '../../components/DashboardPageHeader';
 import { offeringPath, sectionPath } from '../../lib/dashboardPaths';
 import { formatPricingSubtitle } from '../../components/pricingUtils';
@@ -179,13 +178,11 @@ export function ModelDetailPage() {
 
   return (
     <div className="space-y-6">
-      <DashboardBreadcrumb
-        crumbs={
-          [
-            { label: 'Models', to: sectionPath(entitySlug ?? '', 'model') },
-            { label: model?.name ?? 'Loading...' },
-          ] as Crumb[]
-        }
+      <AppBreadcrumbs
+        items={[
+          { label: 'Models', href: sectionPath(entitySlug ?? '', 'model') },
+          { label: model?.name ?? 'Loading...', current: true },
+        ]}
       />
       <DashboardPageHeader
         title={model?.name ?? 'Loading...'}

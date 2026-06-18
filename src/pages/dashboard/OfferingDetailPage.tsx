@@ -10,7 +10,7 @@ import {
   useVendorLocationsManager,
   useVendorInstallationsManager,
 } from '@sudobility/tapayoka_lib';
-import { DashboardBreadcrumb, type Crumb } from '../../components/DashboardBreadcrumb';
+import { AppBreadcrumbs } from '@sudobility/building_blocks';
 import { DashboardPageHeader } from '../../components/DashboardPageHeader';
 import { InstallationFormModal } from '../../components/InstallationFormModal';
 import { OfferingModal } from '../../components/OfferingModal';
@@ -117,13 +117,13 @@ export function OfferingDetailPage() {
     setOfferingEditOpen(false);
   };
 
-  const crumbs: Crumb[] = [
+  const crumbs = [
     {
       label: parent.parentType === 'model' ? 'Models' : 'Locations',
-      to: sectionPath(entitySlug, parent.parentType),
+      href: sectionPath(entitySlug, parent.parentType),
     },
-    { label: parentName ?? '…', to: parentDetailPath(entitySlug, parent) },
-    { label: offering?.name ?? 'Offering' },
+    { label: parentName ?? '…', href: parentDetailPath(entitySlug, parent) },
+    { label: offering?.name ?? 'Offering', current: true },
   ];
 
   const columns: TableColumn<VendorInstallation>[] = [
@@ -173,7 +173,7 @@ export function OfferingDetailPage() {
 
   return (
     <div className="space-y-6">
-      <DashboardBreadcrumb crumbs={crumbs} />
+      <AppBreadcrumbs items={crumbs} />
       <DashboardPageHeader
         title={offering?.name ?? 'Offering'}
         onBack={() => navigate(parentDetailPath(entitySlug, parent))}
