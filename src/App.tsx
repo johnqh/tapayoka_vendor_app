@@ -7,6 +7,7 @@ import { CONSTANTS } from './config/constants';
 import { seoHeadConfig } from './config/seo';
 import i18n from './i18n';
 import { AuthProviderWrapper } from './components/providers/AuthProviderWrapper';
+import { useAppearanceEffect } from './stores/appearanceStore';
 import { ui } from '@sudobility/design';
 
 // Lazy load pages
@@ -26,6 +27,7 @@ const OrdersPage = lazy(() => import('./pages/dashboard/OrdersPage'));
 const WorkspacesPage = lazy(() => import('./pages/dashboard/WorkspacesPage'));
 const MembersPage = lazy(() => import('./pages/dashboard/MembersPage'));
 const InvitationsPage = lazy(() => import('./pages/dashboard/InvitationsPage'));
+const AppearancePage = lazy(() => import('./pages/dashboard/AppearancePage'));
 
 // Layout components
 const ProtectedRoute = lazy(() => import('./components/layout/ProtectedRoute'));
@@ -108,6 +110,7 @@ function AppRoutes() {
             <Route path="workspaces" element={<WorkspacesPage />} />
             <Route path="members" element={<MembersPage />} />
             <Route path="invitations" element={<InvitationsPage />} />
+            <Route path="appearance" element={<AppearancePage />} />
           </Route>
 
           {/* Catch-all */}
@@ -122,6 +125,7 @@ function AppRoutes() {
 }
 
 function App() {
+  useAppearanceEffect();
   return (
     <SudobilityAppWithFirebaseAuthAndEntities
       i18n={i18n}

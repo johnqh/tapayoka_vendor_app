@@ -1,5 +1,9 @@
 import { Link } from 'react-router-dom';
-import { type FooterConfig, type FooterLinkSection } from '@sudobility/building_blocks';
+import {
+  getCopyrightYear,
+  type FooterConfig,
+  type FooterLinkSection,
+} from '@sudobility/building_blocks';
 import { SystemStatusIndicator, useNetwork } from '@sudobility/devops-components';
 import { CONSTANTS } from '../../config/constants';
 
@@ -18,7 +22,7 @@ const linkWrapper = ({
 );
 
 export function useFooterConfig(variant: 'full' | 'compact'): FooterConfig {
-  const currentYear = String(new Date().getFullYear());
+  const currentYear = getCopyrightYear();
   const { isOnline } = useNetwork();
 
   if (variant === 'compact') {
