@@ -27,7 +27,7 @@ const OrdersPage = lazy(() => import('./pages/dashboard/OrdersPage'));
 const WorkspacesPage = lazy(() => import('./pages/dashboard/WorkspacesPage'));
 const MembersPage = lazy(() => import('./pages/dashboard/MembersPage'));
 const InvitationsPage = lazy(() => import('./pages/dashboard/InvitationsPage'));
-const AppearancePage = lazy(() => import('./pages/dashboard/AppearancePage'));
+const SettingsPage = lazy(() => import('./pages/SettingsPage'));
 
 // Layout components
 const ProtectedRoute = lazy(() => import('./components/layout/ProtectedRoute'));
@@ -59,6 +59,7 @@ function AppRoutes() {
           <Route path="/vendor" element={<VendorPage />} />
           <Route path="/docs" element={<DocsPage />} />
           <Route path="/docs/:section" element={<DocsPage />} />
+          <Route path="/settings" element={<SettingsPage />} />
 
           {/* Protected pages */}
           <Route
@@ -110,7 +111,6 @@ function AppRoutes() {
             <Route path="workspaces" element={<WorkspacesPage />} />
             <Route path="members" element={<MembersPage />} />
             <Route path="invitations" element={<InvitationsPage />} />
-            <Route path="appearance" element={<AppearancePage />} />
           </Route>
 
           {/* Catch-all */}
