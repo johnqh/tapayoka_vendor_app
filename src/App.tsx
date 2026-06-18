@@ -20,6 +20,8 @@ const LocationsPage = lazy(() => import('./pages/dashboard/LocationsPage'));
 const LocationDetailPage = lazy(() => import('./pages/dashboard/LocationDetailPage'));
 const ModelsPage = lazy(() => import('./pages/dashboard/ModelsPage'));
 const ModelDetailPage = lazy(() => import('./pages/dashboard/ModelDetailPage'));
+const OfferingDetailPage = lazy(() => import('./pages/dashboard/OfferingDetailPage'));
+const InstallationDetailPage = lazy(() => import('./pages/dashboard/InstallationDetailPage'));
 const OrdersPage = lazy(() => import('./pages/dashboard/OrdersPage'));
 const WorkspacesPage = lazy(() => import('./pages/dashboard/WorkspacesPage'));
 const MembersPage = lazy(() => import('./pages/dashboard/MembersPage'));
@@ -84,8 +86,24 @@ function AppRoutes() {
             <Route index element={<LocationsPage />} />
             <Route path="locations" element={<LocationsPage />} />
             <Route path="locations/:locationId" element={<LocationDetailPage />} />
+            <Route
+              path="locations/:locationId/offerings/:offeringId"
+              element={<OfferingDetailPage />}
+            />
+            <Route
+              path="locations/:locationId/offerings/:offeringId/installs/:wallet"
+              element={<InstallationDetailPage />}
+            />
             <Route path="models" element={<ModelsPage />} />
             <Route path="models/:modelId" element={<ModelDetailPage />} />
+            <Route
+              path="models/:modelId/offerings/:offeringId"
+              element={<OfferingDetailPage />}
+            />
+            <Route
+              path="models/:modelId/offerings/:offeringId/installs/:wallet"
+              element={<InstallationDetailPage />}
+            />
             <Route path="orders" element={<OrdersPage />} />
             <Route path="workspaces" element={<WorkspacesPage />} />
             <Route path="members" element={<MembersPage />} />
