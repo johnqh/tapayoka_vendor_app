@@ -24,6 +24,8 @@ export async function initializeI18n(): Promise<typeof i18next> {
     .init({
       lng: 'en',
       fallbackLng: 'en',
+      // Suppress i18next's Locize promotional console.info on init.
+      showSupportNotice: false,
       supportedLngs: [...SUPPORTED_LANGUAGES],
       defaultNS: 'common',
       ns: ['common', 'homePage', 'vendorPage', 'docsPage', 'loginPage', 'howto'],

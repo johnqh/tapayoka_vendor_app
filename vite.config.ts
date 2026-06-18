@@ -4,7 +4,12 @@ import path from 'path';
 
 export default defineConfig({
   plugins: [react()],
-  server: { port: 5131 },
+  // `same-origin-allow-popups` lets the Firebase Google sign-in popup be closed
+  // by its opener, avoiding the COOP "would block the window.close call" warning.
+  server: {
+    port: 5131,
+    headers: { 'Cross-Origin-Opener-Policy': 'same-origin-allow-popups' },
+  },
   resolve: {
     dedupe: ['react', 'react-dom', '@tanstack/react-query'],
     alias: {
