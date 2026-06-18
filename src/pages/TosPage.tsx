@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { TapayokaClient } from '@sudobility/tapayoka_client';
 import { useApi } from '@sudobility/building_blocks/firebase';
 import { useAuthStatus } from '@sudobility/auth-components';
-import { ui, buttonVariant, colors } from '@sudobility/design';
+import { ui } from '@sudobility/design';
+import { Alert, Button } from '@sudobility/components';
 import { SEOHead } from '@sudobility/seo_lib';
 import { CONSTANTS } from '../config/constants';
 import { analyticsService } from '../config/analytics';
@@ -95,32 +96,23 @@ function TosPage() {
           </div>
         </div>
 
-        {error && (
-          <div
-            className={`px-4 py-3 rounded-lg mb-4 border ${colors.component.alert.error.base} ${colors.component.alert.error.dark}`}
-          >
-            {error}
-          </div>
-        )}
+        {error && <Alert variant="error" description={error} className="mb-4" />}
 
         <div className="flex justify-end gap-4">
-          <button
+          <Button
+            variant="outline"
+            size="lg"
             onClick={() => {
               analyticsService.trackButtonClick('tos_cancel');
               navigate('/login');
             }}
             disabled={isLoading}
-            className={`px-6 py-3 rounded-lg font-medium ${buttonVariant('outline')}`}
           >
             Cancel
-          </button>
-          <button
-            onClick={handleAccept}
-            disabled={isLoading}
-            className={`px-6 py-3 rounded-lg font-medium disabled:opacity-50 ${buttonVariant('primary')}`}
-          >
+          </Button>
+          <Button variant="primary" size="lg" onClick={handleAccept} disabled={isLoading}>
             {isLoading ? 'Please wait...' : 'Accept & Continue'}
-          </button>
+          </Button>
         </div>
       </div>
     </>

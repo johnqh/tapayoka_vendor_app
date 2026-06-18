@@ -5,6 +5,18 @@ import { useApi } from '@sudobility/building_blocks/firebase';
 import { useCurrentEntity } from '@sudobility/entity_client';
 import { useVendorModelsManager } from '@sudobility/tapayoka_lib';
 import { ui, buttonVariant } from '@sudobility/design';
+import {
+  Badge,
+  Button,
+  FormField,
+  Modal,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  Spinner,
+  Table,
+  type TableColumn,
+} from '@sudobility/components';
 import { analyticsService } from '../../config/analytics';
 import type {
   VendorModel,
@@ -218,112 +230,104 @@ function ModelFormModal({ visible, model, onClose, onSave }: ModelFormModalProps
     }
   };
 
-  if (!visible) return null;
-
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-      <div className="bg-white rounded-lg shadow-xl w-full max-w-lg mx-4 max-h-[90vh] overflow-y-auto">
-        <div className="p-6">
-          <h2 className={`${ui.text.h5} mb-4`}>{isEditing ? 'Edit Model' : 'Add Model'}</h2>
+    <Modal isOpen={visible} onClose={onClose} size="medium" aria-labelledby="model-modal-title">
+      <ModalHeader>
+        <h2 id="model-modal-title" className={ui.text.h5}>
+          {isEditing ? 'Edit Model' : 'Add Model'}
+        </h2>
+      </ModalHeader>
+      <ModalContent variant="scrollable">
+        <div className="space-y-4">
+          {/* Name */}
+          <FormField
+            id="model-name"
+            label="Name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Model name"
+          />
 
-          <div className="space-y-4">
-            {/* Name */}
-            <div>
-              <label className={`block text-sm font-medium mb-1 ${ui.text.label}`}>Name</label>
-              <input
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="Model name"
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              />
-            </div>
+          {/* Type */}
+          <ChipGroup
+            label="Type"
+            options={MODEL_TYPES.map((t) => ({ label: t, value: t }))}
+            value={type}
+            onChange={handleTypeSelect}
+            allowNone
+          />
 
-            {/* Type */}
+          {/* Slot */}
+          <ChipGroup
+            label="Slot"
+            options={SLOT_OPTIONS.map((s) => ({
+              label: s === 'multi1D' ? 'Multi 1D' : s === 'multi2D' ? 'Multi 2D' : 'Single',
+              value: s,
+            }))}
+            value={slot}
+            onChange={setSlot}
+          />
+
+          {/* Pricing */}
+          <ChipGroup
+            label="Pricing"
+            options={PRICING_OPTIONS.map((p) => ({ label: p, value: p }))}
+            value={pricing}
+            onChange={setPricing}
+          />
+
+          {/* Slot Pricing - only when slot is multi */}
+          {slot && slot !== 'single' && (
             <ChipGroup
-              label="Type"
-              options={MODEL_TYPES.map((t) => ({ label: t, value: t }))}
-              value={type}
-              onChange={handleTypeSelect}
-              allowNone
+              label="Slot Pricing"
+              options={SLOT_PRICING_OPTIONS.map((sp) => ({ label: sp, value: sp }))}
+              value={slotPricing}
+              onChange={setSlotPricing}
             />
+          )}
 
-            {/* Slot */}
+          {/* Action */}
+          <ChipGroup
+            label="Action"
+            options={ACTION_OPTIONS.map((a) => ({ label: a, value: a }))}
+            value={action}
+            onChange={handleActionSelect}
+          />
+
+          {/* Interruption - only when action is 'timed' */}
+          {action === 'timed' && (
             <ChipGroup
-              label="Slot"
-              options={SLOT_OPTIONS.map((s) => ({
-                label: s === 'multi1D' ? 'Multi 1D' : s === 'multi2D' ? 'Multi 2D' : 'Single',
-                value: s,
-              }))}
-              value={slot}
-              onChange={setSlot}
+              label="Interruption"
+              options={INTERRUPTION_OPTIONS.map((i) => ({ label: i, value: i }))}
+              value={interruption}
+              onChange={setInterruption}
             />
+          )}
 
-            {/* Pricing */}
-            <ChipGroup
-              label="Pricing"
-              options={PRICING_OPTIONS.map((p) => ({ label: p, value: p }))}
-              value={pricing}
-              onChange={setPricing}
-            />
-
-            {/* Slot Pricing - only when slot is multi */}
-            {slot && slot !== 'single' && (
-              <ChipGroup
-                label="Slot Pricing"
-                options={SLOT_PRICING_OPTIONS.map((sp) => ({ label: sp, value: sp }))}
-                value={slotPricing}
-                onChange={setSlotPricing}
-              />
-            )}
-
-            {/* Action */}
-            <ChipGroup
-              label="Action"
-              options={ACTION_OPTIONS.map((a) => ({ label: a, value: a }))}
-              value={action}
-              onChange={handleActionSelect}
-            />
-
-            {/* Interruption - only when action is 'timed' */}
-            {action === 'timed' && (
-              <ChipGroup
-                label="Interruption"
-                options={INTERRUPTION_OPTIONS.map((i) => ({ label: i, value: i }))}
-                value={interruption}
-                onChange={setInterruption}
-              />
-            )}
-
-            {/* Payment */}
-            <ChipGroup
-              label="Payment"
-              options={PAYMENT_OPTIONS.map((p) => ({ label: p, value: p }))}
-              value={payment}
-              onChange={setPayment}
-            />
-          </div>
-
-          <div className="flex justify-end gap-3 mt-6">
-            <button
-              type="button"
-              onClick={onClose}
-              className={`px-4 py-2 text-sm font-medium ${buttonVariant('ghost')}`}
-            >
-              Cancel
-            </button>
-            <button
-              type="button"
-              onClick={handleSave}
-              disabled={saving || !name.trim()}
-              className={`px-4 py-2 text-sm font-medium rounded-lg disabled:opacity-50 disabled:cursor-not-allowed ${buttonVariant('primary')}`}
-            >
-              {saving ? 'Saving...' : 'Save'}
-            </button>
-          </div>
+          {/* Payment */}
+          <ChipGroup
+            label="Payment"
+            options={PAYMENT_OPTIONS.map((p) => ({ label: p, value: p }))}
+            value={payment}
+            onChange={setPayment}
+          />
         </div>
-      </div>
-    </div>
+      </ModalContent>
+      <ModalFooter>
+        <Button type="button" variant="ghost" size="sm" onClick={onClose}>
+          Cancel
+        </Button>
+        <Button
+          type="button"
+          variant="primary"
+          size="sm"
+          onClick={handleSave}
+          disabled={saving || !name.trim()}
+        >
+          {saving ? 'Saving...' : 'Save'}
+        </Button>
+      </ModalFooter>
+    </Modal>
   );
 }
 
@@ -340,7 +344,6 @@ export function ModelsPage() {
 
   const [modalVisible, setModalVisible] = useState(false);
   const [editingModel, setEditingModel] = useState<VendorModel | null>(null);
-  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const handleAdd = () => {
     analyticsService.trackButtonClick('add_model');
@@ -355,10 +358,7 @@ export function ModelsPage() {
 
   const handleDelete = async (model: VendorModel) => {
     if (!window.confirm(`Delete model "${model.name}"?`)) return;
-    setDeletingId(model.id);
-    await new Promise((r) => setTimeout(r, 300));
     const ok = await manager.deleteModel(model.id);
-    setDeletingId(null);
     if (!ok && manager.error) {
       alert(manager.error);
     }
@@ -385,18 +385,83 @@ export function ModelsPage() {
     setModalVisible(false);
   };
 
+  const columns: TableColumn<VendorModel>[] = [
+    {
+      key: 'name',
+      label: 'Name',
+      render: (model) => <span className="font-medium text-gray-900">{model.name}</span>,
+    },
+    {
+      key: 'type',
+      label: 'Type',
+      render: (model) => <span className="text-gray-500">{displayValue(model.type)}</span>,
+    },
+    {
+      key: 'pricing',
+      label: 'Pricing',
+      render: (model) => <span className="text-gray-500">{displayValue(model.pricing)}</span>,
+    },
+    {
+      key: 'slot',
+      label: 'Slot',
+      render: (model) => <span className="text-gray-500">{displayValue(model.slot)}</span>,
+    },
+    {
+      key: 'action',
+      label: 'Action',
+      render: (model) => <span className="text-gray-500">{displayValue(model.action)}</span>,
+    },
+    {
+      key: 'offerings',
+      label: 'Offerings',
+      render: (model) =>
+        model.offeringCount != null ? (
+          <Badge variant="primary" pill>
+            {model.offeringCount}
+          </Badge>
+        ) : null,
+    },
+    {
+      key: 'actions',
+      label: 'Actions',
+      align: 'right',
+      render: (model) => (
+        <>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              handleEdit(model);
+            }}
+            className={`font-medium mr-3 ${ui.text.linkSubtle}`}
+          >
+            Edit
+          </button>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              handleDelete(model);
+            }}
+            className={`font-medium ${ui.text.error} hover:opacity-80`}
+          >
+            Delete
+          </button>
+        </>
+      ),
+    },
+  ];
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h1 className={ui.text.h3}>Models</h1>
-        <button onClick={handleAdd} className={`px-4 py-2 rounded-lg ${buttonVariant('primary')}`}>
+        <Button variant="primary" onClick={handleAdd}>
           Add Model
-        </button>
+        </Button>
       </div>
 
       {manager.isLoading && manager.models.length === 0 ? (
-        <div className="bg-white rounded-lg shadow-sm border p-8 text-center text-gray-500">
-          Loading...
+        <div className="bg-white rounded-lg shadow-sm border p-8 flex justify-center">
+          <Spinner ariaLabel="Loading models" />
         </div>
       ) : manager.models.length === 0 ? (
         <EmptyState
@@ -406,88 +471,13 @@ export function ModelsPage() {
         />
       ) : (
         <div className="bg-white rounded-lg shadow-sm border overflow-hidden">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Name
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Type
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Pricing
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Slot
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Action
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Offerings
-                </th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {manager.models.map((model) => (
-                <tr
-                  key={model.id}
-                  onClick={() => handleRowClick(model)}
-                  className="hover:bg-gray-50 cursor-pointer transition-all duration-300"
-                  style={
-                    deletingId === model.id ? { opacity: 0, transform: 'translateX(-20px)' } : {}
-                  }
-                >
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                    {model.name}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {displayValue(model.type)}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {displayValue(model.pricing)}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {displayValue(model.slot)}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {displayValue(model.action)}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {model.offeringCount != null && (
-                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                        {model.offeringCount}
-                      </span>
-                    )}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm">
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleEdit(model);
-                      }}
-                      className={`font-medium mr-3 ${ui.text.linkSubtle}`}
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleDelete(model);
-                      }}
-                      className={`font-medium ${ui.text.error} hover:opacity-80`}
-                    >
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <Table
+            columns={columns}
+            data={manager.models}
+            keyExtractor={(model) => model.id}
+            hoverable
+            onRowClick={handleRowClick}
+          />
         </div>
       )}
 

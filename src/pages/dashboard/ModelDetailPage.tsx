@@ -4,6 +4,7 @@ import { EmptyState } from '@sudobility/building_blocks';
 import { useApi } from '@sudobility/building_blocks/firebase';
 import { useCurrentEntity } from '@sudobility/entity_client';
 import { ui, buttonVariant } from '@sudobility/design';
+import { Badge, Button, Spinner, Table, type TableColumn } from '@sudobility/components';
 import { analyticsService } from '../../config/analytics';
 import {
   useVendorModelsManager,
@@ -125,7 +126,6 @@ export function ModelDetailPage() {
   // Offerings
   const [modalOpen, setModalOpen] = useState(false);
   const [editingOffering, setEditingOffering] = useState<VendorOffering | null>(null);
-  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const handleAddOffering = useCallback(() => {
     analyticsService.trackButtonClick('add_offering', { context: 'model_detail' });
@@ -141,10 +141,7 @@ export function ModelDetailPage() {
   const handleDeleteOffering = useCallback(
     async (inst: VendorOffering) => {
       if (!window.confirm(`Delete offering "${inst.name}"?`)) return;
-      setDeletingId(inst.id);
-      await new Promise((r) => setTimeout(r, 300));
       const ok = await offeringsManager.deleteOffering(inst.id);
-      setDeletingId(null);
       if (!ok && offeringsManager.error) {
         alert(offeringsManager.error);
       }
@@ -172,6 +169,52 @@ export function ModelDetailPage() {
     [editingOffering, offeringsManager]
   );
 
+  const offeringColumns: TableColumn<VendorOffering>[] = [
+    {
+      key: 'name',
+      label: 'Name',
+      render: (inst) => <span className="text-gray-900">{inst.name}</span>,
+    },
+    {
+      key: 'pricing',
+      label: 'Pricing',
+      render: (inst) => (
+        <span className="text-gray-500">{formatPricingSubtitle(inst.pricingTiers)}</span>
+      ),
+    },
+    {
+      key: 'installations',
+      label: 'Installations',
+      render: (inst) =>
+        inst.installationCount != null ? (
+          <Badge variant="primary" pill>
+            {inst.installationCount}
+          </Badge>
+        ) : null,
+    },
+    {
+      key: 'actions',
+      label: 'Actions',
+      align: 'right',
+      render: (inst) => (
+        <>
+          <button
+            className={`text-sm mr-3 ${ui.text.linkSubtle}`}
+            onClick={() => handleEditOffering(inst)}
+          >
+            Edit
+          </button>
+          <button
+            className={`text-sm ${ui.text.error} hover:opacity-80`}
+            onClick={() => handleDeleteOffering(inst)}
+          >
+            Delete
+          </button>
+        </>
+      ),
+    },
+  ];
+
   if (!model && !modelsManager.isLoading) {
     return (
       <div className="text-center text-gray-500 mt-12">
@@ -197,13 +240,9 @@ export function ModelDetailPage() {
         <div className="flex justify-between items-center mb-4">
           <h2 className={ui.text.h5}>Settings</h2>
           {settingsDirty && (
-            <button
-              className={`px-4 py-2 text-sm rounded-lg disabled:opacity-50 ${buttonVariant('primary')}`}
-              onClick={handleSaveSettings}
-              disabled={saving}
-            >
+            <Button variant="primary" size="sm" onClick={handleSaveSettings} disabled={saving}>
               {saving ? 'Saving...' : 'Save Settings'}
-            </button>
+            </Button>
           )}
         </div>
 
@@ -321,16 +360,15 @@ export function ModelDetailPage() {
       <div className="bg-white rounded-lg shadow-sm border">
         <div className="flex justify-between items-center px-4 py-3 border-b">
           <h2 className={ui.text.h5}>Offerings</h2>
-          <button
-            className={`px-3 py-1.5 text-sm rounded-lg ${buttonVariant('primary')}`}
-            onClick={handleAddOffering}
-          >
+          <Button variant="primary" size="sm" onClick={handleAddOffering}>
             Add Offering
-          </button>
+          </Button>
         </div>
 
         {offeringsManager.isLoading ? (
-          <div className="p-8 text-center text-gray-500">Loading...</div>
+          <div className="p-8 flex justify-center">
+            <Spinner ariaLabel="Loading offerings" />
+          </div>
         ) : offeringsManager.offerings.length === 0 ? (
           <EmptyState
             message="Manage your offerings here."
@@ -338,55 +376,12 @@ export function ModelDetailPage() {
             onPress={handleAddOffering}
           />
         ) : (
-          <table className="w-full">
-            <thead>
-              <tr className="border-b bg-gray-50">
-                <th className="text-left px-4 py-3 text-sm font-medium text-gray-500">Name</th>
-                <th className="text-left px-4 py-3 text-sm font-medium text-gray-500">Pricing</th>
-                <th className="text-left px-4 py-3 text-sm font-medium text-gray-500">
-                  Installations
-                </th>
-                <th className="text-right px-4 py-3 text-sm font-medium text-gray-500">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {offeringsManager.offerings.map((inst) => (
-                <tr
-                  key={inst.id}
-                  className="border-b last:border-0 hover:bg-gray-50 transition-all duration-300"
-                  style={
-                    deletingId === inst.id ? { opacity: 0, transform: 'translateX(-20px)' } : {}
-                  }
-                >
-                  <td className="px-4 py-3 text-sm text-gray-900">{inst.name}</td>
-                  <td className="px-4 py-3 text-sm text-gray-500">
-                    {formatPricingSubtitle(inst.pricingTiers)}
-                  </td>
-                  <td className="px-4 py-3 text-sm text-gray-500">
-                    {inst.installationCount != null && (
-                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                        {inst.installationCount}
-                      </span>
-                    )}
-                  </td>
-                  <td className="px-4 py-3 text-right">
-                    <button
-                      className={`text-sm mr-3 ${ui.text.linkSubtle}`}
-                      onClick={() => handleEditOffering(inst)}
-                    >
-                      Edit
-                    </button>
-                    <button
-                      className={`text-sm ${ui.text.error} hover:opacity-80`}
-                      onClick={() => handleDeleteOffering(inst)}
-                    >
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <Table
+            columns={offeringColumns}
+            data={offeringsManager.offerings}
+            keyExtractor={(inst) => inst.id}
+            hoverable
+          />
         )}
       </div>
 

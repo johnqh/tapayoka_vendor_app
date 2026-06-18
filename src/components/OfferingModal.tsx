@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { buttonVariant, ui } from '@sudobility/design';
+import { Button, Modal, ModalContent, ModalFooter, ModalHeader } from '@sudobility/components';
 import type {
   VendorOffering,
   VendorOfferingCreateRequest,
@@ -366,8 +367,6 @@ export function OfferingModal({
     }
   };
 
-  if (!open) return null;
-
   const pickerItems =
     parentType === 'location'
       ? (models ?? []).map((m) => ({ id: m.id, label: m.name }))
@@ -380,12 +379,13 @@ export function OfferingModal({
       : `Add ${parentName} Offering`;
 
   return (
-    <div className={`fixed inset-0 flex items-center justify-center z-50 ${ui.background.overlay}`}>
-      <div
-        className={`${ui.background.surface} rounded-lg ${ui.shadow.xl} w-full max-w-lg max-h-[90vh] overflow-y-auto p-6`}
-      >
-        <h2 className={`${ui.text.h4} mb-4`}>{title}</h2>
-
+    <Modal isOpen={open} onClose={onClose} size="medium" aria-labelledby="offering-modal-title">
+      <ModalHeader>
+        <h2 id="offering-modal-title" className={ui.text.h4}>
+          {title}
+        </h2>
+      </ModalHeader>
+      <ModalContent variant="scrollable">
         <div className="space-y-4">
           <div>
             <label className={`block text-sm font-medium mb-1 ${ui.text.label}`}>Name</label>
@@ -536,20 +536,15 @@ export function OfferingModal({
             </div>
           </div>
         </div>
-
-        <div className="flex justify-end gap-3 mt-6">
-          <button className={`px-4 py-2 text-sm ${buttonVariant('ghost')}`} onClick={onClose}>
-            Cancel
-          </button>
-          <button
-            className={`px-4 py-2 text-sm rounded-lg disabled:opacity-50 ${buttonVariant('primary')}`}
-            onClick={handleSave}
-            disabled={saving || !name.trim()}
-          >
-            {saving ? 'Saving...' : 'Save'}
-          </button>
-        </div>
-      </div>
-    </div>
+      </ModalContent>
+      <ModalFooter>
+        <Button variant="ghost" size="sm" onClick={onClose}>
+          Cancel
+        </Button>
+        <Button variant="primary" size="sm" onClick={handleSave} disabled={saving || !name.trim()}>
+          {saving ? 'Saving...' : 'Save'}
+        </Button>
+      </ModalFooter>
+    </Modal>
   );
 }

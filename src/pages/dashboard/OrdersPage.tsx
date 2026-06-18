@@ -2,7 +2,8 @@ import { useEffect } from 'react';
 import { useApi } from '@sudobility/building_blocks/firebase';
 import { useCurrentEntity } from '@sudobility/entity_client';
 import { useOrdersManager } from '@sudobility/tapayoka_lib';
-import { ui, buttonVariant, colors } from '@sudobility/design';
+import { ui } from '@sudobility/design';
+import { Alert, Button, Spinner, Table, type TableColumn } from '@sudobility/components';
 import type { Order, OrderStatus } from '@sudobility/tapayoka_types';
 import { analyticsService } from '../../config/analytics';
 
@@ -50,82 +51,70 @@ export function OrdersPage() {
     token
   );
 
+  const columns: TableColumn<Order>[] = [
+    {
+      key: 'id',
+      label: 'ID',
+      render: (order) => (
+        <span className="font-mono text-gray-700" title={order.id}>
+          {truncateId(order.id)}
+        </span>
+      ),
+    },
+    {
+      key: 'amount',
+      label: 'Amount',
+      render: (order) => formatAmount(order.amountCents),
+    },
+    {
+      key: 'status',
+      label: 'Status',
+      render: (order) => (
+        <span
+          className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${STATUS_BADGE[order.status] ?? 'bg-gray-100 text-gray-700'}`}
+        >
+          {order.status}
+        </span>
+      ),
+    },
+    {
+      key: 'createdAt',
+      label: 'Created At',
+      render: (order) => <span className="text-gray-500">{formatDate(order.createdAt)}</span>,
+    },
+  ];
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h1 className={ui.text.h3}>Orders</h1>
-        <button
+        <Button
+          variant="outline"
+          size="sm"
           onClick={() => {
             analyticsService.trackButtonClick('refresh_orders');
             refresh();
           }}
-          className={`px-4 py-2 text-sm rounded-lg ${buttonVariant('outline')}`}
         >
           Refresh
-        </button>
+        </Button>
       </div>
 
-      {error && (
-        <div
-          className={`px-4 py-3 rounded-lg border ${colors.component.alert.error.base} ${colors.component.alert.error.dark}`}
-        >
-          {error}
-        </div>
-      )}
+      {error && <Alert variant="error" description={error} />}
 
       {isLoading ? (
-        <div className="bg-white rounded-lg shadow-sm border p-8 text-center text-gray-500">
-          Loading orders...
-        </div>
-      ) : orders.length === 0 ? (
-        <div className="bg-white rounded-lg shadow-sm border p-8 text-center text-gray-500">
-          No orders yet.
+        <div className="bg-white rounded-lg shadow-sm border p-8 flex justify-center">
+          <Spinner ariaLabel="Loading orders" loadingText="Loading orders..." />
         </div>
       ) : (
         <div className="bg-white rounded-lg shadow-sm border overflow-hidden">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  ID
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Amount
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Status
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Created At
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200">
-              {orders.map((order: Order) => (
-                <tr key={order.id} className="hover:bg-gray-50 transition">
-                  <td
-                    className="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-700"
-                    title={order.id}
-                  >
-                    {truncateId(order.id)}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {formatAmount(order.amountCents)}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm">
-                    <span
-                      className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${STATUS_BADGE[order.status] ?? 'bg-gray-100 text-gray-700'}`}
-                    >
-                      {order.status}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {formatDate(order.createdAt)}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <Table
+            columns={columns}
+            data={orders}
+            keyExtractor={(order) => order.id}
+            hoverable
+            emptyMessage="No orders yet."
+          />
         </div>
       )}
     </div>

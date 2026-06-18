@@ -3,7 +3,8 @@ import { useParams, Link } from 'react-router-dom';
 import { EmptyState } from '@sudobility/building_blocks';
 import { useApi } from '@sudobility/building_blocks/firebase';
 import { useCurrentEntity } from '@sudobility/entity_client';
-import { ui, buttonVariant } from '@sudobility/design';
+import { ui } from '@sudobility/design';
+import { Badge, Button, Spinner, Table, type TableColumn } from '@sudobility/components';
 import { analyticsService } from '../../config/analytics';
 import {
   useVendorLocationsManager,
@@ -47,7 +48,6 @@ export function LocationDetailPage() {
 
   const [modalOpen, setModalOpen] = useState(false);
   const [editingOffering, setEditingOffering] = useState<VendorOffering | null>(null);
-  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const handleAdd = useCallback(() => {
     analyticsService.trackButtonClick('add_offering', { context: 'location_detail' });
@@ -63,10 +63,7 @@ export function LocationDetailPage() {
   const handleDelete = useCallback(
     async (inst: VendorOffering) => {
       if (!window.confirm(`Delete offering "${inst.name}"?`)) return;
-      setDeletingId(inst.id);
-      await new Promise((r) => setTimeout(r, 300));
       const ok = await offeringsManager.deleteOffering(inst.id);
-      setDeletingId(null);
       if (!ok && offeringsManager.error) {
         alert(offeringsManager.error);
       }
@@ -93,6 +90,49 @@ export function LocationDetailPage() {
     },
     [editingOffering, offeringsManager]
   );
+
+  const offeringColumns: TableColumn<VendorOffering>[] = [
+    {
+      key: 'name',
+      label: 'Name',
+      render: (inst) => <span className="text-gray-900">{inst.name}</span>,
+    },
+    {
+      key: 'pricing',
+      label: 'Pricing',
+      render: (inst) => (
+        <span className="text-gray-500">{formatPricingSubtitle(inst.pricingTiers)}</span>
+      ),
+    },
+    {
+      key: 'installations',
+      label: 'Installations',
+      render: (inst) =>
+        inst.installationCount != null ? (
+          <Badge variant="primary" pill>
+            {inst.installationCount}
+          </Badge>
+        ) : null,
+    },
+    {
+      key: 'actions',
+      label: 'Actions',
+      align: 'right',
+      render: (inst) => (
+        <>
+          <button className={`text-sm mr-3 ${ui.text.linkSubtle}`} onClick={() => handleEdit(inst)}>
+            Edit
+          </button>
+          <button
+            className={`text-sm ${ui.text.error} hover:opacity-80`}
+            onClick={() => handleDelete(inst)}
+          >
+            Delete
+          </button>
+        </>
+      ),
+    },
+  ];
 
   if (!location && !locationsManager.isLoading) {
     return (
@@ -123,17 +163,16 @@ export function LocationDetailPage() {
             </p>
           )}
         </div>
-        <button
-          className={`px-4 py-2 rounded-lg text-sm ${buttonVariant('primary')}`}
-          onClick={handleAdd}
-        >
+        <Button variant="primary" size="sm" onClick={handleAdd}>
           Add Offering
-        </button>
+        </Button>
       </div>
 
-      <div className="bg-white rounded-lg shadow-sm border">
+      <div className="bg-white rounded-lg shadow-sm border overflow-hidden">
         {offeringsManager.isLoading ? (
-          <div className="p-8 text-center text-gray-500">Loading...</div>
+          <div className="p-8 flex justify-center">
+            <Spinner ariaLabel="Loading offerings" />
+          </div>
         ) : offeringsManager.offerings.length === 0 ? (
           <EmptyState
             message="Manage your offerings here."
@@ -141,55 +180,12 @@ export function LocationDetailPage() {
             onPress={handleAdd}
           />
         ) : (
-          <table className="w-full">
-            <thead>
-              <tr className="border-b bg-gray-50">
-                <th className="text-left px-4 py-3 text-sm font-medium text-gray-500">Name</th>
-                <th className="text-left px-4 py-3 text-sm font-medium text-gray-500">Pricing</th>
-                <th className="text-left px-4 py-3 text-sm font-medium text-gray-500">
-                  Installations
-                </th>
-                <th className="text-right px-4 py-3 text-sm font-medium text-gray-500">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {offeringsManager.offerings.map((inst) => (
-                <tr
-                  key={inst.id}
-                  className="border-b last:border-0 hover:bg-gray-50 transition-all duration-300"
-                  style={
-                    deletingId === inst.id ? { opacity: 0, transform: 'translateX(-20px)' } : {}
-                  }
-                >
-                  <td className="px-4 py-3 text-sm text-gray-900">{inst.name}</td>
-                  <td className="px-4 py-3 text-sm text-gray-500">
-                    {formatPricingSubtitle(inst.pricingTiers)}
-                  </td>
-                  <td className="px-4 py-3 text-sm text-gray-500">
-                    {inst.installationCount != null && (
-                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                        {inst.installationCount}
-                      </span>
-                    )}
-                  </td>
-                  <td className="px-4 py-3 text-right">
-                    <button
-                      className={`text-sm mr-3 ${ui.text.linkSubtle}`}
-                      onClick={() => handleEdit(inst)}
-                    >
-                      Edit
-                    </button>
-                    <button
-                      className={`text-sm ${ui.text.error} hover:opacity-80`}
-                      onClick={() => handleDelete(inst)}
-                    >
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <Table
+            columns={offeringColumns}
+            data={offeringsManager.offerings}
+            keyExtractor={(inst) => inst.id}
+            hoverable
+          />
         )}
       </div>
 

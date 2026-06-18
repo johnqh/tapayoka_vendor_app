@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuthStatus } from '@sudobility/auth-components';
 import { getFirebaseAuth } from '@sudobility/auth_lib';
-import { variants, ui } from '@sudobility/design';
+import { ui } from '@sudobility/design';
+import { Spinner } from '@sudobility/components';
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
@@ -34,11 +35,7 @@ export default function LoginPage() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-theme-bg-primary">
-        <div
-          role="status"
-          aria-label="Loading authentication"
-          className={variants.loading.spinner.default()}
-        />
+        <Spinner ariaLabel="Loading authentication" />
       </div>
     );
   }
