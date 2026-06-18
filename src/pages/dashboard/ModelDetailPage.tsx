@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { EmptyState } from '@sudobility/building_blocks';
 import { useApi } from '@sudobility/building_blocks/firebase';
 import { useCurrentEntity } from '@sudobility/entity_client';
@@ -12,6 +12,8 @@ import {
   useVendorOfferingsManager,
 } from '@sudobility/tapayoka_lib';
 import { OfferingModal } from '../../components/OfferingModal';
+import { DashboardBreadcrumb, type Crumb } from '../../components/DashboardBreadcrumb';
+import { offeringPath, sectionPath } from '../../lib/dashboardPaths';
 import { formatPricingSubtitle } from '../../components/pricingUtils';
 import type {
   VendorOffering,
@@ -47,6 +49,7 @@ function Chip({ label, active, onClick }: { label: string; active: boolean; onCl
 
 export function ModelDetailPage() {
   const { entitySlug, modelId } = useParams<{ entitySlug: string; modelId: string }>();
+  const navigate = useNavigate();
   const { networkClient, baseUrl, token } = useApi();
   const { currentEntitySlug } = useCurrentEntity();
 
@@ -200,13 +203,19 @@ export function ModelDetailPage() {
         <>
           <button
             className={`text-sm mr-3 ${ui.text.linkSubtle}`}
-            onClick={() => handleEditOffering(inst)}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleEditOffering(inst);
+            }}
           >
             Edit
           </button>
           <button
             className={`text-sm ${ui.text.error} hover:opacity-80`}
-            onClick={() => handleDeleteOffering(inst)}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleDeleteOffering(inst);
+            }}
           >
             Delete
           </button>
@@ -228,12 +237,15 @@ export function ModelDetailPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center gap-3">
-        <Link to={`/dashboard/${entitySlug}/models`} className="text-gray-400 hover:text-gray-600">
-          &larr;
-        </Link>
-        <h1 className={`${ui.text.h3} flex-1`}>{model?.name ?? 'Loading...'}</h1>
-      </div>
+      <DashboardBreadcrumb
+        crumbs={
+          [
+            { label: 'Models', to: sectionPath(entitySlug ?? '', 'model') },
+            { label: model?.name ?? 'Loading...' },
+          ] as Crumb[]
+        }
+      />
+      <h1 className={`${ui.text.h3} flex-1`}>{model?.name ?? 'Loading...'}</h1>
 
       {/* Model Settings */}
       <div className="bg-white rounded-lg shadow-sm border p-6">
@@ -380,6 +392,11 @@ export function ModelDetailPage() {
             columns={offeringColumns}
             data={offeringsManager.offerings}
             keyExtractor={(inst) => inst.id}
+            onRowClick={(inst) =>
+              navigate(
+                offeringPath(entitySlug ?? '', { parentType: 'model', parentId: modelId ?? '' }, inst.id)
+              )
+            }
             hoverable
           />
         )}
