@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { MasterDetailLayout } from '@sudobility/components';
 import { ui } from '@sudobility/design';
 import { SEOHead } from '@sudobility/seo_lib';
-import { useSetPageConfig } from '../hooks/usePageConfig';
+import { useSetPageConfig, usePageBreadcrumbs } from '../hooks/usePageConfig';
 import { CONSTANTS } from '../config/constants';
 import { analyticsService } from '../config/analytics';
 
@@ -213,6 +213,13 @@ function DocsPage() {
   useSetPageConfig({ scrollable: false, contentPadding: 'sm', maxWidth: '7xl' });
 
   const currentSection = (section as DocSection) || 'getting-started';
+  const currentSectionLabel =
+    sidebarItems.find((i) => i.id === currentSection)?.label ?? 'Documentation';
+
+  usePageBreadcrumbs([
+    { label: 'Documentation', href: '/docs' },
+    { label: currentSectionLabel, current: true },
+  ]);
 
   useEffect(() => {
     analyticsService.trackPageView(`/docs/${currentSection}`, `Docs - ${currentSection}`);

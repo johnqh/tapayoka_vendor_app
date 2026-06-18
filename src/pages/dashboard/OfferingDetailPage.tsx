@@ -10,7 +10,6 @@ import {
   useVendorLocationsManager,
   useVendorInstallationsManager,
 } from '@sudobility/tapayoka_lib';
-import { AppBreadcrumbs } from '@sudobility/building_blocks';
 import { DashboardPageHeader } from '../../components/DashboardPageHeader';
 import { InstallationFormModal } from '../../components/InstallationFormModal';
 import { OfferingModal } from '../../components/OfferingModal';
@@ -21,6 +20,7 @@ import {
   parentDetailPath,
   installationPath,
 } from '../../lib/dashboardPaths';
+import { usePageBreadcrumbs } from '../../hooks/usePageConfig';
 import type {
   VendorInstallation,
   VendorInstallationUpdateRequest,
@@ -125,6 +125,7 @@ export function OfferingDetailPage() {
     { label: parentName ?? '…', href: parentDetailPath(entitySlug, parent) },
     { label: offering?.name ?? 'Offering', current: true },
   ];
+  usePageBreadcrumbs(crumbs);
 
   const columns: TableColumn<VendorInstallation>[] = [
     {
@@ -173,7 +174,6 @@ export function OfferingDetailPage() {
 
   return (
     <div className="space-y-6">
-      <AppBreadcrumbs items={crumbs} />
       <DashboardPageHeader
         title={offering?.name ?? 'Offering'}
         onBack={() => navigate(parentDetailPath(entitySlug, parent))}

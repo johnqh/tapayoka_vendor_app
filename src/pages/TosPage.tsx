@@ -8,6 +8,7 @@ import { Alert, Button } from '@sudobility/components';
 import { SEOHead } from '@sudobility/seo_lib';
 import { CONSTANTS } from '../config/constants';
 import { analyticsService } from '../config/analytics';
+import { usePageBreadcrumbs } from '../hooks/usePageConfig';
 
 function TosPage() {
   const navigate = useNavigate();
@@ -22,6 +23,8 @@ function TosPage() {
   useEffect(() => {
     analyticsService.trackPageView('/tos', 'Terms of Service');
   }, []);
+
+  usePageBreadcrumbs([{ label: 'Terms of Service', current: true }]);
 
   const handleAccept = async () => {
     if (!token) return;

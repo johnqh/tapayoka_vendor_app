@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { EmptyState, AppBreadcrumbs } from '@sudobility/building_blocks';
+import { EmptyState } from '@sudobility/building_blocks';
 import { useApi } from '@sudobility/building_blocks/firebase';
 import { useCurrentEntity } from '@sudobility/entity_client';
 import { ui } from '@sudobility/design';
@@ -15,6 +15,7 @@ import { OfferingModal } from '../../components/OfferingModal';
 import { ModelSettingsModal } from '../../components/ModelSettingsModal';
 import { DashboardPageHeader } from '../../components/DashboardPageHeader';
 import { offeringPath, sectionPath } from '../../lib/dashboardPaths';
+import { usePageBreadcrumbs } from '../../hooks/usePageConfig';
 import { formatPricingSubtitle } from '../../components/pricingUtils';
 import type {
   VendorOffering,
@@ -50,6 +51,11 @@ export function ModelDetailPage() {
   useEffect(() => {
     analyticsService.trackPageView(`/dashboard/models/${modelId}`, 'Model Detail');
   }, [modelId]);
+
+  usePageBreadcrumbs([
+    { label: 'Models', href: sectionPath(entitySlug ?? '', 'model') },
+    { label: model?.name ?? 'Loading...', current: true },
+  ]);
 
   const [settingsOpen, setSettingsOpen] = useState(false);
 
@@ -178,12 +184,6 @@ export function ModelDetailPage() {
 
   return (
     <div className="space-y-6">
-      <AppBreadcrumbs
-        items={[
-          { label: 'Models', href: sectionPath(entitySlug ?? '', 'model') },
-          { label: model?.name ?? 'Loading...', current: true },
-        ]}
-      />
       <DashboardPageHeader
         title={model?.name ?? 'Loading...'}
         onBack={() => navigate(sectionPath(entitySlug ?? '', 'model'))}

@@ -11,7 +11,6 @@ import {
   useVendorInstallationsManager,
   useVendorInstallationSlotsManager,
 } from '@sudobility/tapayoka_lib';
-import { AppBreadcrumbs } from '@sudobility/building_blocks';
 import { DashboardPageHeader } from '../../components/DashboardPageHeader';
 import { SlotFormModal } from '../../components/SlotFormModal';
 import { InstallationFormModal } from '../../components/InstallationFormModal';
@@ -22,6 +21,7 @@ import {
   parentDetailPath,
   offeringPath,
 } from '../../lib/dashboardPaths';
+import { usePageBreadcrumbs } from '../../hooks/usePageConfig';
 import type {
   VendorInstallationSlot,
   VendorInstallationSlotCreateRequest,
@@ -147,6 +147,7 @@ export function InstallationDetailPage() {
     { label: offering?.name ?? 'Offering', href: offeringPath(entitySlug, parent, offeringId) },
     { label: installation?.label ?? 'Installation', current: true },
   ];
+  usePageBreadcrumbs(crumbs);
 
   const columns: TableColumn<VendorInstallationSlot>[] = [
     {
@@ -181,7 +182,6 @@ export function InstallationDetailPage() {
 
   return (
     <div className="space-y-6">
-      <AppBreadcrumbs items={crumbs} />
       <DashboardPageHeader
         title={installation?.label ?? 'Installation'}
         onBack={() => navigate(offeringPath(entitySlug, parent, offeringId))}

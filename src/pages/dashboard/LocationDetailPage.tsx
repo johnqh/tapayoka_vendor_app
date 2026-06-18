@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { EmptyState, AppBreadcrumbs } from '@sudobility/building_blocks';
+import { EmptyState } from '@sudobility/building_blocks';
 import { useApi } from '@sudobility/building_blocks/firebase';
 import { useCurrentEntity } from '@sudobility/entity_client';
 import { ui } from '@sudobility/design';
@@ -14,6 +14,7 @@ import {
 import { OfferingModal } from '../../components/OfferingModal';
 import { DashboardPageHeader } from '../../components/DashboardPageHeader';
 import { offeringPath, sectionPath } from '../../lib/dashboardPaths';
+import { usePageBreadcrumbs } from '../../hooks/usePageConfig';
 import { formatPricingSubtitle } from '../../components/pricingUtils';
 import type {
   VendorOffering,
@@ -48,6 +49,11 @@ export function LocationDetailPage() {
   useEffect(() => {
     analyticsService.trackPageView(`/dashboard/locations/${locationId}`, 'Location Detail');
   }, [locationId]);
+
+  usePageBreadcrumbs([
+    { label: 'Locations', href: sectionPath(entitySlug ?? '', 'location') },
+    { label: location?.name ?? 'Loading...', current: true },
+  ]);
 
   const [modalOpen, setModalOpen] = useState(false);
   const [editingOffering, setEditingOffering] = useState<VendorOffering | null>(null);
@@ -159,12 +165,6 @@ export function LocationDetailPage() {
 
   return (
     <div className="space-y-6">
-      <AppBreadcrumbs
-        items={[
-          { label: 'Locations', href: sectionPath(entitySlug ?? '', 'location') },
-          { label: location?.name ?? 'Loading...', current: true },
-        ]}
-      />
       <DashboardPageHeader
         title={location?.name ?? 'Loading...'}
         onBack={() => navigate(sectionPath(entitySlug ?? '', 'location'))}

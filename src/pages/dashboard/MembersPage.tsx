@@ -6,6 +6,7 @@ import { useAuthStatus } from '@sudobility/auth-components';
 import { useCurrentEntity } from '@sudobility/entity_client';
 import { ui } from '@sudobility/design';
 import { analyticsService } from '../../config/analytics';
+import { usePageBreadcrumbs } from '../../hooks/usePageConfig';
 
 export function MembersPage() {
   const { networkClient, baseUrl } = useApi();
@@ -15,6 +16,8 @@ export function MembersPage() {
   useEffect(() => {
     analyticsService.trackPageView('/dashboard/members', 'Members');
   }, []);
+
+  usePageBreadcrumbs([{ label: 'Members', current: true }]);
 
   const entityClient = useMemo(
     () => new EntityClient({ baseUrl: `${baseUrl}/api/v1`, networkClient }),

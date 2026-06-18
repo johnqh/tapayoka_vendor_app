@@ -9,10 +9,20 @@ export interface PageConfig {
   background?: 'default' | 'white' | 'gradient';
 }
 
+/** A single breadcrumb crumb, matching @sudobility/building_blocks BreadcrumbItem. */
+export interface BreadcrumbCrumb {
+  label: string;
+  href?: string;
+  current?: boolean;
+}
+
 export interface PageConfigContextValue {
   pageConfig: PageConfig;
   setPageConfig: (config: PageConfig) => void;
   resetPageConfig: () => void;
+  /** Breadcrumb trail for the active page, rendered by the layout. */
+  breadcrumbs: BreadcrumbCrumb[];
+  setBreadcrumbs: (items: BreadcrumbCrumb[]) => void;
 }
 
 export const DEFAULT_PAGE_CONFIG: PageConfig = {
@@ -43,4 +53,19 @@ export function useSetPageConfig(config: PageConfig) {
     setPageConfig(JSON.parse(configStr));
     return () => resetPageConfig();
   }, [configStr, setPageConfig, resetPageConfig]);
+}
+
+/**
+ * Hook for pages to declare their breadcrumb trail. The layout
+ * (AppPageLayout's `breadcrumbs` prop) renders it consistently site-wide.
+ * Cleared automatically when the page unmounts.
+ */
+export function usePageBreadcrumbs(items: BreadcrumbCrumb[]) {
+  const { setBreadcrumbs } = usePageConfig();
+  const itemsStr = JSON.stringify(items);
+
+  useLayoutEffect(() => {
+    setBreadcrumbs(JSON.parse(itemsStr));
+    return () => setBreadcrumbs([]);
+  }, [itemsStr, setBreadcrumbs]);
 }

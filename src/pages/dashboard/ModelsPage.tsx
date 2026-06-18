@@ -19,6 +19,7 @@ import {
 } from '@sudobility/components';
 import { analyticsService } from '../../config/analytics';
 import { DashboardPageHeader } from '../../components/DashboardPageHeader';
+import { usePageBreadcrumbs } from '../../hooks/usePageConfig';
 import type {
   VendorModel,
   VendorModelCreateRequest,
@@ -342,6 +343,8 @@ export function ModelsPage() {
   useEffect(() => {
     analyticsService.trackPageView('/dashboard/models', 'Models');
   }, []);
+
+  usePageBreadcrumbs([{ label: 'Models', current: true }]);
 
   const [modalVisible, setModalVisible] = useState(false);
   const [editingModel, setEditingModel] = useState<VendorModel | null>(null);

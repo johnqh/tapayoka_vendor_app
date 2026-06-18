@@ -26,16 +26,17 @@ function ScreenContainer({ children }: ScreenContainerProps) {
 function ScreenContainerInner({ children }: { children: ReactNode }) {
   const location = useLocation();
   const topBarConfig = useTopBarConfig();
-  const { pageConfig } = usePageConfig();
+  const { pageConfig, breadcrumbs } = usePageConfig();
 
-  const isPublicPage = ['/', '/vendor', '/docs'].some(
-    (p) => location.pathname === p || location.pathname.startsWith('/docs/')
-  );
-  const footerConfig = useFooterConfig(isPublicPage ? 'full' : 'compact');
+  // Home keeps the full marketing footer; every other page uses the compact
+  // footer, which sticks to the bottom of the viewport (same as the dashboard).
+  const isHomePage = location.pathname === '/';
+  const footerConfig = useFooterConfig(isHomePage ? 'full' : 'compact');
 
   return (
     <AppPageLayout
       topBar={topBarConfig}
+      breadcrumbs={breadcrumbs.length > 0 ? { items: breadcrumbs } : undefined}
       footer={footerConfig}
       page={{
         maxWidth: 'full',

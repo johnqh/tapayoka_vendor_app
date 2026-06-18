@@ -6,6 +6,7 @@ import { Alert, Spinner, Table, type TableColumn } from '@sudobility/components'
 import type { Order, OrderStatus } from '@sudobility/tapayoka_types';
 import { analyticsService } from '../../config/analytics';
 import { DashboardPageHeader } from '../../components/DashboardPageHeader';
+import { usePageBreadcrumbs } from '../../hooks/usePageConfig';
 
 const STATUS_BADGE: Record<OrderStatus, string> = {
   CREATED: 'bg-gray-100 text-gray-700',
@@ -43,6 +44,8 @@ export function OrdersPage() {
   useEffect(() => {
     analyticsService.trackPageView('/dashboard/orders', 'Orders');
   }, []);
+
+  usePageBreadcrumbs([{ label: 'Orders', current: true }]);
 
   const { orders, isLoading, error, refresh } = useOrdersManager(
     networkClient,
