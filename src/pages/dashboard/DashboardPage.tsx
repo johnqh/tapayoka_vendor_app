@@ -232,7 +232,6 @@ function DashboardPage() {
           backButtonText="Back"
           masterContent={masterContent}
           detailContent={detailContent}
-          detailTitle={getDetailTitle()}
           mobileView={mobileView}
           onBackToNavigation={handleBackToNavigation}
           animationRef={animationRef}
