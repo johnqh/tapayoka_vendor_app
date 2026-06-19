@@ -4,7 +4,7 @@ import { EmptyState } from '@sudobility/building_blocks';
 import { useApi } from '../../context/apiContextDef';
 import { useCurrentEntity } from '@sudobility/entity_client';
 import { ui } from '@sudobility/design';
-import { Badge, Spinner, Table, type TableColumn } from '@sudobility/components';
+import { Badge, ContentLayout, Spinner, Table, type TableColumn } from '@sudobility/components';
 import { analyticsService } from '../../config/analytics';
 import {
   useVendorModelsManager,
@@ -187,50 +187,55 @@ export function ModelDetailPage() {
   }
 
   return (
-    <div className="space-y-6">
-      <DashboardPageHeader
-        title={model?.name ?? 'Loading...'}
-        onBack={() => navigate(sectionPath(entitySlug ?? '', 'model'))}
-        onRefresh={() => offeringsManager.refresh()}
-        refreshing={offeringsManager.isLoading}
-        onSettings={() => setSettingsOpen(true)}
-        onAdd={handleAddOffering}
-        addLabel="Offering"
-      />
-
-      <div className="bg-white rounded-lg shadow-sm border">
-        <div className="px-4 py-3 border-b">
-          <h2 className={ui.text.h5}>Offerings</h2>
-        </div>
-
-        {offeringsManager.isLoading ? (
-          <div className="p-8 flex justify-center">
-            <Spinner ariaLabel="Loading offerings" />
+    <>
+      <ContentLayout
+        header={
+          <DashboardPageHeader
+            title={model?.name ?? 'Loading...'}
+            onBack={() => navigate(sectionPath(entitySlug ?? '', 'model'))}
+            onRefresh={() => offeringsManager.refresh()}
+            refreshing={offeringsManager.isLoading}
+            onSettings={() => setSettingsOpen(true)}
+            onAdd={handleAddOffering}
+            addLabel="Offering"
+          />
+        }
+        contentClassName="p-4"
+      >
+        <div className="bg-white rounded-lg shadow-sm border">
+          <div className="px-4 py-3 border-b">
+            <h2 className={ui.text.h5}>Offerings</h2>
           </div>
-        ) : offeringsManager.offerings.length === 0 ? (
-          <EmptyState
-            message="Manage your offerings here."
-            buttonLabel="Add Offering"
-            onPress={handleAddOffering}
-          />
-        ) : (
-          <Table
-            columns={offeringColumns}
-            data={offeringsManager.offerings}
-            keyExtractor={(inst) => inst.id}
-            onRowClick={(inst) =>
-              navigate(
-                offeringPath(
-                  entitySlug ?? '',
-                  { parentType: 'model', parentId: modelId ?? '' },
-                  inst.id
+
+          {offeringsManager.isLoading ? (
+            <div className="p-8 flex justify-center">
+              <Spinner ariaLabel="Loading offerings" />
+            </div>
+          ) : offeringsManager.offerings.length === 0 ? (
+            <EmptyState
+              message="Manage your offerings here."
+              buttonLabel="Add Offering"
+              onPress={handleAddOffering}
+            />
+          ) : (
+            <Table
+              columns={offeringColumns}
+              data={offeringsManager.offerings}
+              keyExtractor={(inst) => inst.id}
+              onRowClick={(inst) =>
+                navigate(
+                  offeringPath(
+                    entitySlug ?? '',
+                    { parentType: 'model', parentId: modelId ?? '' },
+                    inst.id
+                  )
                 )
-              )
-            }
-            hoverable
-          />
-        )}
-      </div>
+              }
+              hoverable
+            />
+          )}
+        </div>
+      </ContentLayout>
 
       <OfferingModal
         open={modalOpen}
@@ -250,7 +255,7 @@ export function ModelDetailPage() {
         onClose={() => setSettingsOpen(false)}
         onSave={handleSaveSettings}
       />
-    </div>
+    </>
   );
 }
 

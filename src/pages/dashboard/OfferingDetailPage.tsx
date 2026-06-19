@@ -3,7 +3,14 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useApi } from '../../context/apiContextDef';
 import { useCurrentEntity } from '@sudobility/entity_client';
 import { ui } from '@sudobility/design';
-import { Badge, Spinner, Table, Alert, type TableColumn } from '@sudobility/components';
+import {
+  Badge,
+  ContentLayout,
+  Spinner,
+  Table,
+  Alert,
+  type TableColumn,
+} from '@sudobility/components';
 import {
   useVendorOfferingsManager,
   useVendorModelsManager,
@@ -174,46 +181,51 @@ export function OfferingDetailPage() {
   ];
 
   return (
-    <div className="space-y-6">
-      <DashboardPageHeader
-        title={offering?.name ?? 'Offering'}
-        onBack={() => navigate(parentDetailPath(entitySlug, parent))}
-        onRefresh={() => installationsManager.refresh()}
-        refreshing={installationsManager.isLoading}
-        onSettings={() => setOfferingEditOpen(true)}
-        onAdd={() => undefined}
-        addDisabled
-        addTitle="Pair a device in the mobile app"
-        addLabel="Installation"
-      />
-
-      {installationsManager.error && <Alert variant="error">{installationsManager.error}</Alert>}
-
-      <div className="bg-white rounded-lg shadow-sm border">
-        <div className="px-4 py-3 border-b">
-          <h2 className={ui.text.h5}>Installations</h2>
-        </div>
-
-        {installationsManager.isLoading ? (
-          <div className="p-8 flex justify-center">
-            <Spinner ariaLabel="Loading installations" />
-          </div>
-        ) : installationsManager.installations.length === 0 ? (
-          <div className="p-8 text-center text-gray-500">
-            No installations yet. Pair a device in the mobile app to add one.
-          </div>
-        ) : (
-          <Table
-            columns={columns}
-            data={installationsManager.installations}
-            keyExtractor={(inst) => inst.walletAddress}
-            onRowClick={(inst) =>
-              navigate(installationPath(entitySlug, parent, offeringId, inst.walletAddress))
-            }
-            hoverable
+    <>
+      <ContentLayout
+        header={
+          <DashboardPageHeader
+            title={offering?.name ?? 'Offering'}
+            onBack={() => navigate(parentDetailPath(entitySlug, parent))}
+            onRefresh={() => installationsManager.refresh()}
+            refreshing={installationsManager.isLoading}
+            onSettings={() => setOfferingEditOpen(true)}
+            onAdd={() => undefined}
+            addDisabled
+            addTitle="Pair a device in the mobile app"
+            addLabel="Installation"
           />
-        )}
-      </div>
+        }
+        contentClassName="p-4 space-y-4"
+      >
+        {installationsManager.error && <Alert variant="error">{installationsManager.error}</Alert>}
+
+        <div className="bg-white rounded-lg shadow-sm border">
+          <div className="px-4 py-3 border-b">
+            <h2 className={ui.text.h5}>Installations</h2>
+          </div>
+
+          {installationsManager.isLoading ? (
+            <div className="p-8 flex justify-center">
+              <Spinner ariaLabel="Loading installations" />
+            </div>
+          ) : installationsManager.installations.length === 0 ? (
+            <div className="p-8 text-center text-gray-500">
+              No installations yet. Pair a device in the mobile app to add one.
+            </div>
+          ) : (
+            <Table
+              columns={columns}
+              data={installationsManager.installations}
+              keyExtractor={(inst) => inst.walletAddress}
+              onRowClick={(inst) =>
+                navigate(installationPath(entitySlug, parent, offeringId, inst.walletAddress))
+              }
+              hoverable
+            />
+          )}
+        </div>
+      </ContentLayout>
 
       <InstallationFormModal
         open={modalOpen}
@@ -234,7 +246,7 @@ export function OfferingDetailPage() {
         onClose={() => setOfferingEditOpen(false)}
         onSave={handleSaveOffering}
       />
-    </div>
+    </>
   );
 }
 

@@ -9,6 +9,7 @@ import {
   Alert,
   Badge,
   Button,
+  ContentLayout,
   FormField,
   Modal,
   ModalContent,
@@ -143,18 +144,22 @@ export function LocationsPage() {
 
   if (manager.isLoading) {
     return (
-      <div className="space-y-6">
-        <DashboardPageHeader
-          title="Locations"
-          onRefresh={() => manager.refresh()}
-          refreshing
-          onAdd={openAddModal}
-          addLabel="Location"
-        />
+      <ContentLayout
+        header={
+          <DashboardPageHeader
+            title="Locations"
+            onRefresh={() => manager.refresh()}
+            refreshing
+            onAdd={openAddModal}
+            addLabel="Location"
+          />
+        }
+        contentClassName="p-4"
+      >
         <div className="bg-white rounded-lg shadow-sm border p-8 flex justify-center">
           <Spinner ariaLabel="Loading locations" />
         </div>
-      </div>
+      </ContentLayout>
     );
   }
 
@@ -224,32 +229,37 @@ export function LocationsPage() {
   ];
 
   return (
-    <div className="space-y-6">
-      <DashboardPageHeader
-        title="Locations"
-        onRefresh={() => manager.refresh()}
-        refreshing={manager.isLoading}
-        onAdd={openAddModal}
-        addLabel="Location"
-      />
-
-      {manager.locations.length === 0 ? (
-        <EmptyState
-          message="Manage your business premises here."
-          buttonLabel="Add Location"
-          onPress={openAddModal}
-        />
-      ) : (
-        <div className="bg-white rounded-lg shadow-sm border overflow-hidden">
-          <Table
-            columns={columns}
-            data={manager.locations}
-            keyExtractor={(location) => location.id}
-            hoverable
-            onRowClick={handleRowClick}
+    <>
+      <ContentLayout
+        header={
+          <DashboardPageHeader
+            title="Locations"
+            onRefresh={() => manager.refresh()}
+            refreshing={manager.isLoading}
+            onAdd={openAddModal}
+            addLabel="Location"
           />
-        </div>
-      )}
+        }
+        contentClassName="p-4"
+      >
+        {manager.locations.length === 0 ? (
+          <EmptyState
+            message="Manage your business premises here."
+            buttonLabel="Add Location"
+            onPress={openAddModal}
+          />
+        ) : (
+          <div className="bg-white rounded-lg shadow-sm border overflow-hidden">
+            <Table
+              columns={columns}
+              data={manager.locations}
+              keyExtractor={(location) => location.id}
+              hoverable
+              onRowClick={handleRowClick}
+            />
+          </div>
+        )}
+      </ContentLayout>
 
       <Modal
         isOpen={modalOpen}
@@ -330,7 +340,7 @@ export function LocationsPage() {
           </Button>
         </ModalFooter>
       </Modal>
-    </div>
+    </>
   );
 }
 

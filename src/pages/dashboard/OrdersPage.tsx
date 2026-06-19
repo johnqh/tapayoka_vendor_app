@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { useApi } from '../../context/apiContextDef';
 import { useCurrentEntity } from '@sudobility/entity_client';
 import { useOrdersManager } from '@sudobility/tapayoka_lib';
-import { Alert, Spinner, Table, type TableColumn } from '@sudobility/components';
+import { Alert, ContentLayout, Spinner, Table, type TableColumn } from '@sudobility/components';
 import type { Order, OrderStatus } from '@sudobility/tapayoka_types';
 import { analyticsService } from '../../config/analytics';
 import { DashboardPageHeader } from '../../components/DashboardPageHeader';
@@ -91,16 +91,19 @@ export function OrdersPage() {
   ];
 
   return (
-    <div className="space-y-6">
-      <DashboardPageHeader
-        title="Orders"
-        onRefresh={() => {
-          analyticsService.trackButtonClick('refresh_orders');
-          refresh();
-        }}
-        refreshing={isLoading}
-      />
-
+    <ContentLayout
+      header={
+        <DashboardPageHeader
+          title="Orders"
+          onRefresh={() => {
+            analyticsService.trackButtonClick('refresh_orders');
+            refresh();
+          }}
+          refreshing={isLoading}
+        />
+      }
+      contentClassName="p-4 space-y-4"
+    >
       {error && <Alert variant="error" description={error} />}
 
       {isLoading ? (
@@ -118,7 +121,7 @@ export function OrdersPage() {
           />
         </div>
       )}
-    </div>
+    </ContentLayout>
   );
 }
 

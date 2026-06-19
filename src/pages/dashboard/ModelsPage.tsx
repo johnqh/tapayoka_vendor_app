@@ -8,6 +8,7 @@ import { ui, buttonVariant } from '@sudobility/design';
 import {
   Badge,
   Button,
+  ContentLayout,
   FormField,
   Modal,
   ModalContent,
@@ -456,36 +457,41 @@ export function ModelsPage() {
   ];
 
   return (
-    <div className="space-y-6">
-      <DashboardPageHeader
-        title="Models"
-        onRefresh={() => manager.refresh()}
-        refreshing={manager.isLoading}
-        onAdd={handleAdd}
-        addLabel="Model"
-      />
-
-      {manager.isLoading && manager.models.length === 0 ? (
-        <div className="bg-white rounded-lg shadow-sm border p-8 flex justify-center">
-          <Spinner ariaLabel="Loading models" />
-        </div>
-      ) : manager.models.length === 0 ? (
-        <EmptyState
-          message="Manage your installation models here."
-          buttonLabel="Add Model"
-          onPress={handleAdd}
-        />
-      ) : (
-        <div className="bg-white rounded-lg shadow-sm border overflow-hidden">
-          <Table
-            columns={columns}
-            data={manager.models}
-            keyExtractor={(model) => model.id}
-            hoverable
-            onRowClick={handleRowClick}
+    <>
+      <ContentLayout
+        header={
+          <DashboardPageHeader
+            title="Models"
+            onRefresh={() => manager.refresh()}
+            refreshing={manager.isLoading}
+            onAdd={handleAdd}
+            addLabel="Model"
           />
-        </div>
-      )}
+        }
+        contentClassName="p-4"
+      >
+        {manager.isLoading && manager.models.length === 0 ? (
+          <div className="bg-white rounded-lg shadow-sm border p-8 flex justify-center">
+            <Spinner ariaLabel="Loading models" />
+          </div>
+        ) : manager.models.length === 0 ? (
+          <EmptyState
+            message="Manage your installation models here."
+            buttonLabel="Add Model"
+            onPress={handleAdd}
+          />
+        ) : (
+          <div className="bg-white rounded-lg shadow-sm border overflow-hidden">
+            <Table
+              columns={columns}
+              data={manager.models}
+              keyExtractor={(model) => model.id}
+              hoverable
+              onRowClick={handleRowClick}
+            />
+          </div>
+        )}
+      </ContentLayout>
 
       <ModelFormModal
         visible={modalVisible}
@@ -493,7 +499,7 @@ export function ModelsPage() {
         onClose={() => setModalVisible(false)}
         onSave={handleSave}
       />
-    </div>
+    </>
   );
 }
 

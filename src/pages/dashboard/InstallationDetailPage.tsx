@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useApi } from '../../context/apiContextDef';
 import { useCurrentEntity } from '@sudobility/entity_client';
 import { ui } from '@sudobility/design';
-import { Spinner, Alert, Table, type TableColumn } from '@sudobility/components';
+import { ContentLayout, Spinner, Alert, Table, type TableColumn } from '@sudobility/components';
 import {
   useVendorOfferingsManager,
   useVendorModelsManager,
@@ -182,43 +182,48 @@ export function InstallationDetailPage() {
   ];
 
   return (
-    <div className="space-y-6">
-      <DashboardPageHeader
-        title={installation?.label ?? 'Installation'}
-        onBack={() => navigate(offeringPath(entitySlug, parent, offeringId))}
-        onRefresh={() => slotsManager.refresh()}
-        refreshing={slotsManager.isLoading}
-        onSettings={() => setInstallEditOpen(true)}
-        onAdd={handleAdd}
-        addDisabled={isGrid}
-        addTitle={isGrid ? 'Generate the grid in the mobile app' : undefined}
-        addLabel="Slot"
-      />
-
-      {slotsManager.error && <Alert variant="error">{slotsManager.error}</Alert>}
-
-      <div className="bg-white rounded-lg shadow-sm border">
-        <div className="px-4 py-3 border-b">
-          <h2 className={ui.text.h5}>Slots</h2>
-        </div>
-
-        {slotsManager.isLoading ? (
-          <div className="p-8 flex justify-center">
-            <Spinner ariaLabel="Loading slots" />
-          </div>
-        ) : slotsManager.slots.length === 0 ? (
-          <div className="p-8 text-center text-gray-500">
-            {isGrid ? 'No slots yet. Generate the grid in the mobile app.' : 'No slots yet.'}
-          </div>
-        ) : (
-          <Table
-            columns={columns}
-            data={slotsManager.slots}
-            keyExtractor={(slot) => slot.id}
-            hoverable
+    <>
+      <ContentLayout
+        header={
+          <DashboardPageHeader
+            title={installation?.label ?? 'Installation'}
+            onBack={() => navigate(offeringPath(entitySlug, parent, offeringId))}
+            onRefresh={() => slotsManager.refresh()}
+            refreshing={slotsManager.isLoading}
+            onSettings={() => setInstallEditOpen(true)}
+            onAdd={handleAdd}
+            addDisabled={isGrid}
+            addTitle={isGrid ? 'Generate the grid in the mobile app' : undefined}
+            addLabel="Slot"
           />
-        )}
-      </div>
+        }
+        contentClassName="p-4 space-y-4"
+      >
+        {slotsManager.error && <Alert variant="error">{slotsManager.error}</Alert>}
+
+        <div className="bg-white rounded-lg shadow-sm border">
+          <div className="px-4 py-3 border-b">
+            <h2 className={ui.text.h5}>Slots</h2>
+          </div>
+
+          {slotsManager.isLoading ? (
+            <div className="p-8 flex justify-center">
+              <Spinner ariaLabel="Loading slots" />
+            </div>
+          ) : slotsManager.slots.length === 0 ? (
+            <div className="p-8 text-center text-gray-500">
+              {isGrid ? 'No slots yet. Generate the grid in the mobile app.' : 'No slots yet.'}
+            </div>
+          ) : (
+            <Table
+              columns={columns}
+              data={slotsManager.slots}
+              keyExtractor={(slot) => slot.id}
+              hoverable
+            />
+          )}
+        </div>
+      </ContentLayout>
 
       <SlotFormModal
         open={modalOpen}
@@ -233,7 +238,7 @@ export function InstallationDetailPage() {
         onClose={() => setInstallEditOpen(false)}
         onSave={handleSaveInstall}
       />
-    </div>
+    </>
   );
 }
 

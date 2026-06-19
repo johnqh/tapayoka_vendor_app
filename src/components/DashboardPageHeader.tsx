@@ -1,3 +1,4 @@
+import { type ReactNode } from 'react';
 import {
   ChevronLeftIcon,
   ArrowPathIcon,
@@ -50,7 +51,9 @@ export function DashboardPageHeader({
   addTitle,
 }: DashboardPageHeaderProps) {
   return (
-    <div className="flex items-center gap-3">
+    <div
+      className={`flex items-center gap-3 px-4 py-3 border-b border-gray-200 dark:border-gray-800 ${ui.background.subtle}`}
+    >
       {onBack && (
         <button
           type="button"
@@ -102,6 +105,20 @@ export function DashboardPageHeader({
           </button>
         )}
       </div>
+    </div>
+  );
+}
+
+/**
+ * Footer band for a ContentLayout detail page — pinned to the bottom of the
+ * scroll area to show information about the current object.
+ */
+export function DashboardDetailFooter({ children }: { children: ReactNode }) {
+  return (
+    <div
+      className={`px-4 py-3 border-t border-gray-200 dark:border-gray-800 ${ui.background.subtle} ${ui.text.bodySmall}`}
+    >
+      {children}
     </div>
   );
 }

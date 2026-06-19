@@ -4,7 +4,7 @@ import { EmptyState } from '@sudobility/building_blocks';
 import { useApi } from '../../context/apiContextDef';
 import { useCurrentEntity } from '@sudobility/entity_client';
 import { ui } from '@sudobility/design';
-import { Badge, Spinner, Table, type TableColumn } from '@sudobility/components';
+import { Badge, ContentLayout, Spinner, Table, type TableColumn } from '@sudobility/components';
 import { analyticsService } from '../../config/analytics';
 import {
   useVendorLocationsManager,
@@ -12,7 +12,7 @@ import {
   useVendorOfferingsManager,
 } from '@sudobility/tapayoka_lib';
 import { OfferingModal } from '../../components/OfferingModal';
-import { DashboardPageHeader } from '../../components/DashboardPageHeader';
+import { DashboardPageHeader, DashboardDetailFooter } from '../../components/DashboardPageHeader';
 import { offeringPath, sectionPath } from '../../lib/dashboardPaths';
 import { usePageBreadcrumbs } from '../../hooks/usePageConfig';
 import { dashboardTrail } from '../../lib/breadcrumbs';
@@ -168,51 +168,58 @@ export function LocationDetailPage() {
   }
 
   return (
-    <div className="space-y-6">
-      <DashboardPageHeader
-        title={location?.name ?? 'Loading...'}
-        onBack={() => navigate(sectionPath(entitySlug ?? '', 'location'))}
-        onRefresh={() => offeringsManager.refresh()}
-        refreshing={offeringsManager.isLoading}
-        onAdd={handleAdd}
-        addLabel="Offering"
-      />
-      {location && (
-        <p className={ui.text.bodySmall}>
-          {location.address}, {location.city}, {location.stateProvince} {location.zipcode},{' '}
-          {location.country}
-        </p>
-      )}
-
-      <div className="bg-white rounded-lg shadow-sm border overflow-hidden">
-        {offeringsManager.isLoading ? (
-          <div className="p-8 flex justify-center">
-            <Spinner ariaLabel="Loading offerings" />
-          </div>
-        ) : offeringsManager.offerings.length === 0 ? (
-          <EmptyState
-            message="Manage your offerings here."
-            buttonLabel="Add Offering"
-            onPress={handleAdd}
+    <>
+      <ContentLayout
+        header={
+          <DashboardPageHeader
+            title={location?.name ?? 'Loading...'}
+            onBack={() => navigate(sectionPath(entitySlug ?? '', 'location'))}
+            onRefresh={() => offeringsManager.refresh()}
+            refreshing={offeringsManager.isLoading}
+            onAdd={handleAdd}
+            addLabel="Offering"
           />
-        ) : (
-          <Table
-            columns={offeringColumns}
-            data={offeringsManager.offerings}
-            keyExtractor={(inst) => inst.id}
-            onRowClick={(inst) =>
-              navigate(
-                offeringPath(
-                  entitySlug ?? '',
-                  { parentType: 'location', parentId: locationId ?? '' },
-                  inst.id
+        }
+        footer={
+          location ? (
+            <DashboardDetailFooter>
+              {location.address}, {location.city}, {location.stateProvince} {location.zipcode},{' '}
+              {location.country}
+            </DashboardDetailFooter>
+          ) : undefined
+        }
+        contentClassName="p-4"
+      >
+        <div className="bg-white rounded-lg shadow-sm border overflow-hidden">
+          {offeringsManager.isLoading ? (
+            <div className="p-8 flex justify-center">
+              <Spinner ariaLabel="Loading offerings" />
+            </div>
+          ) : offeringsManager.offerings.length === 0 ? (
+            <EmptyState
+              message="Manage your offerings here."
+              buttonLabel="Add Offering"
+              onPress={handleAdd}
+            />
+          ) : (
+            <Table
+              columns={offeringColumns}
+              data={offeringsManager.offerings}
+              keyExtractor={(inst) => inst.id}
+              onRowClick={(inst) =>
+                navigate(
+                  offeringPath(
+                    entitySlug ?? '',
+                    { parentType: 'location', parentId: locationId ?? '' },
+                    inst.id
+                  )
                 )
-              )
-            }
-            hoverable
-          />
-        )}
-      </div>
+              }
+              hoverable
+            />
+          )}
+        </div>
+      </ContentLayout>
 
       <OfferingModal
         open={modalOpen}
@@ -224,7 +231,7 @@ export function LocationDetailPage() {
         onClose={() => setModalOpen(false)}
         onSave={handleSave}
       />
-    </div>
+    </>
   );
 }
 
