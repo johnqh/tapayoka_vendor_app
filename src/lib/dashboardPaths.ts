@@ -1,5 +1,9 @@
 export type OfferingParent = { parentType: 'model' | 'location'; parentId: string };
 
+export function dashboardHomePath(entitySlug: string): string {
+  return `/dashboard/${entitySlug}`;
+}
+
 export function resolveOfferingParent(params: {
   modelId?: string;
   locationId?: string;

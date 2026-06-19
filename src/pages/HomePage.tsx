@@ -6,6 +6,7 @@ import { ui, buttonVariant } from '@sudobility/design';
 import { SEOHead, buildHowToSchema } from '@sudobility/seo_lib';
 import { CONSTANTS } from '../config/constants';
 import { analyticsService } from '../config/analytics';
+import { usePageBreadcrumbs } from '../hooks/usePageConfig';
 
 const featureIcons = [
   // Device Management
@@ -84,6 +85,8 @@ function HomePage() {
   const { user } = useAuthStatus();
   const { t } = useTranslation('homePage');
   const { t: tHowTo } = useTranslation('howto');
+
+  usePageBreadcrumbs([{ label: 'Home', current: true }]);
 
   useEffect(() => {
     analyticsService.trackPageView('/home', 'Home Page');

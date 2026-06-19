@@ -22,6 +22,7 @@ import {
   offeringPath,
 } from '../../lib/dashboardPaths';
 import { usePageBreadcrumbs } from '../../hooks/usePageConfig';
+import { dashboardTrail } from '../../lib/breadcrumbs';
 import type {
   VendorInstallationSlot,
   VendorInstallationSlotCreateRequest,
@@ -147,7 +148,7 @@ export function InstallationDetailPage() {
     { label: offering?.name ?? 'Offering', href: offeringPath(entitySlug, parent, offeringId) },
     { label: installation?.label ?? 'Installation', current: true },
   ];
-  usePageBreadcrumbs(crumbs);
+  usePageBreadcrumbs(dashboardTrail(entitySlug, ...crumbs));
 
   const columns: TableColumn<VendorInstallationSlot>[] = [
     {

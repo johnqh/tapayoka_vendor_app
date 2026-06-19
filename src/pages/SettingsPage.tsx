@@ -4,6 +4,7 @@ import { SEOHead } from '@sudobility/seo_lib';
 import { CONSTANTS } from '../config/constants';
 import { analyticsService } from '../config/analytics';
 import { useSetPageConfig, usePageBreadcrumbs } from '../hooks/usePageConfig';
+import { publicTrail } from '../lib/breadcrumbs';
 import { useAppearanceStore } from '../stores/appearanceStore';
 
 export default function SettingsPage() {
@@ -13,7 +14,7 @@ export default function SettingsPage() {
   const setFontSize = useAppearanceStore((s) => s.setFontSize);
 
   useSetPageConfig({ scrollable: false, contentPadding: 'sm', maxWidth: '7xl' });
-  usePageBreadcrumbs([{ label: 'Settings', current: true }]);
+  usePageBreadcrumbs(publicTrail({ label: 'Settings', current: true }));
 
   useEffect(() => {
     analyticsService.trackPageView('/settings', 'Settings');

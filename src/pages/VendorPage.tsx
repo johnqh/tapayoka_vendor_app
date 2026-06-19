@@ -7,6 +7,7 @@ import { SEOHead } from '@sudobility/seo_lib';
 import { CONSTANTS } from '../config/constants';
 import { analyticsService } from '../config/analytics';
 import { usePageBreadcrumbs } from '../hooks/usePageConfig';
+import { publicTrail } from '../lib/breadcrumbs';
 
 const sectionKeys = [
   'sections.deviceManagement',
@@ -24,7 +25,7 @@ function VendorPage() {
     analyticsService.trackPageView('/vendor', 'Vendor Page');
   }, []);
 
-  usePageBreadcrumbs([{ label: 'For Vendors', current: true }]);
+  usePageBreadcrumbs(publicTrail({ label: 'For Vendors', current: true }));
 
   const seoTitle = t('seo.title', { appName: CONSTANTS.APP_NAME });
   const seoDescription = t('seo.description', { appName: CONSTANTS.APP_NAME });

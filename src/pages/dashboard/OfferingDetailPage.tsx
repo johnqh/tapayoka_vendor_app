@@ -21,6 +21,7 @@ import {
   installationPath,
 } from '../../lib/dashboardPaths';
 import { usePageBreadcrumbs } from '../../hooks/usePageConfig';
+import { dashboardTrail } from '../../lib/breadcrumbs';
 import type {
   VendorInstallation,
   VendorInstallationUpdateRequest,
@@ -125,7 +126,7 @@ export function OfferingDetailPage() {
     { label: parentName ?? '…', href: parentDetailPath(entitySlug, parent) },
     { label: offering?.name ?? 'Offering', current: true },
   ];
-  usePageBreadcrumbs(crumbs);
+  usePageBreadcrumbs(dashboardTrail(entitySlug, ...crumbs));
 
   const columns: TableColumn<VendorInstallation>[] = [
     {

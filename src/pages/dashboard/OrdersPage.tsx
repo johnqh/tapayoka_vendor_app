@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import { useApi } from '../../context/apiContextDef';
 import { useCurrentEntity } from '@sudobility/entity_client';
 import { useOrdersManager } from '@sudobility/tapayoka_lib';
@@ -7,6 +8,7 @@ import type { Order, OrderStatus } from '@sudobility/tapayoka_types';
 import { analyticsService } from '../../config/analytics';
 import { DashboardPageHeader } from '../../components/DashboardPageHeader';
 import { usePageBreadcrumbs } from '../../hooks/usePageConfig';
+import { dashboardTrail } from '../../lib/breadcrumbs';
 
 const STATUS_BADGE: Record<OrderStatus, string> = {
   CREATED: 'bg-gray-100 text-gray-700',
@@ -39,13 +41,14 @@ function truncateId(id: string): string {
 
 export function OrdersPage() {
   const { networkClient, baseUrl, token } = useApi();
+  const { entitySlug } = useParams<{ entitySlug: string }>();
   const { currentEntitySlug } = useCurrentEntity();
 
   useEffect(() => {
     analyticsService.trackPageView('/dashboard/orders', 'Orders');
   }, []);
 
-  usePageBreadcrumbs([{ label: 'Orders', current: true }]);
+  usePageBreadcrumbs(dashboardTrail(entitySlug ?? '', { label: 'Orders', current: true }));
 
   const { orders, isLoading, error, refresh } = useOrdersManager(
     networkClient,

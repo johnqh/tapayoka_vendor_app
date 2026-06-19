@@ -16,6 +16,7 @@ import { ModelSettingsModal } from '../../components/ModelSettingsModal';
 import { DashboardPageHeader } from '../../components/DashboardPageHeader';
 import { offeringPath, sectionPath } from '../../lib/dashboardPaths';
 import { usePageBreadcrumbs } from '../../hooks/usePageConfig';
+import { dashboardTrail } from '../../lib/breadcrumbs';
 import { formatPricingSubtitle } from '../../components/pricingUtils';
 import type {
   VendorOffering,
@@ -52,10 +53,13 @@ export function ModelDetailPage() {
     analyticsService.trackPageView(`/dashboard/models/${modelId}`, 'Model Detail');
   }, [modelId]);
 
-  usePageBreadcrumbs([
-    { label: 'Models', href: sectionPath(entitySlug ?? '', 'model') },
-    { label: model?.name ?? 'Loading...', current: true },
-  ]);
+  usePageBreadcrumbs(
+    dashboardTrail(
+      entitySlug ?? '',
+      { label: 'Models', href: sectionPath(entitySlug ?? '', 'model') },
+      { label: model?.name ?? 'Loading...', current: true }
+    )
+  );
 
   const [settingsOpen, setSettingsOpen] = useState(false);
 

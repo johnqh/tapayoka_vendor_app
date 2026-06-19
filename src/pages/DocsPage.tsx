@@ -5,6 +5,7 @@ import { MasterDetailLayout } from '@sudobility/components';
 import { ui } from '@sudobility/design';
 import { SEOHead } from '@sudobility/seo_lib';
 import { useSetPageConfig, usePageBreadcrumbs } from '../hooks/usePageConfig';
+import { publicTrail } from '../lib/breadcrumbs';
 import { CONSTANTS } from '../config/constants';
 import { analyticsService } from '../config/analytics';
 
@@ -216,10 +217,12 @@ function DocsPage() {
   const currentSectionLabel =
     sidebarItems.find((i) => i.id === currentSection)?.label ?? 'Documentation';
 
-  usePageBreadcrumbs([
-    { label: 'Documentation', href: '/docs' },
-    { label: currentSectionLabel, current: true },
-  ]);
+  usePageBreadcrumbs(
+    publicTrail(
+      { label: 'Documentation', href: '/docs' },
+      { label: currentSectionLabel, current: true }
+    )
+  );
 
   useEffect(() => {
     analyticsService.trackPageView(`/docs/${currentSection}`, `Docs - ${currentSection}`);

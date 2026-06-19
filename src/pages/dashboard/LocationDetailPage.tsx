@@ -15,6 +15,7 @@ import { OfferingModal } from '../../components/OfferingModal';
 import { DashboardPageHeader } from '../../components/DashboardPageHeader';
 import { offeringPath, sectionPath } from '../../lib/dashboardPaths';
 import { usePageBreadcrumbs } from '../../hooks/usePageConfig';
+import { dashboardTrail } from '../../lib/breadcrumbs';
 import { formatPricingSubtitle } from '../../components/pricingUtils';
 import type {
   VendorOffering,
@@ -50,10 +51,13 @@ export function LocationDetailPage() {
     analyticsService.trackPageView(`/dashboard/locations/${locationId}`, 'Location Detail');
   }, [locationId]);
 
-  usePageBreadcrumbs([
-    { label: 'Locations', href: sectionPath(entitySlug ?? '', 'location') },
-    { label: location?.name ?? 'Loading...', current: true },
-  ]);
+  usePageBreadcrumbs(
+    dashboardTrail(
+      entitySlug ?? '',
+      { label: 'Locations', href: sectionPath(entitySlug ?? '', 'location') },
+      { label: location?.name ?? 'Loading...', current: true }
+    )
+  );
 
   const [modalOpen, setModalOpen] = useState(false);
   const [editingOffering, setEditingOffering] = useState<VendorOffering | null>(null);

@@ -21,6 +21,7 @@ import {
 import { analyticsService } from '../../config/analytics';
 import { DashboardPageHeader } from '../../components/DashboardPageHeader';
 import { usePageBreadcrumbs } from '../../hooks/usePageConfig';
+import { dashboardTrail } from '../../lib/breadcrumbs';
 import type {
   VendorLocation,
   VendorLocationCreateRequest,
@@ -57,7 +58,7 @@ export function LocationsPage() {
     analyticsService.trackPageView('/dashboard/locations', 'Locations');
   }, []);
 
-  usePageBreadcrumbs([{ label: 'Locations', current: true }]);
+  usePageBreadcrumbs(dashboardTrail(entitySlug ?? '', { label: 'Locations', current: true }));
 
   const [modalOpen, setModalOpen] = useState(false);
   const [editingLocation, setEditingLocation] = useState<VendorLocation | null>(null);

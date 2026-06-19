@@ -9,6 +9,7 @@ import { SEOHead } from '@sudobility/seo_lib';
 import { CONSTANTS } from '../config/constants';
 import { analyticsService } from '../config/analytics';
 import { usePageBreadcrumbs } from '../hooks/usePageConfig';
+import { publicTrail } from '../lib/breadcrumbs';
 
 function TosPage() {
   const navigate = useNavigate();
@@ -24,7 +25,7 @@ function TosPage() {
     analyticsService.trackPageView('/tos', 'Terms of Service');
   }, []);
 
-  usePageBreadcrumbs([{ label: 'Terms of Service', current: true }]);
+  usePageBreadcrumbs(publicTrail({ label: 'Terms of Service', current: true }));
 
   const handleAccept = async () => {
     if (!token) return;
