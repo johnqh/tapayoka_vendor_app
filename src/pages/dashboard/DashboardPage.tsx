@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { Outlet, useLocation, useParams, useNavigate, Link } from 'react-router-dom';
 import { MasterDetailLayout } from '@sudobility/components';
-import { useApi } from '@sudobility/building_blocks/firebase';
+import { useApi } from '../../context/apiContextDef';
 import { useCurrentEntity } from '@sudobility/entity_client';
 import { ui } from '@sudobility/design';
 import { SEOHead } from '@sudobility/seo_lib';

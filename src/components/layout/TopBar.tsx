@@ -11,7 +11,7 @@ import {
   type TopBarConfig,
 } from '@sudobility/building_blocks';
 import { AuthAction, useAuthStatus } from '@sudobility/auth-components';
-import { useApi } from '@sudobility/building_blocks/firebase';
+import { useApi } from '../../context/apiContextDef';
 import { useCurrentEntityOptional } from '@sudobility/entity_client';
 import { CONSTANTS } from '../../config/constants';
 import { SUPPORTED_LANGUAGES, isLanguageSupported } from '../../i18n';

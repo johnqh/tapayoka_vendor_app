@@ -1,7 +1,7 @@
 import { useEffect, useMemo } from 'react';
 import { EntityClient } from '@sudobility/entity_client';
 import { MembersManagementPage } from '@sudobility/entity_pages';
-import { useApi } from '@sudobility/building_blocks/firebase';
+import { useApi } from '../../context/apiContextDef';
 import { useAuthStatus } from '@sudobility/auth-components';
 import { useCurrentEntity } from '@sudobility/entity_client';
 import { ui } from '@sudobility/design';

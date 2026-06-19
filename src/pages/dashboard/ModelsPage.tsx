@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { EmptyState } from '@sudobility/building_blocks';
-import { useApi } from '@sudobility/building_blocks/firebase';
+import { useApi } from '../../context/apiContextDef';
 import { useCurrentEntity } from '@sudobility/entity_client';
 import { useVendorModelsManager } from '@sudobility/tapayoka_lib';
 import { ui, buttonVariant } from '@sudobility/design';

@@ -1,7 +1,7 @@
 import { useEffect, useMemo } from 'react';
 import { EntityClient } from '@sudobility/entity_client';
 import { InvitationsPage as InvitationsPageComponent } from '@sudobility/entity_pages';
-import { useApi } from '@sudobility/building_blocks/firebase';
+import { useApi } from '../../context/apiContextDef';
 import { analyticsService } from '../../config/analytics';
 import { usePageBreadcrumbs } from '../../hooks/usePageConfig';
 

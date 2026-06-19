@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { TapayokaClient } from '@sudobility/tapayoka_client';
-import { useApi } from '@sudobility/building_blocks/firebase';
+import { useApi } from '../context/apiContextDef';
 import { useAuthStatus } from '@sudobility/auth-components';
 import { ui } from '@sudobility/design';
 import { Alert, Button } from '@sudobility/components';
