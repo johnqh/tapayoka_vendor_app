@@ -4,7 +4,6 @@ import {
   Cog6ToothIcon,
   PlusIcon,
 } from '@heroicons/react/24/outline';
-import { Button } from '@sudobility/components';
 import { ui } from '@sudobility/design';
 
 export interface DashboardPageHeaderProps {
@@ -87,18 +86,20 @@ export function DashboardPageHeader({
           </button>
         )}
         {onAdd && (
-          <Button
-            variant="primary"
-            size="sm"
+          <button
+            type="button"
             onClick={onAdd}
             disabled={addDisabled}
-            title={addTitle}
+            aria-label={addLabel}
+            title={addTitle ?? addLabel}
+            className={`p-2 rounded-lg transition-colors ${
+              addDisabled
+                ? 'text-gray-300 cursor-not-allowed'
+                : 'text-blue-600 hover:text-blue-700 hover:bg-blue-50'
+            }`}
           >
-            <span className="inline-flex items-center gap-1">
-              <PlusIcon className="w-4 h-4" />
-              {addLabel}
-            </span>
-          </Button>
+            <PlusIcon className="w-5 h-5" />
+          </button>
         )}
       </div>
     </div>
