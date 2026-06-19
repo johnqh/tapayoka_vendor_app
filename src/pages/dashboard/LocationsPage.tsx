@@ -16,9 +16,9 @@ import {
   ModalFooter,
   ModalHeader,
   Spinner,
-  Table,
-  type TableColumn,
 } from '@sudobility/components';
+import { PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline';
+import { DataCardList, RowIconButton } from '../../components/DataCardList';
 import { analyticsService } from '../../config/analytics';
 import { DashboardPageHeader } from '../../components/DashboardPageHeader';
 import { usePageBreadcrumbs } from '../../hooks/usePageConfig';
@@ -163,71 +163,6 @@ export function LocationsPage() {
     );
   }
 
-  const columns: TableColumn<VendorLocation>[] = [
-    {
-      key: 'name',
-      label: 'Name',
-      render: (location) => <span className="font-medium text-gray-900">{location.name}</span>,
-    },
-    {
-      key: 'address',
-      label: 'Address',
-      render: (location) => <span className="text-gray-500">{location.address}</span>,
-    },
-    {
-      key: 'city',
-      label: 'City',
-      render: (location) => <span className="text-gray-500">{location.city}</span>,
-    },
-    {
-      key: 'stateProvince',
-      label: 'State/Province',
-      render: (location) => <span className="text-gray-500">{location.stateProvince}</span>,
-    },
-    {
-      key: 'country',
-      label: 'Country',
-      render: (location) => <span className="text-gray-500">{location.country}</span>,
-    },
-    {
-      key: 'offerings',
-      label: 'Offerings',
-      render: (location) =>
-        location.offeringCount != null ? (
-          <Badge variant="primary" pill>
-            {location.offeringCount}
-          </Badge>
-        ) : null,
-    },
-    {
-      key: 'actions',
-      label: 'Actions',
-      align: 'right',
-      render: (location) => (
-        <>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              openEditModal(location);
-            }}
-            className={`font-medium mr-4 ${ui.text.linkSubtle}`}
-          >
-            Edit
-          </button>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              handleDelete(location);
-            }}
-            className={`font-medium ${ui.text.error} hover:opacity-80`}
-          >
-            Delete
-          </button>
-        </>
-      ),
-    },
-  ];
-
   return (
     <>
       <ContentLayout
@@ -249,15 +184,49 @@ export function LocationsPage() {
             onPress={openAddModal}
           />
         ) : (
-          <div className="bg-white rounded-lg shadow-sm border overflow-hidden">
-            <Table
-              columns={columns}
-              data={manager.locations}
-              keyExtractor={(location) => location.id}
-              hoverable
-              onRowClick={handleRowClick}
-            />
-          </div>
+          <DataCardList
+            data={manager.locations}
+            keyExtractor={(location) => location.id}
+            onItemClick={handleRowClick}
+            renderItem={(location) => (
+              <div className="flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <p className="truncate font-medium text-gray-900 dark:text-gray-100">
+                    {location.name}
+                  </p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">
+                    {[
+                      location.address,
+                      location.city,
+                      location.stateProvince,
+                      location.zipcode,
+                      location.country,
+                    ]
+                      .filter(Boolean)
+                      .join(', ')}
+                  </p>
+                </div>
+                <div className="flex flex-shrink-0 items-center gap-1">
+                  {location.offeringCount != null && (
+                    <Badge variant="primary" pill>
+                      {location.offeringCount}
+                    </Badge>
+                  )}
+                  <RowIconButton
+                    icon={<PencilSquareIcon className="h-5 w-5" />}
+                    label="Edit"
+                    onClick={() => openEditModal(location)}
+                  />
+                  <RowIconButton
+                    icon={<TrashIcon className="h-5 w-5" />}
+                    label="Delete"
+                    variant="danger"
+                    onClick={() => handleDelete(location)}
+                  />
+                </div>
+              </div>
+            )}
+          />
         )}
       </ContentLayout>
 

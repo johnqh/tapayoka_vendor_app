@@ -2,15 +2,9 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useApi } from '../../context/apiContextDef';
 import { useCurrentEntity } from '@sudobility/entity_client';
-import { ui } from '@sudobility/design';
-import {
-  Badge,
-  ContentLayout,
-  Spinner,
-  Table,
-  Alert,
-  type TableColumn,
-} from '@sudobility/components';
+import { Badge, ContentLayout, Spinner, Alert } from '@sudobility/components';
+import { PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline';
+import { DataCardList, RowIconButton } from '../../components/DataCardList';
 import {
   useVendorOfferingsManager,
   useVendorModelsManager,
@@ -135,51 +129,6 @@ export function OfferingDetailPage() {
   ];
   usePageBreadcrumbs(dashboardTrail(entitySlug, ...crumbs));
 
-  const columns: TableColumn<VendorInstallation>[] = [
-    {
-      key: 'label',
-      label: 'Installation',
-      render: (inst) => <span className="text-gray-900">{inst.label}</span>,
-    },
-    {
-      key: 'slots',
-      label: 'Slots',
-      render: (inst) =>
-        inst.slotCount != null ? (
-          <Badge variant="primary" pill>
-            {inst.slotCount}
-          </Badge>
-        ) : null,
-    },
-    {
-      key: 'actions',
-      label: 'Actions',
-      align: 'right',
-      render: (inst) => (
-        <>
-          <button
-            className={`text-sm mr-3 ${ui.text.linkSubtle}`}
-            onClick={(e) => {
-              e.stopPropagation();
-              handleEdit(inst);
-            }}
-          >
-            Edit
-          </button>
-          <button
-            className={`text-sm ${ui.text.error} hover:opacity-80`}
-            onClick={(e) => {
-              e.stopPropagation();
-              handleDelete(inst);
-            }}
-          >
-            Delete
-          </button>
-        </>
-      ),
-    },
-  ];
-
   return (
     <>
       <ContentLayout
@@ -200,31 +149,47 @@ export function OfferingDetailPage() {
       >
         {installationsManager.error && <Alert variant="error">{installationsManager.error}</Alert>}
 
-        <div className="bg-white rounded-lg shadow-sm border">
-          <div className="px-4 py-3 border-b">
-            <h2 className={ui.text.h5}>Installations</h2>
+        {installationsManager.isLoading ? (
+          <div className="flex justify-center rounded-lg border border-gray-200 bg-white p-8 dark:border-gray-700 dark:bg-gray-800">
+            <Spinner ariaLabel="Loading installations" />
           </div>
-
-          {installationsManager.isLoading ? (
-            <div className="p-8 flex justify-center">
-              <Spinner ariaLabel="Loading installations" />
-            </div>
-          ) : installationsManager.installations.length === 0 ? (
-            <div className="p-8 text-center text-gray-500">
-              No installations yet. Pair a device in the mobile app to add one.
-            </div>
-          ) : (
-            <Table
-              columns={columns}
-              data={installationsManager.installations}
-              keyExtractor={(inst) => inst.walletAddress}
-              onRowClick={(inst) =>
-                navigate(installationPath(entitySlug, parent, offeringId, inst.walletAddress))
-              }
-              hoverable
-            />
-          )}
-        </div>
+        ) : (
+          <DataCardList
+            data={installationsManager.installations}
+            keyExtractor={(inst) => inst.walletAddress}
+            emptyMessage="No installations yet. Pair a device in the mobile app to add one."
+            onItemClick={(inst) =>
+              navigate(installationPath(entitySlug, parent, offeringId, inst.walletAddress))
+            }
+            renderItem={(inst) => (
+              <div className="flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <p className="truncate font-medium text-gray-900 dark:text-gray-100">
+                    {inst.label}
+                  </p>
+                </div>
+                <div className="flex flex-shrink-0 items-center gap-1">
+                  {inst.slotCount != null && (
+                    <Badge variant="primary" pill>
+                      {inst.slotCount}
+                    </Badge>
+                  )}
+                  <RowIconButton
+                    icon={<PencilSquareIcon className="h-5 w-5" />}
+                    label="Edit"
+                    onClick={() => handleEdit(inst)}
+                  />
+                  <RowIconButton
+                    icon={<TrashIcon className="h-5 w-5" />}
+                    label="Delete"
+                    variant="danger"
+                    onClick={() => handleDelete(inst)}
+                  />
+                </div>
+              </div>
+            )}
+          />
+        )}
       </ContentLayout>
 
       <InstallationFormModal

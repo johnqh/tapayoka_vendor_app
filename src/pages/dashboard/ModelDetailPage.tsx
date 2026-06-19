@@ -4,7 +4,9 @@ import { EmptyState } from '@sudobility/building_blocks';
 import { useApi } from '../../context/apiContextDef';
 import { useCurrentEntity } from '@sudobility/entity_client';
 import { ui } from '@sudobility/design';
-import { Badge, ContentLayout, Spinner, Table, type TableColumn } from '@sudobility/components';
+import { Badge, ContentLayout, Spinner } from '@sudobility/components';
+import { PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline';
+import { DataCardList, RowIconButton } from '../../components/DataCardList';
 import { analyticsService } from '../../config/analytics';
 import {
   useVendorModelsManager,
@@ -123,58 +125,6 @@ export function ModelDetailPage() {
     [editingOffering, offeringsManager]
   );
 
-  const offeringColumns: TableColumn<VendorOffering>[] = [
-    {
-      key: 'name',
-      label: 'Name',
-      render: (inst) => <span className="text-gray-900">{inst.name}</span>,
-    },
-    {
-      key: 'pricing',
-      label: 'Pricing',
-      render: (inst) => (
-        <span className="text-gray-500">{formatPricingSubtitle(inst.pricingTiers)}</span>
-      ),
-    },
-    {
-      key: 'installations',
-      label: 'Installations',
-      render: (inst) =>
-        inst.installationCount != null ? (
-          <Badge variant="primary" pill>
-            {inst.installationCount}
-          </Badge>
-        ) : null,
-    },
-    {
-      key: 'actions',
-      label: 'Actions',
-      align: 'right',
-      render: (inst) => (
-        <>
-          <button
-            className={`text-sm mr-3 ${ui.text.linkSubtle}`}
-            onClick={(e) => {
-              e.stopPropagation();
-              handleEditOffering(inst);
-            }}
-          >
-            Edit
-          </button>
-          <button
-            className={`text-sm ${ui.text.error} hover:opacity-80`}
-            onClick={(e) => {
-              e.stopPropagation();
-              handleDeleteOffering(inst);
-            }}
-          >
-            Delete
-          </button>
-        </>
-      ),
-    },
-  ];
-
   if (!model && !modelsManager.isLoading) {
     return (
       <div className="text-center text-gray-500 mt-12">
@@ -202,39 +152,61 @@ export function ModelDetailPage() {
         }
         contentClassName="p-4"
       >
-        <div className="bg-white rounded-lg shadow-sm border">
-          <div className="px-4 py-3 border-b">
-            <h2 className={ui.text.h5}>Offerings</h2>
+        {offeringsManager.isLoading ? (
+          <div className="flex justify-center rounded-lg border border-gray-200 bg-white p-8 dark:border-gray-700 dark:bg-gray-800">
+            <Spinner ariaLabel="Loading offerings" />
           </div>
-
-          {offeringsManager.isLoading ? (
-            <div className="p-8 flex justify-center">
-              <Spinner ariaLabel="Loading offerings" />
-            </div>
-          ) : offeringsManager.offerings.length === 0 ? (
-            <EmptyState
-              message="Manage your offerings here."
-              buttonLabel="Add Offering"
-              onPress={handleAddOffering}
-            />
-          ) : (
-            <Table
-              columns={offeringColumns}
-              data={offeringsManager.offerings}
-              keyExtractor={(inst) => inst.id}
-              onRowClick={(inst) =>
-                navigate(
-                  offeringPath(
-                    entitySlug ?? '',
-                    { parentType: 'model', parentId: modelId ?? '' },
-                    inst.id
-                  )
+        ) : offeringsManager.offerings.length === 0 ? (
+          <EmptyState
+            message="Manage your offerings here."
+            buttonLabel="Add Offering"
+            onPress={handleAddOffering}
+          />
+        ) : (
+          <DataCardList
+            data={offeringsManager.offerings}
+            keyExtractor={(inst) => inst.id}
+            onItemClick={(inst) =>
+              navigate(
+                offeringPath(
+                  entitySlug ?? '',
+                  { parentType: 'model', parentId: modelId ?? '' },
+                  inst.id
                 )
-              }
-              hoverable
-            />
-          )}
-        </div>
+              )
+            }
+            renderItem={(inst) => (
+              <div className="flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <p className="truncate font-medium text-gray-900 dark:text-gray-100">
+                    {inst.name}
+                  </p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">
+                    {formatPricingSubtitle(inst.pricingTiers)}
+                  </p>
+                </div>
+                <div className="flex flex-shrink-0 items-center gap-1">
+                  {inst.installationCount != null && (
+                    <Badge variant="primary" pill>
+                      {inst.installationCount}
+                    </Badge>
+                  )}
+                  <RowIconButton
+                    icon={<PencilSquareIcon className="h-5 w-5" />}
+                    label="Edit"
+                    onClick={() => handleEditOffering(inst)}
+                  />
+                  <RowIconButton
+                    icon={<TrashIcon className="h-5 w-5" />}
+                    label="Delete"
+                    variant="danger"
+                    onClick={() => handleDeleteOffering(inst)}
+                  />
+                </div>
+              </div>
+            )}
+          />
+        )}
       </ContentLayout>
 
       <OfferingModal

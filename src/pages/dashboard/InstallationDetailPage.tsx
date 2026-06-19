@@ -2,8 +2,9 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useApi } from '../../context/apiContextDef';
 import { useCurrentEntity } from '@sudobility/entity_client';
-import { ui } from '@sudobility/design';
-import { ContentLayout, Spinner, Alert, Table, type TableColumn } from '@sudobility/components';
+import { ContentLayout, Spinner, Alert } from '@sudobility/components';
+import { PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline';
+import { DataCardList, RowIconButton } from '../../components/DataCardList';
 import {
   useVendorOfferingsManager,
   useVendorModelsManager,
@@ -150,37 +151,6 @@ export function InstallationDetailPage() {
   ];
   usePageBreadcrumbs(dashboardTrail(entitySlug, ...crumbs));
 
-  const columns: TableColumn<VendorInstallationSlot>[] = [
-    {
-      key: 'label',
-      label: 'Slot',
-      render: (slot) => <span className="text-gray-900">{slot.label}</span>,
-    },
-    {
-      key: 'tier',
-      label: 'Pricing Tier',
-      render: (slot) => <span className="text-gray-500">{slot.pricingTier?.name ?? '—'}</span>,
-    },
-    {
-      key: 'actions',
-      label: 'Actions',
-      align: 'right',
-      render: (slot) => (
-        <>
-          <button className={`text-sm mr-3 ${ui.text.linkSubtle}`} onClick={() => handleEdit(slot)}>
-            Edit
-          </button>
-          <button
-            className={`text-sm ${ui.text.error} hover:opacity-80`}
-            onClick={() => handleDelete(slot)}
-          >
-            Delete
-          </button>
-        </>
-      ),
-    },
-  ];
-
   return (
     <>
       <ContentLayout
@@ -201,28 +171,44 @@ export function InstallationDetailPage() {
       >
         {slotsManager.error && <Alert variant="error">{slotsManager.error}</Alert>}
 
-        <div className="bg-white rounded-lg shadow-sm border">
-          <div className="px-4 py-3 border-b">
-            <h2 className={ui.text.h5}>Slots</h2>
+        {slotsManager.isLoading ? (
+          <div className="flex justify-center rounded-lg border border-gray-200 bg-white p-8 dark:border-gray-700 dark:bg-gray-800">
+            <Spinner ariaLabel="Loading slots" />
           </div>
-
-          {slotsManager.isLoading ? (
-            <div className="p-8 flex justify-center">
-              <Spinner ariaLabel="Loading slots" />
-            </div>
-          ) : slotsManager.slots.length === 0 ? (
-            <div className="p-8 text-center text-gray-500">
-              {isGrid ? 'No slots yet. Generate the grid in the mobile app.' : 'No slots yet.'}
-            </div>
-          ) : (
-            <Table
-              columns={columns}
-              data={slotsManager.slots}
-              keyExtractor={(slot) => slot.id}
-              hoverable
-            />
-          )}
-        </div>
+        ) : (
+          <DataCardList
+            data={slotsManager.slots}
+            keyExtractor={(slot) => slot.id}
+            emptyMessage={
+              isGrid ? 'No slots yet. Generate the grid in the mobile app.' : 'No slots yet.'
+            }
+            renderItem={(slot) => (
+              <div className="flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <p className="truncate font-medium text-gray-900 dark:text-gray-100">
+                    {slot.label}
+                  </p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">
+                    {slot.pricingTier?.name ?? '—'}
+                  </p>
+                </div>
+                <div className="flex flex-shrink-0 items-center gap-1">
+                  <RowIconButton
+                    icon={<PencilSquareIcon className="h-5 w-5" />}
+                    label="Edit"
+                    onClick={() => handleEdit(slot)}
+                  />
+                  <RowIconButton
+                    icon={<TrashIcon className="h-5 w-5" />}
+                    label="Delete"
+                    variant="danger"
+                    onClick={() => handleDelete(slot)}
+                  />
+                </div>
+              </div>
+            )}
+          />
+        )}
       </ContentLayout>
 
       <SlotFormModal

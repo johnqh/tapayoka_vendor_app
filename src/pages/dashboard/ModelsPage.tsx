@@ -15,9 +15,9 @@ import {
   ModalFooter,
   ModalHeader,
   Spinner,
-  Table,
-  type TableColumn,
 } from '@sudobility/components';
+import { PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline';
+import { DataCardList, RowIconButton } from '../../components/DataCardList';
 import { analyticsService } from '../../config/analytics';
 import { DashboardPageHeader } from '../../components/DashboardPageHeader';
 import { usePageBreadcrumbs } from '../../hooks/usePageConfig';
@@ -95,10 +95,6 @@ const TYPE_DEFAULTS: Record<
     payment: 'atStart',
   },
 };
-
-function displayValue(value: string | null | undefined): string {
-  return value ?? '—';
-}
 
 function Chip<T extends string>({
   label,
@@ -391,71 +387,6 @@ export function ModelsPage() {
     setModalVisible(false);
   };
 
-  const columns: TableColumn<VendorModel>[] = [
-    {
-      key: 'name',
-      label: 'Name',
-      render: (model) => <span className="font-medium text-gray-900">{model.name}</span>,
-    },
-    {
-      key: 'type',
-      label: 'Type',
-      render: (model) => <span className="text-gray-500">{displayValue(model.type)}</span>,
-    },
-    {
-      key: 'pricing',
-      label: 'Pricing',
-      render: (model) => <span className="text-gray-500">{displayValue(model.pricing)}</span>,
-    },
-    {
-      key: 'slot',
-      label: 'Slot',
-      render: (model) => <span className="text-gray-500">{displayValue(model.slot)}</span>,
-    },
-    {
-      key: 'action',
-      label: 'Action',
-      render: (model) => <span className="text-gray-500">{displayValue(model.action)}</span>,
-    },
-    {
-      key: 'offerings',
-      label: 'Offerings',
-      render: (model) =>
-        model.offeringCount != null ? (
-          <Badge variant="primary" pill>
-            {model.offeringCount}
-          </Badge>
-        ) : null,
-    },
-    {
-      key: 'actions',
-      label: 'Actions',
-      align: 'right',
-      render: (model) => (
-        <>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              handleEdit(model);
-            }}
-            className={`font-medium mr-3 ${ui.text.linkSubtle}`}
-          >
-            Edit
-          </button>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              handleDelete(model);
-            }}
-            className={`font-medium ${ui.text.error} hover:opacity-80`}
-          >
-            Delete
-          </button>
-        </>
-      ),
-    },
-  ];
-
   return (
     <>
       <ContentLayout
@@ -481,15 +412,43 @@ export function ModelsPage() {
             onPress={handleAdd}
           />
         ) : (
-          <div className="bg-white rounded-lg shadow-sm border overflow-hidden">
-            <Table
-              columns={columns}
-              data={manager.models}
-              keyExtractor={(model) => model.id}
-              hoverable
-              onRowClick={handleRowClick}
-            />
-          </div>
+          <DataCardList
+            data={manager.models}
+            keyExtractor={(model) => model.id}
+            onItemClick={handleRowClick}
+            renderItem={(model) => (
+              <div className="flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <p className="truncate font-medium text-gray-900 dark:text-gray-100">
+                    {model.name}
+                  </p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">
+                    {[model.type, model.pricing, model.slot, model.action]
+                      .filter(Boolean)
+                      .join(' · ') || '—'}
+                  </p>
+                </div>
+                <div className="flex flex-shrink-0 items-center gap-1">
+                  {model.offeringCount != null && (
+                    <Badge variant="primary" pill>
+                      {model.offeringCount}
+                    </Badge>
+                  )}
+                  <RowIconButton
+                    icon={<PencilSquareIcon className="h-5 w-5" />}
+                    label="Edit"
+                    onClick={() => handleEdit(model)}
+                  />
+                  <RowIconButton
+                    icon={<TrashIcon className="h-5 w-5" />}
+                    label="Delete"
+                    variant="danger"
+                    onClick={() => handleDelete(model)}
+                  />
+                </div>
+              </div>
+            )}
+          />
         )}
       </ContentLayout>
 
