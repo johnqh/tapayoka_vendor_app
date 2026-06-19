@@ -1,22 +1,22 @@
 import { useEffect, useMemo } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { EntityClient } from '@sudobility/entity_client';
+import { useNavigate } from 'react-router-dom';
+import { EntityClient, useCurrentEntity } from '@sudobility/entity_client';
 import { EntityListPage } from '@sudobility/entity_pages';
 import { useApi } from '../../context/apiContextDef';
 import { analyticsService } from '../../config/analytics';
 import { usePageBreadcrumbs } from '../../hooks/usePageConfig';
-import { dashboardTrail } from '../../lib/breadcrumbs';
+import { organizationsTrail } from '../../lib/breadcrumbs';
 
-export function WorkspacesPage() {
+export function OrganizationsListPage() {
   const navigate = useNavigate();
   const { networkClient, baseUrl } = useApi();
-  const { entitySlug } = useParams<{ entitySlug: string }>();
+  const { selectEntity } = useCurrentEntity();
 
   useEffect(() => {
-    analyticsService.trackPageView('/dashboard/workspaces', 'Workspaces');
+    analyticsService.trackPageView('/organizations', 'Organizations');
   }, []);
 
-  usePageBreadcrumbs(dashboardTrail(entitySlug ?? '', { label: 'Organizations', current: true }));
+  usePageBreadcrumbs(organizationsTrail({ label: 'Organizations', current: true }));
 
   const entityClient = useMemo(
     () => new EntityClient({ baseUrl: `${baseUrl}/api/v1`, networkClient }),
@@ -27,10 +27,12 @@ export function WorkspacesPage() {
     <EntityListPage
       client={entityClient}
       onSelectEntity={(entity) => {
-        navigate(`/dashboard/${encodeURIComponent(entity.entitySlug)}/members`);
+        // Set the picked workspace as current so Members/Invitations reflect it.
+        selectEntity(entity.entitySlug);
+        navigate('/organizations/members');
       }}
     />
   );
 }
 
-export default WorkspacesPage;
+export default OrganizationsListPage;

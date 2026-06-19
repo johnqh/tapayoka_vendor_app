@@ -42,33 +42,9 @@ const ClipboardIcon = () => (
   </svg>
 );
 
-const BuildingIcon = () => (
-  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15M9 21v-3.375c0-.621.504-1.125 1.125-1.125h3.75c.621 0 1.125.504 1.125 1.125V21"
-    />
-  </svg>
-);
-
-const UsersIcon = () => (
-  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z"
-    />
-  </svg>
-);
-
-const EnvelopeIcon = () => (
-  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75"
-    />
+const ChevronDownIcon = () => (
+  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+    <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
   </svg>
 );
 
@@ -83,36 +59,20 @@ interface NavItem {
 function DashboardMasterList({ onNavigate }: { onNavigate?: () => void }) {
   const { entitySlug = '' } = useParams<{ entitySlug: string }>();
   const location = useLocation();
+  const navigate = useNavigate();
+  const { entities, selectEntity } = useCurrentEntity();
   const base = `/dashboard/${entitySlug}`;
+
+  const handleWorkspaceChange = (slug: string) => {
+    selectEntity(slug);
+    navigate(`/dashboard/${slug}`);
+    onNavigate?.();
+  };
 
   const mainItems: NavItem[] = [
     { id: 'locations', label: 'Locations', path: `${base}/locations`, icon: <MapPinIcon /> },
     { id: 'models', label: 'Models', path: `${base}/models`, icon: <TagIcon /> },
     { id: 'orders', label: 'Orders', path: `${base}/orders`, icon: <ClipboardIcon /> },
-  ];
-
-  const settingsItems: NavItem[] = [
-    {
-      id: 'workspaces',
-      label: 'Organizations',
-      path: `${base}/workspaces`,
-      icon: <BuildingIcon />,
-      section: 'settings',
-    },
-    {
-      id: 'members',
-      label: 'Members',
-      path: `${base}/members`,
-      icon: <UsersIcon />,
-      section: 'settings',
-    },
-    {
-      id: 'invitations',
-      label: 'Invitations',
-      path: `${base}/invitations`,
-      icon: <EnvelopeIcon />,
-      section: 'settings',
-    },
   ];
 
   const isActive = (item: NavItem) => {
@@ -139,12 +99,26 @@ function DashboardMasterList({ onNavigate }: { onNavigate?: () => void }) {
   );
 
   return (
-    <nav className="p-4 space-y-6">
-      <div className="space-y-1">{mainItems.map(renderItem)}</div>
-      <div>
-        <p className={`px-3 mb-2 ${ui.text.uppercase}`}>Settings</p>
-        <div className="space-y-1">{settingsItems.map(renderItem)}</div>
+    <nav className="p-2 space-y-2">
+      <div className="relative">
+        <select
+          aria-label="Workspace"
+          value={entitySlug}
+          onChange={(e) => handleWorkspaceChange(e.target.value)}
+          className="w-full appearance-none rounded-lg border border-gray-200 bg-white px-3 py-2 pr-8 text-sm font-medium text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
+        >
+          {entities.length === 0 && <option value={entitySlug}>{entitySlug}</option>}
+          {entities.map((entity) => (
+            <option key={entity.entitySlug} value={entity.entitySlug}>
+              {entity.displayName || entity.entitySlug}
+            </option>
+          ))}
+        </select>
+        <span className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-gray-400">
+          <ChevronDownIcon />
+        </span>
       </div>
+      <div className="space-y-1">{mainItems.map(renderItem)}</div>
     </nav>
   );
 }
@@ -155,7 +129,7 @@ function DashboardPage() {
   const { entitySlug = '' } = useParams<{ entitySlug: string }>();
   const { isReady } = useApi();
   const { selectEntity } = useCurrentEntity();
-  useSetPageConfig({ scrollable: false, contentPadding: 'sm', maxWidth: '7xl' });
+  useSetPageConfig({ scrollable: false, contentPadding: 'none', maxWidth: '7xl' });
 
   useEffect(() => {
     analyticsService.trackPageView('/dashboard', 'Dashboard');

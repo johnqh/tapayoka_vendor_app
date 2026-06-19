@@ -24,3 +24,8 @@ export function dashboardTrail(
 ): BreadcrumbCrumb[] {
   return [HOME_CRUMB, { label: 'Dashboard', href: dashboardHomePath(entitySlug) }, ...rest];
 }
+
+/** Trail for organization-management pages: `Home > Organizations > ...rest`. */
+export function organizationsTrail(...rest: BreadcrumbCrumb[]): BreadcrumbCrumb[] {
+  return [HOME_CRUMB, { label: 'Organizations', href: '/organizations' }, ...rest];
+}

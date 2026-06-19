@@ -24,9 +24,10 @@ const ModelDetailPage = lazy(() => import('./pages/dashboard/ModelDetailPage'));
 const OfferingDetailPage = lazy(() => import('./pages/dashboard/OfferingDetailPage'));
 const InstallationDetailPage = lazy(() => import('./pages/dashboard/InstallationDetailPage'));
 const OrdersPage = lazy(() => import('./pages/dashboard/OrdersPage'));
-const WorkspacesPage = lazy(() => import('./pages/dashboard/WorkspacesPage'));
-const MembersPage = lazy(() => import('./pages/dashboard/MembersPage'));
-const InvitationsPage = lazy(() => import('./pages/dashboard/InvitationsPage'));
+const OrganizationsPage = lazy(() => import('./pages/organizations/OrganizationsPage'));
+const OrganizationsListPage = lazy(() => import('./pages/organizations/OrganizationsListPage'));
+const MembersPage = lazy(() => import('./pages/organizations/MembersPage'));
+const InvitationsPage = lazy(() => import('./pages/organizations/InvitationsPage'));
 const SettingsPage = lazy(() => import('./pages/SettingsPage'));
 
 // Layout components
@@ -105,7 +106,18 @@ function AppRoutes() {
               element={<InstallationDetailPage />}
             />
             <Route path="orders" element={<OrdersPage />} />
-            <Route path="workspaces" element={<WorkspacesPage />} />
+          </Route>
+
+          {/* Organization management (split out of the dashboard) */}
+          <Route
+            path="/organizations"
+            element={
+              <ProtectedRoute>
+                <OrganizationsPage />
+              </ProtectedRoute>
+            }
+          >
+            <Route index element={<OrganizationsListPage />} />
             <Route path="members" element={<MembersPage />} />
             <Route path="invitations" element={<InvitationsPage />} />
           </Route>
