@@ -3,7 +3,9 @@ export default {
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
-    "./node_modules/@sudobility/components/**/*.{js,jsx,ts,tsx}",
+    // Scoped to dist: @sudobility/components is a file: link to the whole
+    // mail_box_components repo, so a bare ** would scan its node_modules too.
+    "./node_modules/@sudobility/components/dist/**/*.{js,jsx,ts,tsx}",
     "./node_modules/@sudobility/design/**/*.{js,jsx,ts,tsx}",
     "./node_modules/@sudobility/building_blocks/**/*.{js,jsx,ts,tsx}",
     "./node_modules/@sudobility/devops-components/**/*.{js,jsx,ts,tsx}",

@@ -10,6 +10,12 @@ export default defineConfig({
     port: 5131,
     headers: { 'Cross-Origin-Opener-Policy': 'same-origin-allow-popups' },
   },
+  // @sudobility/components is a local file: link under active development.
+  // Excluding it from dep pre-bundling means edits/rebuilds are picked up on
+  // reload (no stale optimized cache) — it's a single ESM dist bundle.
+  optimizeDeps: {
+    exclude: ['@sudobility/components'],
+  },
   resolve: {
     dedupe: ['react', 'react-dom', '@tanstack/react-query'],
     alias: {
