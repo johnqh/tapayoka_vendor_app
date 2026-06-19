@@ -18,10 +18,7 @@ export function publicTrail(...rest: BreadcrumbCrumb[]): BreadcrumbCrumb[] {
 }
 
 /** Trail for dashboard pages: `Home > Dashboard > ...rest`. */
-export function dashboardTrail(
-  entitySlug: string,
-  ...rest: BreadcrumbCrumb[]
-): BreadcrumbCrumb[] {
+export function dashboardTrail(entitySlug: string, ...rest: BreadcrumbCrumb[]): BreadcrumbCrumb[] {
   return [HOME_CRUMB, { label: 'Dashboard', href: dashboardHomePath(entitySlug) }, ...rest];
 }
 
