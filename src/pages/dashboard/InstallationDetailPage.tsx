@@ -79,11 +79,11 @@ export function InstallationDetailPage() {
   const installation =
     installationsManager.installations.find((i) => i.walletAddress === wallet) ?? null;
   const model = offering
-    ? modelsManager.models.find((m) => m.id === offering.vendorModelId) ?? null
+    ? (modelsManager.models.find((m) => m.id === offering.vendorModelId) ?? null)
     : null;
   const parentName =
     parent.parentType === 'model'
-      ? model?.name ?? modelsManager.models.find((m) => m.id === parent.parentId)?.name
+      ? (model?.name ?? modelsManager.models.find((m) => m.id === parent.parentId)?.name)
       : locationsManager.locations.find((l) => l.id === parent.parentId)?.name;
   const isGrid = model?.slot === 'multi2D';
 

@@ -10,10 +10,7 @@ const FONT_SIZE_PX: Record<string, string> = {
 };
 
 function prefersDark(): boolean {
-  return (
-    typeof window !== 'undefined' &&
-    window.matchMedia('(prefers-color-scheme: dark)').matches
-  );
+  return typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches;
 }
 
 function isDark(theme: Theme): boolean {

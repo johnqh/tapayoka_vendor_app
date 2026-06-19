@@ -99,10 +99,7 @@ function AppRoutes() {
             />
             <Route path="models" element={<ModelsPage />} />
             <Route path="models/:modelId" element={<ModelDetailPage />} />
-            <Route
-              path="models/:modelId/offerings/:offeringId"
-              element={<OfferingDetailPage />}
-            />
+            <Route path="models/:modelId/offerings/:offeringId" element={<OfferingDetailPage />} />
             <Route
               path="models/:modelId/offerings/:offeringId/installs/:wallet"
               element={<InstallationDetailPage />}

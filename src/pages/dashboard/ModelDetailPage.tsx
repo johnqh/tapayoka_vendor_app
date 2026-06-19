@@ -216,7 +216,11 @@ export function ModelDetailPage() {
             keyExtractor={(inst) => inst.id}
             onRowClick={(inst) =>
               navigate(
-                offeringPath(entitySlug ?? '', { parentType: 'model', parentId: modelId ?? '' }, inst.id)
+                offeringPath(
+                  entitySlug ?? '',
+                  { parentType: 'model', parentId: modelId ?? '' },
+                  inst.id
+                )
               )
             }
             hoverable

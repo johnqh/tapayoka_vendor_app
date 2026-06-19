@@ -9,7 +9,10 @@ import {
 
 describe('dashboardPaths', () => {
   it('resolves a model parent from route params', () => {
-    expect(resolveOfferingParent({ modelId: 'm1' })).toEqual({ parentType: 'model', parentId: 'm1' });
+    expect(resolveOfferingParent({ modelId: 'm1' })).toEqual({
+      parentType: 'model',
+      parentId: 'm1',
+    });
   });
 
   it('resolves a location parent from route params', () => {
