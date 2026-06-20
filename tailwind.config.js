@@ -10,7 +10,10 @@ export default {
     "./node_modules/@sudobility/building_blocks/**/*.{js,jsx,ts,tsx}",
     "./node_modules/@sudobility/devops-components/**/*.{js,jsx,ts,tsx}",
     "./node_modules/@sudobility/auth-components/**/*.{js,jsx,ts,tsx}",
-    "./node_modules/@sudobility/entity_pages/**/*.{js,jsx,ts,tsx}",
+    // Scoped to dist: a file: link exposes the whole entity_pages repo, so a
+    // bare ** would scan its node_modules too. dist matches the published
+    // package and the link alike.
+    "./node_modules/@sudobility/entity_pages/dist/**/*.{js,jsx,ts,tsx}",
   ],
   darkMode: "class",
   theme: {
