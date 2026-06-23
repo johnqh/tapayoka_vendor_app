@@ -14,7 +14,7 @@
         "@sudobility/di": "^1.5.58",
         "@sudobility/di_web": "^0.1.198",
         "@sudobility/entity_client": "^0.0.36",
-        "@sudobility/entity_pages": "^0.0.121",
+        "@sudobility/entity_pages": "^0.0.122",
         "@sudobility/seo_lib": "^0.0.30",
         "@sudobility/subscription_lib": "^0.0.44",
         "@sudobility/tapayoka_client": "^0.0.52",
@@ -501,7 +501,7 @@
 
     "@sudobility/entity_client": ["@sudobility/entity_client@0.0.36", "", { "peerDependencies": { "@sudobility/types": "^1.9.62", "@tanstack/react-query": "^5.0.0", "react": "^18.0.0 || ^19.0.0" } }, "sha512-ksYFQnC4t/SqGasf5ImYrxD2L/kSxnFkex1KOGUchd8NXi9M9RUQB2AwvYuF1JpgXpk5JF/ueJohU9IVpVatwA=="],
 
-    "@sudobility/entity_pages": ["@sudobility/entity_pages@0.0.121", "", { "optionalDependencies": { "@rollup/rollup-linux-x64-gnu": "4.52.5", "@rollup/rollup-linux-x64-musl": "4.52.5" }, "peerDependencies": { "@heroicons/react": "^2.2.0", "@sudobility/components": "^5.0.82", "@sudobility/design": "^1.1.32", "@sudobility/entity-components": "^1.0.13", "@sudobility/entity_client": "^0.0.36", "@sudobility/types": "^1.9.62", "@tanstack/react-query": "^5.0.0", "react": "^18.0.0 || ^19.0.0", "react-dom": "^18.0.0 || ^19.0.0" } }, "sha512-eX7FbT/voXHAshtiwBJ2hoh25qf6r12KChoRFvK2bNBPKpHL1M/3LR3+kXTh1gT7HpHUijGoY/ERYsiU1Ye/Yw=="],
+    "@sudobility/entity_pages": ["@sudobility/entity_pages@0.0.122", "", { "optionalDependencies": { "@rollup/rollup-linux-x64-gnu": "4.52.5", "@rollup/rollup-linux-x64-musl": "4.52.5" }, "peerDependencies": { "@heroicons/react": "^2.2.0", "@sudobility/components": "^5.0.82", "@sudobility/design": "^1.1.32", "@sudobility/entity-components": "^1.0.13", "@sudobility/entity_client": "^0.0.36", "@sudobility/types": "^1.9.62", "@tanstack/react-query": "^5.0.0", "react": "^18.0.0 || ^19.0.0", "react-dom": "^18.0.0 || ^19.0.0" } }, "sha512-8txwDmdq3jz7p3T2pap8g89bLDVOhEzwXfAu6Uq9nrCsXdK3nzzqFyZ0cHvLTeu3jkLXeKXoUOt/8x1MFBG+hw=="],
 
     "@sudobility/seo_lib": ["@sudobility/seo_lib@0.0.30", "", { "peerDependencies": { "i18next": ">=23.0.0", "react": "^18.0.0 || ^19.0.0", "react-dom": "^18.0.0 || ^19.0.0", "react-helmet-async": ">=2.0.0", "react-i18next": ">=14.0.0", "react-router-dom": ">=6.0.0" }, "optionalPeers": ["i18next", "react-i18next", "react-router-dom"] }, "sha512-eQYaZ0+Jv6fZ9+230YiPufo1IME31MbmyYHYzocOilhgbuRX0Q08y6R74Zht88EwKfkeiO8cYTT5nHQa7nsUVQ=="],
 
