@@ -9,6 +9,7 @@ import {
   Alert,
   Badge,
   Button,
+  Card,
   ContentLayout,
   FormField,
   Modal,
@@ -16,6 +17,7 @@ import {
   ModalFooter,
   ModalHeader,
   Spinner,
+  Text,
 } from '@sudobility/components';
 import { PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { DataCardList, RowIconButton } from '../../components/DataCardList';
@@ -156,9 +158,9 @@ export function LocationsPage() {
         }
         contentClassName="p-4"
       >
-        <div className="bg-white rounded-lg shadow-sm border p-8 flex justify-center">
+        <Card padding="none" className="flex justify-center p-8">
           <Spinner ariaLabel="Loading locations" />
-        </div>
+        </Card>
       </ContentLayout>
     );
   }
@@ -191,10 +193,10 @@ export function LocationsPage() {
             renderItem={(location) => (
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
-                  <p className="truncate font-medium text-gray-900 dark:text-gray-100">
+                  <Text weight="medium" truncate>
                     {location.name}
-                  </p>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
+                  </Text>
+                  <Text size="sm" color="muted">
                     {[
                       location.address,
                       location.city,
@@ -204,7 +206,7 @@ export function LocationsPage() {
                     ]
                       .filter(Boolean)
                       .join(', ')}
-                  </p>
+                  </Text>
                 </div>
                 <div className="flex flex-shrink-0 items-center gap-1">
                   {location.offeringCount != null && (

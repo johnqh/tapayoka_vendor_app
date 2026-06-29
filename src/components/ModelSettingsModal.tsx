@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Modal, ModalContent, ModalFooter, Button } from '@sudobility/components';
-import { ui, buttonVariant } from '@sudobility/design';
+import { Modal, ModalContent, ModalFooter, Button, Text } from '@sudobility/components';
 import type {
   VendorModel,
   VendorModelUpdateRequest,
@@ -21,22 +20,18 @@ const PAYMENT_OPTIONS: VendorModelPayment[] = ['atStart', 'atEnd'];
 
 function Chip({ label, active, onClick }: { label: string; active: boolean; onClick: () => void }) {
   return (
-    <button
-      type="button"
-      className={`px-3 py-1.5 text-sm rounded-lg border ${ui.transition.default} ${
-        active ? `${buttonVariant('primary')}` : `${buttonVariant('outline')} hover:border-gray-400`
-      }`}
-      onClick={onClick}
-    >
+    <Button type="button" variant={active ? 'primary' : 'outline'} size="sm" onClick={onClick}>
       {label}
-    </button>
+    </Button>
   );
 }
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div>
-      <label className={`block text-sm font-medium mb-2 ${ui.text.muted}`}>{label}</label>
+      <Text as="label" size="sm" weight="medium" color="muted" className="block mb-2">
+        {label}
+      </Text>
       <div className="flex gap-2 flex-wrap">{children}</div>
     </div>
   );

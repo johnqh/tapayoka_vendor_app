@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { MasterDetailLayout } from '@sudobility/components';
+import { Card, Heading, MasterDetailLayout, Text } from '@sudobility/components';
 import { ui } from '@sudobility/design';
 import { SEOHead } from '@sudobility/seo_lib';
 import { useSetPageConfig, usePageBreadcrumbs } from '../hooks/usePageConfig';
@@ -30,8 +30,8 @@ function DocsSidebar({ onNavigate }: { onNavigate?: () => void }) {
           onClick={onNavigate}
           className={`block px-3 py-2 rounded-lg text-sm font-medium ${ui.transition.default} ${
             currentSection === item.id
-              ? 'bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-400'
-              : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800'
+              ? 'bg-accent text-primary'
+              : 'text-theme-text-secondary hover:bg-theme-bg-tertiary'
           }`}
         >
           {item.label}
@@ -71,18 +71,22 @@ function GettingStartedContent() {
 
   return (
     <div className="space-y-8 max-w-3xl">
-      <p className={ui.text.body}>Get up and running with Tapayoka in five simple steps.</p>
+      <Text>Get up and running with Tapayoka in five simple steps.</Text>
       <div className="space-y-4">
         {steps.map((step, index) => (
-          <div key={index} className="flex gap-4 p-5 bg-gray-50 rounded-xl border border-gray-200">
-            <div className="flex-shrink-0 w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-semibold text-sm">
+          <Card key={index} variant="bordered" padding="none" className="flex gap-4 p-5">
+            <div className="flex-shrink-0 w-8 h-8 bg-primary/10 text-primary rounded-full flex items-center justify-center font-semibold text-sm">
               {index + 1}
             </div>
             <div>
-              <h3 className={`${ui.text.strong} mb-1`}>{step.title}</h3>
-              <p className={ui.text.bodySmall}>{step.description}</p>
+              <Heading level={3} size="base" className="mb-1">
+                {step.title}
+              </Heading>
+              <Text size="sm" color="muted">
+                {step.description}
+              </Text>
             </div>
-          </div>
+          </Card>
         ))}
       </div>
     </div>
@@ -93,10 +97,12 @@ function DeviceSetupContent() {
   return (
     <div className="space-y-10 max-w-3xl">
       <div>
-        <h2 className={`${ui.text.h4} mb-3`}>Device Models</h2>
-        <p className="text-gray-600 mb-4">
+        <Heading level={2} size="xl" className="mb-3">
+          Device Models
+        </Heading>
+        <Text color="muted" className="mb-4">
           Device models define the type and behavior of your machines. Each model specifies:
-        </p>
+        </Text>
         <div className="space-y-3">
           {[
             { name: 'Type', description: 'Washer, Dryer, Parking, Locker, or Vending' },
@@ -115,30 +121,38 @@ function DeviceSetupContent() {
             },
             { name: 'Payment', description: 'At Start (pre-pay) or At End (post-pay)' },
           ].map((item) => (
-            <div key={item.name} className="p-4 bg-gray-50 rounded-lg border border-gray-200">
-              <code className="text-sm font-mono text-blue-600">{item.name}</code>
-              <p className="mt-1 text-sm text-gray-600">{item.description}</p>
-            </div>
+            <Card key={item.name} variant="bordered" padding="none" className="p-4">
+              <code className="text-sm font-mono bg-muted text-foreground rounded px-1.5 py-0.5">
+                {item.name}
+              </code>
+              <Text size="sm" color="muted" className="mt-1">
+                {item.description}
+              </Text>
+            </Card>
           ))}
         </div>
       </div>
 
       <div>
-        <h2 className={`${ui.text.h4} mb-3`}>BLE Protocol</h2>
-        <p className={ui.text.body}>
+        <Heading level={2} size="xl" className="mb-3">
+          BLE Protocol
+        </Heading>
+        <Text>
           Tapayoka uses Bluetooth Low Energy (BLE) to communicate between the Raspberry Pi
           controller and customer devices. The Pi advertises a GATT service that handles session
           initiation, payment verification, and device control signals.
-        </p>
+        </Text>
       </div>
 
       <div>
-        <h2 className={`${ui.text.h4} mb-3`}>Offerings</h2>
-        <p className={ui.text.body}>
+        <Heading level={2} size="xl" className="mb-3">
+          Offerings
+        </Heading>
+        <Text>
           Offerings are individual device instances assigned to a location or model. Each offering
           can override the model&apos;s default pricing with custom pricing configurations
           (variable, fixed, or multi-slot).
-        </p>
+        </Text>
       </div>
     </div>
   );
@@ -147,13 +161,15 @@ function DeviceSetupContent() {
 function ApiReferenceContent() {
   return (
     <div className="space-y-8 max-w-3xl">
-      <p className={ui.text.body}>
+      <Text>
         The Tapayoka API provides RESTful endpoints for managing locations, models, offerings, and
         orders.
-      </p>
+      </Text>
 
       <div>
-        <h2 className={`${ui.text.h5} mb-3`}>Endpoints</h2>
+        <Heading level={2} size="lg" className="mb-3">
+          Endpoints
+        </Heading>
         <div className="space-y-3">
           {[
             { method: 'GET', path: '/api/v1/vendor/locations', description: 'List all locations' },
@@ -163,42 +179,48 @@ function ApiReferenceContent() {
             { method: 'GET', path: '/api/v1/vendor/offerings', description: 'List offerings' },
             { method: 'GET', path: '/api/v1/vendor/orders', description: 'List orders' },
           ].map((endpoint) => (
-            <div
+            <Card
               key={`${endpoint.method}-${endpoint.path}`}
-              className="p-4 bg-gray-50 rounded-lg font-mono text-sm border border-gray-200"
+              variant="bordered"
+              padding="none"
+              className="p-4 font-mono text-sm"
             >
-              <span className={endpoint.method === 'GET' ? 'text-green-600' : 'text-blue-600'}>
+              <span className={endpoint.method === 'GET' ? 'text-success' : 'text-primary'}>
                 {endpoint.method}
               </span>{' '}
-              <span className="text-gray-900">{endpoint.path}</span>
-              <p className="mt-1 font-sans text-gray-600 text-sm">{endpoint.description}</p>
-            </div>
+              <span className="text-theme-text-primary">{endpoint.path}</span>
+              <Text size="sm" color="muted" className="mt-1 font-sans">
+                {endpoint.description}
+              </Text>
+            </Card>
           ))}
         </div>
       </div>
 
       <div>
-        <h2 className={`${ui.text.h5} mb-3`}>WebSocket Protocol</h2>
-        <p className="text-gray-600 mb-4">
+        <Heading level={2} size="lg" className="mb-3">
+          WebSocket Protocol
+        </Heading>
+        <Text color="muted" className="mb-4">
           Real-time updates are delivered via WebSocket connections. Subscribe to order status
           changes and device state updates.
-        </p>
-        <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
-          <code className="text-sm font-mono text-purple-600">
+        </Text>
+        <Card variant="bordered" padding="none" className="p-4">
+          <code className="text-sm font-mono bg-muted text-foreground rounded px-1.5 py-0.5">
             ws://api.tapayoka.com/ws/v1/vendor/events
           </code>
-          <p className="mt-1 text-sm text-gray-600">
+          <Text size="sm" color="muted" className="mt-1">
             Connects to the real-time event stream for your workspace.
-          </p>
-        </div>
+          </Text>
+        </Card>
       </div>
 
       <div>
-        <h2 className={`${ui.text.h5} mb-3`}>Authentication</h2>
-        <p className={ui.text.body}>
-          All API requests require a Firebase ID token in the Authorization header:
-        </p>
-        <div className="mt-3 p-4 bg-gray-900 rounded-lg text-gray-100 text-sm font-mono overflow-x-auto">
+        <Heading level={2} size="lg" className="mb-3">
+          Authentication
+        </Heading>
+        <Text>All API requests require a Firebase ID token in the Authorization header:</Text>
+        <div className="mt-3 p-4 bg-muted rounded-lg text-foreground text-sm font-mono overflow-x-auto">
           {`Authorization: Bearer <firebase-id-token>`}
         </div>
       </div>

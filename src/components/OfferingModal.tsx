@@ -1,6 +1,19 @@
 import { useState, useEffect, useCallback } from 'react';
-import { buttonVariant, ui } from '@sudobility/design';
-import { Button, Modal, ModalContent, ModalFooter, ModalHeader } from '@sudobility/components';
+import { ui } from '@sudobility/design';
+import {
+  Button,
+  Input,
+  Modal,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+  Text,
+} from '@sudobility/components';
 import type {
   VendorOffering,
   VendorOfferingCreateRequest,
@@ -80,26 +93,30 @@ function VariablePricingForm({
   return (
     <div className="space-y-3">
       <div>
-        <label className={`block text-xs font-medium mb-1 ${ui.text.muted}`}>Start with</label>
+        <Text as="label" size="xs" weight="medium" color="muted" className="block mb-1">
+          Start with
+        </Text>
         <div className="flex items-center gap-2">
-          <input
+          <Input
             type="text"
-            className="w-20 border rounded px-2 py-1 text-sm"
+            className="w-20"
             value={config.startPrice}
             onChange={(e) => onChange({ ...config, startPrice: e.target.value })}
             placeholder="0.00"
           />
-          <input
+          <Input
             type="text"
-            className="w-14 border rounded px-2 py-1 text-sm uppercase"
+            className="w-14 uppercase"
             value={config.currencyCode}
             onChange={(e) => onChange({ ...config, currencyCode: e.target.value.toUpperCase() })}
             maxLength={3}
           />
-          <span className={`text-xs ${ui.text.muted}`}>for</span>
-          <input
+          <Text as="span" size="xs" color="muted">
+            for
+          </Text>
+          <Input
             type="number"
-            className="w-16 border rounded px-2 py-1 text-sm"
+            className="w-16"
             value={config.startDuration}
             onChange={(e) =>
               onChange({ ...config, startDuration: parseInt(e.target.value, 10) || 1 })
@@ -107,39 +124,44 @@ function VariablePricingForm({
           />
           <div className="flex gap-1">
             {DURATION_UNITS.map((u) => (
-              <button
+              <Button
                 key={u}
                 type="button"
-                className={`px-2 py-1 text-xs rounded border ${config.startDurationUnit === u ? `${buttonVariant('primary')}` : `${buttonVariant('outline')}`}`}
+                variant={config.startDurationUnit === u ? 'primary' : 'outline'}
+                size="sm"
                 onClick={() => onChange({ ...config, startDurationUnit: u })}
               >
                 {u}
-              </button>
+              </Button>
             ))}
           </div>
         </div>
       </div>
       <div>
-        <label className={`block text-xs font-medium mb-1 ${ui.text.muted}`}>Additional</label>
+        <Text as="label" size="xs" weight="medium" color="muted" className="block mb-1">
+          Additional
+        </Text>
         <div className="flex items-center gap-2">
-          <input
+          <Input
             type="text"
-            className="w-20 border rounded px-2 py-1 text-sm"
+            className="w-20"
             value={config.marginalPrice}
             onChange={(e) => onChange({ ...config, marginalPrice: e.target.value })}
             placeholder="0.00"
           />
-          <input
+          <Input
             type="text"
-            className="w-14 border rounded px-2 py-1 text-sm uppercase"
+            className="w-14 uppercase"
             value={config.currencyCode}
             onChange={(e) => onChange({ ...config, currencyCode: e.target.value.toUpperCase() })}
             maxLength={3}
           />
-          <span className={`text-xs ${ui.text.muted}`}>for</span>
-          <input
+          <Text as="span" size="xs" color="muted">
+            for
+          </Text>
+          <Input
             type="number"
-            className="w-16 border rounded px-2 py-1 text-sm"
+            className="w-16"
             value={config.marginalDuration}
             onChange={(e) =>
               onChange({ ...config, marginalDuration: parseInt(e.target.value, 10) || 1 })
@@ -147,25 +169,26 @@ function VariablePricingForm({
           />
           <div className="flex gap-1">
             {DURATION_UNITS.map((u) => (
-              <button
+              <Button
                 key={u}
                 type="button"
-                className={`px-2 py-1 text-xs rounded border ${config.marginalDurationUnit === u ? `${buttonVariant('primary')}` : `${buttonVariant('outline')}`}`}
+                variant={config.marginalDurationUnit === u ? 'primary' : 'outline'}
+                size="sm"
                 onClick={() => onChange({ ...config, marginalDurationUnit: u })}
               >
                 {u}
-              </button>
+              </Button>
             ))}
           </div>
         </div>
       </div>
       <div>
-        <label className={`block text-xs font-medium mb-1 ${ui.text.muted}`}>
+        <Text as="label" size="xs" weight="medium" color="muted" className="block mb-1">
           Pin Number (0–25)
-        </label>
-        <input
+        </Text>
+        <Input
           type="number"
-          className="w-16 border rounded px-2 py-1 text-sm"
+          className="w-16"
           value={config.pinNumber}
           min={0}
           max={25}
@@ -196,18 +219,20 @@ function FixedPricingForm({
   return (
     <div className="space-y-3">
       <div>
-        <label className={`block text-xs font-medium mb-1 ${ui.text.muted}`}>Price</label>
+        <Text as="label" size="xs" weight="medium" color="muted" className="block mb-1">
+          Price
+        </Text>
         <div className="flex items-center gap-2">
-          <input
+          <Input
             type="text"
-            className="w-20 border rounded px-2 py-1 text-sm"
+            className="w-20"
             value={config.price}
             onChange={(e) => onChange({ ...config, price: e.target.value })}
             placeholder="0.00"
           />
-          <input
+          <Input
             type="text"
-            className="w-14 border rounded px-2 py-1 text-sm uppercase"
+            className="w-14 uppercase"
             value={config.currencyCode}
             onChange={(e) => onChange({ ...config, currencyCode: e.target.value.toUpperCase() })}
             maxLength={3}
@@ -215,13 +240,17 @@ function FixedPricingForm({
         </div>
       </div>
       <div>
-        <label className={`block text-xs font-medium mb-1 ${ui.text.muted}`}>Signals</label>
+        <Text as="label" size="xs" weight="medium" color="muted" className="block mb-1">
+          Signals
+        </Text>
         {config.signals.map((signal, index) => (
           <div key={index} className="flex items-center gap-2 mb-2">
-            <span className={`text-xs ${ui.text.muted}`}>Pin</span>
-            <input
+            <Text as="span" size="xs" color="muted">
+              Pin
+            </Text>
+            <Input
               type="number"
-              className="w-14 border rounded px-2 py-1 text-sm"
+              className="w-14"
               value={signal.pinNumber}
               min={0}
               max={25}
@@ -232,10 +261,12 @@ function FixedPricingForm({
                 })
               }
             />
-            <span className={`text-xs ${ui.text.muted}`}>Duration (s)</span>
-            <input
+            <Text as="span" size="xs" color="muted">
+              Duration (s)
+            </Text>
+            <Input
               type="number"
-              className="w-16 border rounded px-2 py-1 text-sm"
+              className="w-16"
               value={signal.duration}
               onChange={(e) =>
                 handleUpdateSignal(index, {
@@ -244,18 +275,19 @@ function FixedPricingForm({
                 })
               }
             />
-            <button
+            <Button
               type="button"
-              className={`text-xs ${ui.text.error} hover:opacity-80`}
+              variant="destructive-outline"
+              size="sm"
               onClick={() => handleRemoveSignal(index)}
             >
               Remove
-            </button>
+            </Button>
           </div>
         ))}
-        <button type="button" className={`text-xs ${ui.text.linkSubtle}`} onClick={handleAddSignal}>
+        <Button type="button" variant="link" size="sm" onClick={handleAddSignal}>
           + Add Signal
-        </button>
+        </Button>
       </div>
     </div>
   );
@@ -388,10 +420,12 @@ export function OfferingModal({
       <ModalContent variant="scrollable">
         <div className="space-y-4">
           <div>
-            <label className={`block text-sm font-medium mb-1 ${ui.text.label}`}>Name</label>
-            <input
+            <Text as="label" size="sm" weight="medium" className="block mb-1">
+              Name
+            </Text>
+            <Input
               type="text"
-              className="w-full border rounded-lg px-3 py-2 text-sm"
+              className="w-full"
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Offering name"
@@ -400,52 +434,58 @@ export function OfferingModal({
 
           {!offering && (
             <div>
-              <label className={`block text-sm font-medium mb-1 ${ui.text.label}`}>
+              <Text as="label" size="sm" weight="medium" className="block mb-1">
                 {parentType === 'location' ? 'Model' : 'Location'}
-              </label>
-              <select
-                className="w-full border rounded-lg px-3 py-2 text-sm"
+              </Text>
+              <Select
                 value={pickerId}
-                onChange={(e) => {
-                  setPickerId(e.target.value);
-                  if (!name.trim() && e.target.value) {
-                    const item = pickerItems.find((i) => i.id === e.target.value);
+                onValueChange={(value) => {
+                  setPickerId(value);
+                  if (!name.trim() && value) {
+                    const item = pickerItems.find((i) => i.id === value);
                     if (item) setName(`${item.label} at ${parentName}`);
                   }
                 }}
               >
-                <option value="">Select...</option>
-                {pickerItems.map((item) => (
-                  <option key={item.id} value={item.id}>
-                    {item.label}
-                  </option>
-                ))}
-              </select>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select..." />
+                </SelectTrigger>
+                <SelectContent>
+                  {pickerItems.map((item) => (
+                    <SelectItem key={item.id} value={item.id}>
+                      {item.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           )}
 
           {/* Pricing Tiers Section */}
           {pricingTiers.length > 0 && (
             <div>
-              <h3 className={`text-sm font-semibold mb-2 ${ui.text.emphasis}`}>Pricing Tiers</h3>
+              <Text as="div" size="sm" weight="semibold" className="mb-2">
+                Pricing Tiers
+              </Text>
               {pricingTiers.map((tier, index) => (
-                <div key={tier.id} className="border rounded-lg p-3 mb-3">
+                <div key={tier.id} className="border border-theme-border rounded-lg p-3 mb-3">
                   <div className="flex items-center gap-2 mb-2">
-                    <input
+                    <Input
                       type="text"
-                      className="flex-1 border rounded px-2 py-1 text-sm"
+                      className="flex-1"
                       value={tier.name}
                       onChange={(e) => handleTierNameChange(index, e.target.value)}
                       placeholder="Tier name"
                     />
                     {pricingTiers.length > 1 && (
-                      <button
+                      <Button
                         type="button"
-                        className={`text-xs ${ui.text.error} hover:opacity-80`}
+                        variant="destructive-outline"
+                        size="sm"
                         onClick={() => handleRemoveTier(index)}
                       >
                         Remove
-                      </button>
+                      </Button>
                     )}
                   </div>
                   {tier.type === 'timed' ? (
@@ -458,29 +498,27 @@ export function OfferingModal({
                   )}
                 </div>
               ))}
-              <button
-                type="button"
-                className={`text-sm ${ui.text.linkSubtle}`}
-                onClick={handleAddTier}
-              >
+              <Button type="button" variant="link" size="sm" onClick={handleAddTier}>
                 + Add Tier
-              </button>
+              </Button>
             </div>
           )}
           {/* Schedule Section */}
           <div>
-            <label className={`block text-sm font-medium mb-2 ${ui.text.label}`}>Schedule</label>
+            <Text as="label" size="sm" weight="medium" className="block mb-2">
+              Schedule
+            </Text>
             {schedule.map((entry, index) => (
               <div
                 key={`${entry.dayOfWeek}-${index}`}
-                className="flex items-center gap-3 mb-2 bg-gray-50 rounded-lg px-3 py-2"
+                className="flex items-center gap-3 mb-2 bg-theme-bg-secondary rounded-lg px-3 py-2"
               >
-                <span className={`text-sm font-medium w-24 ${ui.text.label}`}>
+                <Text as="span" size="sm" weight="medium" className="w-24">
                   {entry.dayOfWeek}
-                </span>
-                <input
+                </Text>
+                <Input
                   type="text"
-                  className="w-20 border rounded px-2 py-1 text-sm"
+                  className="w-20"
                   value={entry.startTime}
                   onChange={(e) =>
                     setSchedule((prev) =>
@@ -490,10 +528,12 @@ export function OfferingModal({
                   placeholder="09:00"
                   maxLength={5}
                 />
-                <span className={`text-xs ${ui.text.muted}`}>to</span>
-                <input
+                <Text as="span" size="xs" color="muted">
+                  to
+                </Text>
+                <Input
                   type="text"
-                  className="w-20 border rounded px-2 py-1 text-sm"
+                  className="w-20"
                   value={entry.endTime}
                   onChange={(e) =>
                     setSchedule((prev) =>
@@ -503,21 +543,23 @@ export function OfferingModal({
                   placeholder="17:00"
                   maxLength={5}
                 />
-                <button
+                <Button
                   type="button"
-                  className={`text-xs ${ui.text.error} hover:opacity-80`}
+                  variant="destructive-outline"
+                  size="sm"
                   onClick={() => setSchedule((prev) => prev.filter((_, i) => i !== index))}
                 >
                   Remove
-                </button>
+                </Button>
               </div>
             ))}
             <div className="flex flex-wrap gap-2 mt-2">
               {DAYS_OF_WEEK.filter((d) => !schedule.some((s) => s.dayOfWeek === d)).map((day) => (
-                <button
+                <Button
                   key={day}
                   type="button"
-                  className={`px-2 py-1 text-xs border border-dashed rounded hover:border-blue-400 ${ui.border.default} ${ui.text.linkSubtle}`}
+                  variant="outline"
+                  size="sm"
                   onClick={() => {
                     const last = schedule[schedule.length - 1];
                     setSchedule((prev) => [
@@ -531,7 +573,7 @@ export function OfferingModal({
                   }}
                 >
                   + {day.slice(0, 3)}
-                </button>
+                </Button>
               ))}
             </div>
           </div>

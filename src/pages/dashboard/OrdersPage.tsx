@@ -3,7 +3,8 @@ import { useParams } from 'react-router-dom';
 import { useApi } from '../../context/apiContextDef';
 import { useCurrentEntity } from '@sudobility/entity_client';
 import { useOrdersManager } from '@sudobility/tapayoka_lib';
-import { Alert, ContentLayout, Spinner } from '@sudobility/components';
+import { Alert, Badge, Card, ContentLayout, Spinner, Text } from '@sudobility/components';
+import type { BadgeProps } from '@sudobility/components';
 import { DataCardList } from '../../components/DataCardList';
 import type { OrderStatus } from '@sudobility/tapayoka_types';
 import { analyticsService } from '../../config/analytics';
@@ -11,13 +12,13 @@ import { DashboardPageHeader } from '../../components/DashboardPageHeader';
 import { usePageBreadcrumbs } from '../../hooks/usePageConfig';
 import { dashboardTrail } from '../../lib/breadcrumbs';
 
-const STATUS_BADGE: Record<OrderStatus, string> = {
-  CREATED: 'bg-gray-100 text-gray-700',
-  PAID: 'bg-blue-100 text-blue-700',
-  AUTHORIZED: 'bg-indigo-100 text-indigo-700',
-  RUNNING: 'bg-yellow-100 text-yellow-700',
-  DONE: 'bg-green-100 text-green-700',
-  FAILED: 'bg-red-100 text-red-700',
+const STATUS_BADGE: Record<OrderStatus, BadgeProps['variant']> = {
+  CREATED: 'default',
+  PAID: 'primary',
+  AUTHORIZED: 'purple',
+  RUNNING: 'warning',
+  DONE: 'success',
+  FAILED: 'danger',
 };
 
 function formatDate(date: Date | null): string {
@@ -75,9 +76,9 @@ export function OrdersPage() {
       {error && <Alert variant="error" description={error} />}
 
       {isLoading ? (
-        <div className="bg-white rounded-lg shadow-sm border p-8 flex justify-center">
+        <Card padding="none" className="flex justify-center p-8">
           <Spinner ariaLabel="Loading orders" loadingText="Loading orders..." />
-        </div>
+        </Card>
       ) : (
         <DataCardList
           data={orders}
@@ -87,24 +88,22 @@ export function OrdersPage() {
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0">
                 <p
-                  className="truncate font-mono text-sm text-gray-700 dark:text-gray-300"
+                  className="truncate font-mono text-sm text-theme-text-secondary"
                   title={order.id}
                 >
                   {truncateId(order.id)}
                 </p>
-                <p className="text-xs text-gray-500 dark:text-gray-400">
+                <Text size="xs" color="muted">
                   {formatDate(order.createdAt)}
-                </p>
+                </Text>
               </div>
               <div className="flex flex-shrink-0 items-center gap-3">
-                <span className="font-medium text-gray-900 dark:text-gray-100">
+                <Text as="span" weight="medium">
                   {formatAmount(order.amountCents)}
-                </span>
-                <span
-                  className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${STATUS_BADGE[order.status] ?? 'bg-gray-100 text-gray-700'}`}
-                >
+                </Text>
+                <Badge variant={STATUS_BADGE[order.status] ?? 'default'} size="sm" pill>
                   {order.status}
-                </span>
+                </Badge>
               </div>
             </div>
           )}

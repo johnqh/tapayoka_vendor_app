@@ -2,7 +2,8 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuthStatus } from '@sudobility/auth-components';
-import { ui, buttonVariant } from '@sudobility/design';
+import { ui } from '@sudobility/design';
+import { Button, Card, Heading, Text } from '@sudobility/components';
 import { SEOHead, buildHowToSchema } from '@sudobility/seo_lib';
 import { CONSTANTS } from '../config/constants';
 import { analyticsService } from '../config/analytics';
@@ -11,7 +12,7 @@ import { usePageBreadcrumbs } from '../hooks/usePageConfig';
 const featureIcons = [
   // Device Management
   <svg
-    className="w-8 h-8 text-blue-600"
+    className="w-8 h-8 text-primary"
     fill="none"
     stroke="currentColor"
     viewBox="0 0 24 24"
@@ -26,7 +27,7 @@ const featureIcons = [
   </svg>,
   // QR Payments
   <svg
-    className="w-8 h-8 text-blue-600"
+    className="w-8 h-8 text-primary"
     fill="none"
     stroke="currentColor"
     viewBox="0 0 24 24"
@@ -45,7 +46,7 @@ const featureIcons = [
   </svg>,
   // Order Tracking
   <svg
-    className="w-8 h-8 text-blue-600"
+    className="w-8 h-8 text-primary"
     fill="none"
     stroke="currentColor"
     viewBox="0 0 24 24"
@@ -59,7 +60,7 @@ const featureIcons = [
   </svg>,
   // Real-time Monitoring
   <svg
-    className="w-8 h-8 text-blue-600"
+    className="w-8 h-8 text-primary"
     fill="none"
     stroke="currentColor"
     viewBox="0 0 24 24"
@@ -116,45 +117,54 @@ function HomePage() {
       />
 
       {/* Hero */}
-      <section className="bg-gradient-to-br from-blue-600 to-blue-800 text-white">
+      <section className="bg-primary text-primary-foreground">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-6">
+          <Heading
+            level={1}
+            size="4xl"
+            weight="bold"
+            className="md:text-5xl mb-6 text-primary-foreground"
+          >
             {t('hero.title', { appName: CONSTANTS.APP_NAME })}
-          </h1>
-          <p className="text-lg md:text-xl text-blue-100 max-w-2xl mx-auto mb-10">
+          </Heading>
+          <Text size="lg" className="md:text-xl text-primary-foreground/80 max-w-2xl mx-auto mb-10">
             {t('hero.description', { appName: CONSTANTS.APP_NAME })}
-          </p>
+          </Text>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             {user ? (
-              <button
+              <Button
+                variant="secondary"
+                size="lg"
                 onClick={() => {
                   analyticsService.trackButtonClick('hero_dashboard');
                   navigate('/dashboard');
                 }}
-                className={`px-8 py-3 bg-white text-blue-700 font-semibold rounded-lg hover:bg-blue-50 ${ui.transition.fast}`}
               >
                 {t('hero.ctaDashboard')}
-              </button>
+              </Button>
             ) : (
               <>
-                <button
+                <Button
+                  variant="secondary"
+                  size="lg"
                   onClick={() => {
                     analyticsService.trackButtonClick('hero_get_started');
                     navigate('/login');
                   }}
-                  className={`px-8 py-3 bg-white text-blue-700 font-semibold rounded-lg hover:bg-blue-50 ${ui.transition.fast}`}
                 >
                   {t('hero.ctaGetStarted')}
-                </button>
-                <button
+                </Button>
+                <Button
+                  variant="outline"
+                  size="lg"
                   onClick={() => {
                     analyticsService.trackButtonClick('hero_learn_more');
                     navigate('/vendor');
                   }}
-                  className={`px-8 py-3 border-2 border-white text-white font-semibold rounded-lg hover:bg-white/10 ${ui.transition.fast}`}
+                  className="border-2 border-primary-foreground text-primary-foreground hover:bg-primary-foreground/10"
                 >
                   {t('hero.ctaLearnMore')}
-                </button>
+                </Button>
               </>
             )}
           </div>
@@ -165,20 +175,24 @@ function HomePage() {
       <section className={ui.section.default + ' py-20'}>
         <div className={ui.layout.container}>
           <div className="text-center mb-16">
-            <h2 className={`${ui.text.h2} mb-4`}>
+            <Heading level={2} size="3xl" className="mb-4">
               {t('features.title', { appName: CONSTANTS.APP_NAME })}
-            </h2>
-            <p className={`${ui.text.bodyLarge} max-w-2xl mx-auto`}>
+            </Heading>
+            <Text size="lg" color="muted" className="max-w-2xl mx-auto">
               {t('features.subtitle', { appName: CONSTANTS.APP_NAME })}
-            </p>
+            </Text>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {featureKeys.map((key, index) => (
-              <div key={key} className={`${ui.card.feature}`}>
+              <Card key={key} variant="bordered">
                 <div className="mb-4">{featureIcons[index]}</div>
-                <h3 className={`${ui.text.h5} mb-2`}>{t(`${key}.title`)}</h3>
-                <p className={ui.text.bodySmall}>{t(`${key}.description`)}</p>
-              </div>
+                <Heading level={3} size="lg" className="mb-2">
+                  {t(`${key}.title`)}
+                </Heading>
+                <Text size="sm" color="muted">
+                  {t(`${key}.description`)}
+                </Text>
+              </Card>
             ))}
           </div>
         </div>
@@ -187,19 +201,24 @@ function HomePage() {
       {/* CTA */}
       <section className={ui.section.subtle + ' py-16'}>
         <div className="max-w-4xl mx-auto px-4 text-center">
-          <h2 className={`${ui.text.h2} mb-4`}>{t('cta.title')}</h2>
-          <p className={`${ui.text.bodyLarge} mb-8`}>{t('cta.description')}</p>
-          <button
+          <Heading level={2} size="3xl" className="mb-4">
+            {t('cta.title')}
+          </Heading>
+          <Text size="lg" color="muted" className="mb-8">
+            {t('cta.description')}
+          </Text>
+          <Button
+            variant="primary"
+            size="lg"
             onClick={() => {
               analyticsService.trackButtonClick('cta_action', {
                 target: user ? 'dashboard' : 'login',
               });
               navigate(user ? '/dashboard' : '/login');
             }}
-            className={`px-8 py-3 rounded-lg font-semibold ${buttonVariant('primary')}`}
           >
             {user ? t('cta.ctaDashboard') : t('cta.ctaCreate')}
-          </button>
+          </Button>
         </div>
       </section>
     </>

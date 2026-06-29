@@ -4,10 +4,11 @@ import { EmptyState } from '@sudobility/building_blocks';
 import { useApi } from '../../context/apiContextDef';
 import { useCurrentEntity } from '@sudobility/entity_client';
 import { useVendorModelsManager } from '@sudobility/tapayoka_lib';
-import { ui, buttonVariant } from '@sudobility/design';
+import { ui } from '@sudobility/design';
 import {
   Badge,
   Button,
+  Card,
   ContentLayout,
   FormField,
   Modal,
@@ -15,6 +16,7 @@ import {
   ModalFooter,
   ModalHeader,
   Spinner,
+  Text,
 } from '@sudobility/components';
 import { PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { DataCardList, RowIconButton } from '../../components/DataCardList';
@@ -109,17 +111,14 @@ function Chip<T extends string>({
 }) {
   const isActive = value === selected;
   return (
-    <button
+    <Button
       type="button"
+      variant={isActive ? 'primary' : 'outline'}
+      size="sm"
       onClick={() => onSelect(value)}
-      className={`px-3 py-1.5 rounded-lg border text-sm font-medium ${ui.transition.default} ${
-        isActive
-          ? `${buttonVariant('primary')}`
-          : `${buttonVariant('outline')} hover:border-gray-400`
-      }`}
     >
       {label}
-    </button>
+    </Button>
   );
 }
 
@@ -138,7 +137,9 @@ function ChipGroup<T extends string>({
 }) {
   return (
     <div>
-      <label className={`block text-sm font-medium mb-1 ${ui.text.label}`}>{label}</label>
+      <Text as="label" size="sm" weight="medium" className="block mb-1">
+        {label}
+      </Text>
       <div className="flex flex-wrap gap-2">
         {allowNone && <Chip label="None" value={null} selected={value} onSelect={onChange} />}
         {options.map((opt) => (
@@ -402,9 +403,9 @@ export function ModelsPage() {
         contentClassName="p-4"
       >
         {manager.isLoading && manager.models.length === 0 ? (
-          <div className="bg-white rounded-lg shadow-sm border p-8 flex justify-center">
+          <Card padding="none" className="flex justify-center p-8">
             <Spinner ariaLabel="Loading models" />
-          </div>
+          </Card>
         ) : manager.models.length === 0 ? (
           <EmptyState
             message="Manage your installation models here."
@@ -419,14 +420,14 @@ export function ModelsPage() {
             renderItem={(model) => (
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
-                  <p className="truncate font-medium text-gray-900 dark:text-gray-100">
+                  <Text weight="medium" truncate>
                     {model.name}
-                  </p>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
+                  </Text>
+                  <Text size="sm" color="muted">
                     {[model.type, model.pricing, model.slot, model.action]
                       .filter(Boolean)
                       .join(' · ') || '—'}
-                  </p>
+                  </Text>
                 </div>
                 <div className="flex flex-shrink-0 items-center gap-1">
                   {model.offeringCount != null && (

@@ -3,7 +3,7 @@ import { EntityClient, useCurrentEntity } from '@sudobility/entity_client';
 import { MembersManagementPage } from '@sudobility/entity_pages';
 import { useApi } from '../../context/apiContextDef';
 import { useAuthStatus } from '@sudobility/auth-components';
-import { ui } from '@sudobility/design';
+import { Text } from '@sudobility/components';
 import { analyticsService } from '../../config/analytics';
 import { usePageBreadcrumbs } from '../../hooks/usePageConfig';
 import { organizationsTrail } from '../../lib/breadcrumbs';
@@ -25,7 +25,7 @@ export function MembersPage() {
   );
 
   if (!currentEntity) {
-    return <div className={ui.text.muted}>Select an organization to manage its members.</div>;
+    return <Text color="muted">Select an organization to manage its members.</Text>;
   }
 
   return (

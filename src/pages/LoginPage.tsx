@@ -3,8 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuthStatus } from '@sudobility/auth-components';
 import { getFirebaseAuth } from '@sudobility/auth_lib';
-import { ui } from '@sudobility/design';
-import { Spinner } from '@sudobility/components';
+import { Alert, Spinner } from '@sudobility/components';
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
@@ -43,9 +42,7 @@ export default function LoginPage() {
   if (!auth) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-theme-bg-primary">
-        <p role="alert" className={ui.text.error}>
-          Firebase not configured
-        </p>
+        <Alert variant="error" description="Firebase not configured" />
       </div>
     );
   }

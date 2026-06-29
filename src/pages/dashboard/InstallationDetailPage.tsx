@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useApi } from '../../context/apiContextDef';
 import { useCurrentEntity } from '@sudobility/entity_client';
-import { ContentLayout, Spinner, Alert } from '@sudobility/components';
+import { Card, ContentLayout, Spinner, Alert, Text } from '@sudobility/components';
 import { PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { DataCardList, RowIconButton } from '../../components/DataCardList';
 import {
@@ -172,9 +172,9 @@ export function InstallationDetailPage() {
         {slotsManager.error && <Alert variant="error">{slotsManager.error}</Alert>}
 
         {slotsManager.isLoading ? (
-          <div className="flex justify-center rounded-lg border border-gray-200 bg-white p-8 dark:border-gray-700 dark:bg-gray-800">
+          <Card padding="none" className="flex justify-center p-8">
             <Spinner ariaLabel="Loading slots" />
-          </div>
+          </Card>
         ) : (
           <DataCardList
             data={slotsManager.slots}
@@ -185,12 +185,12 @@ export function InstallationDetailPage() {
             renderItem={(slot) => (
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
-                  <p className="truncate font-medium text-gray-900 dark:text-gray-100">
+                  <Text weight="medium" truncate>
                     {slot.label}
-                  </p>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
+                  </Text>
+                  <Text size="sm" color="muted">
                     {slot.pricingTier?.name ?? '—'}
-                  </p>
+                  </Text>
                 </div>
                 <div className="flex flex-shrink-0 items-center gap-1">
                   <RowIconButton

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useApi } from '../../context/apiContextDef';
 import { useCurrentEntity } from '@sudobility/entity_client';
-import { Badge, ContentLayout, Spinner, Alert } from '@sudobility/components';
+import { Badge, Card, ContentLayout, Spinner, Alert, Text } from '@sudobility/components';
 import { PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { DataCardList, RowIconButton } from '../../components/DataCardList';
 import {
@@ -150,9 +150,9 @@ export function OfferingDetailPage() {
         {installationsManager.error && <Alert variant="error">{installationsManager.error}</Alert>}
 
         {installationsManager.isLoading ? (
-          <div className="flex justify-center rounded-lg border border-gray-200 bg-white p-8 dark:border-gray-700 dark:bg-gray-800">
+          <Card padding="none" className="flex justify-center p-8">
             <Spinner ariaLabel="Loading installations" />
-          </div>
+          </Card>
         ) : (
           <DataCardList
             data={installationsManager.installations}
@@ -164,9 +164,9 @@ export function OfferingDetailPage() {
             renderItem={(inst) => (
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
-                  <p className="truncate font-medium text-gray-900 dark:text-gray-100">
+                  <Text weight="medium" truncate>
                     {inst.label}
-                  </p>
+                  </Text>
                 </div>
                 <div className="flex flex-shrink-0 items-center gap-1">
                   {inst.slotCount != null && (

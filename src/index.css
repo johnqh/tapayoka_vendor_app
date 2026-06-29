@@ -2,30 +2,21 @@
 @tailwind components;
 @tailwind utilities;
 
+/* The app's theme.* utility colors are aliased to the @sudobility/design tokens
+   (defined as --background, --foreground, ... in the :root/.dark blocks below),
+   so the whole app — not just the design components — follows the active design
+   theme and flips light/dark automatically. */
 :root {
-  --color-bg-primary: #ffffff;
-  --color-bg-secondary: #f9fafb;
-  --color-bg-tertiary: #f3f4f6;
-  --color-text-primary: #111827;
-  --color-text-secondary: #4b5563;
-  --color-text-tertiary: #9ca3af;
-  --color-border: #e5e7eb;
-  --color-border-light: #f3f4f6;
-  --color-hover-bg: #f3f4f6;
-  --color-hover-border: #d1d5db;
-}
-
-.dark {
-  --color-bg-primary: #111827;
-  --color-bg-secondary: #1f2937;
-  --color-bg-tertiary: #374151;
-  --color-text-primary: #f9fafb;
-  --color-text-secondary: #d1d5db;
-  --color-text-tertiary: #9ca3af;
-  --color-border: #374151;
-  --color-border-light: #4b5563;
-  --color-hover-bg: #374151;
-  --color-hover-border: #4b5563;
+  --color-bg-primary: hsl(var(--background));
+  --color-bg-secondary: hsl(var(--muted));
+  --color-bg-tertiary: hsl(var(--accent));
+  --color-text-primary: hsl(var(--foreground));
+  --color-text-secondary: hsl(var(--muted-foreground));
+  --color-text-tertiary: hsl(var(--muted-foreground));
+  --color-border: hsl(var(--border));
+  --color-border-light: hsl(var(--border));
+  --color-hover-bg: hsl(var(--accent));
+  --color-hover-border: hsl(var(--input));
 }
 
 .font-small {

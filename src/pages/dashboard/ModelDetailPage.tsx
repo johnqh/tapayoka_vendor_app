@@ -4,7 +4,7 @@ import { EmptyState } from '@sudobility/building_blocks';
 import { useApi } from '../../context/apiContextDef';
 import { useCurrentEntity } from '@sudobility/entity_client';
 import { ui } from '@sudobility/design';
-import { Badge, ContentLayout, Spinner } from '@sudobility/components';
+import { Badge, Card, ContentLayout, Spinner, Text } from '@sudobility/components';
 import { PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { DataCardList, RowIconButton } from '../../components/DataCardList';
 import { analyticsService } from '../../config/analytics';
@@ -127,11 +127,13 @@ export function ModelDetailPage() {
 
   if (!model && !modelsManager.isLoading) {
     return (
-      <div className="text-center text-gray-500 mt-12">
-        Model not found.{' '}
-        <Link to={`/dashboard/${entitySlug}/models`} className={ui.text.linkSubtle}>
-          Back to models
-        </Link>
+      <div className="text-center mt-12">
+        <Text color="muted">
+          Model not found.{' '}
+          <Link to={`/dashboard/${entitySlug}/models`} className={ui.text.linkSubtle}>
+            Back to models
+          </Link>
+        </Text>
       </div>
     );
   }
@@ -153,9 +155,9 @@ export function ModelDetailPage() {
         contentClassName="p-4"
       >
         {offeringsManager.isLoading ? (
-          <div className="flex justify-center rounded-lg border border-gray-200 bg-white p-8 dark:border-gray-700 dark:bg-gray-800">
+          <Card padding="none" className="flex justify-center p-8">
             <Spinner ariaLabel="Loading offerings" />
-          </div>
+          </Card>
         ) : offeringsManager.offerings.length === 0 ? (
           <EmptyState
             message="Manage your offerings here."
@@ -178,12 +180,12 @@ export function ModelDetailPage() {
             renderItem={(inst) => (
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
-                  <p className="truncate font-medium text-gray-900 dark:text-gray-100">
+                  <Text weight="medium" truncate>
                     {inst.name}
-                  </p>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
+                  </Text>
+                  <Text size="sm" color="muted">
                     {formatPricingSubtitle(inst.pricingTiers)}
-                  </p>
+                  </Text>
                 </div>
                 <div className="flex flex-shrink-0 items-center gap-1">
                   {inst.installationCount != null && (

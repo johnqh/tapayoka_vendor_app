@@ -70,11 +70,11 @@ function OrganizationsMasterList({ onNavigate }: { onNavigate?: () => void }) {
       onClick={onNavigate}
       className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium ${ui.transition.default} ${
         isActive(item)
-          ? 'bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-400'
-          : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800'
+          ? 'bg-accent text-primary'
+          : 'text-theme-text-secondary hover:bg-theme-bg-tertiary'
       }`}
     >
-      <span className={isActive(item) ? 'text-blue-600' : 'text-gray-400'}>{item.icon}</span>
+      <span className={isActive(item) ? 'text-primary' : 'text-muted-foreground'}>{item.icon}</span>
       {item.label}
     </Link>
   );

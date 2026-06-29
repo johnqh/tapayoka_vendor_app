@@ -5,6 +5,7 @@ import {
   Cog6ToothIcon,
   PlusIcon,
 } from '@heroicons/react/24/outline';
+import { Button, Heading, Text } from '@sudobility/components';
 import { ui } from '@sudobility/design';
 
 export interface DashboardPageHeaderProps {
@@ -28,8 +29,7 @@ export interface DashboardPageHeaderProps {
   addTitle?: string;
 }
 
-const iconButtonClass =
-  'p-2 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100 transition-colors';
+const iconButtonClass = 'h-auto w-auto p-2 text-muted-foreground hover:text-foreground';
 
 /**
  * Consistent header for every dashboard list/detail page:
@@ -52,22 +52,28 @@ export function DashboardPageHeader({
 }: DashboardPageHeaderProps) {
   return (
     <div
-      className={`flex items-center gap-3 px-4 py-3 border-b border-gray-200 dark:border-gray-800 ${ui.background.subtle}`}
+      className={`flex items-center gap-3 px-4 py-3 border-b border-theme-border ${ui.background.subtle}`}
     >
       {onBack && (
-        <button
+        <Button
+          variant="ghost"
+          size="icon"
           type="button"
           onClick={onBack}
           aria-label="Back"
-          className="-ml-1 text-gray-400 hover:text-gray-600 transition-colors"
+          className="-ml-1 h-auto w-auto p-0 text-muted-foreground hover:text-foreground"
         >
           <ChevronLeftIcon className="w-6 h-6" />
-        </button>
+        </Button>
       )}
-      <h1 className={`${ui.text.h3} flex-1 min-w-0 truncate`}>{title}</h1>
+      <Heading level={1} size="lg" className="flex-1 min-w-0 truncate">
+        {title}
+      </Heading>
       <div className="flex items-center gap-2 flex-shrink-0">
         {onRefresh && (
-          <button
+          <Button
+            variant="ghost"
+            size="icon"
             type="button"
             onClick={onRefresh}
             aria-label="Refresh"
@@ -75,10 +81,12 @@ export function DashboardPageHeader({
             className={iconButtonClass}
           >
             <ArrowPathIcon className={`w-5 h-5 ${refreshing ? 'animate-spin' : ''}`} />
-          </button>
+          </Button>
         )}
         {onSettings && (
-          <button
+          <Button
+            variant="ghost"
+            size="icon"
             type="button"
             onClick={onSettings}
             aria-label="Settings"
@@ -86,23 +94,25 @@ export function DashboardPageHeader({
             className={iconButtonClass}
           >
             <Cog6ToothIcon className="w-5 h-5" />
-          </button>
+          </Button>
         )}
         {onAdd && (
-          <button
+          <Button
+            variant="ghost"
+            size="icon"
             type="button"
             onClick={onAdd}
             disabled={addDisabled}
             aria-label={addLabel}
             title={addTitle ?? addLabel}
-            className={`p-2 rounded-lg transition-colors ${
+            className={`h-auto w-auto p-2 ${
               addDisabled
-                ? 'text-gray-300 cursor-not-allowed'
-                : 'text-blue-600 hover:text-blue-700 hover:bg-blue-50'
+                ? 'text-theme-text-tertiary cursor-not-allowed'
+                : 'text-primary hover:text-primary/80'
             }`}
           >
             <PlusIcon className="w-5 h-5" />
-          </button>
+          </Button>
         )}
       </div>
     </div>
@@ -115,10 +125,10 @@ export function DashboardPageHeader({
  */
 export function DashboardDetailFooter({ children }: { children: ReactNode }) {
   return (
-    <div
-      className={`px-4 py-3 border-t border-gray-200 dark:border-gray-800 ${ui.background.subtle} ${ui.text.bodySmall}`}
-    >
-      {children}
+    <div className={`px-4 py-3 border-t border-theme-border ${ui.background.subtle}`}>
+      <Text size="sm" color="muted">
+        {children}
+      </Text>
     </div>
   );
 }

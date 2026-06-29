@@ -2,7 +2,8 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuthStatus } from '@sudobility/auth-components';
-import { ui, buttonVariant } from '@sudobility/design';
+import { ui } from '@sudobility/design';
+import { Button, Heading, Text } from '@sudobility/components';
 import { SEOHead } from '@sudobility/seo_lib';
 import { CONSTANTS } from '../config/constants';
 import { analyticsService } from '../config/analytics';
@@ -37,12 +38,19 @@ function VendorPage() {
       <SEOHead title={seoTitle} description={seoDescription} keywords={seoKeywords} />
 
       {/* Header */}
-      <section className="bg-gradient-to-br from-blue-600 to-indigo-700 text-white py-20">
+      <section className="bg-primary text-primary-foreground py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-6">{t('hero.title')}</h1>
-          <p className="text-lg md:text-xl text-blue-100 max-w-2xl mx-auto">
+          <Heading
+            level={1}
+            size="4xl"
+            weight="bold"
+            className="md:text-5xl mb-6 text-primary-foreground"
+          >
+            {t('hero.title')}
+          </Heading>
+          <Text size="lg" className="md:text-xl text-primary-foreground/80 max-w-2xl mx-auto">
             {t('hero.description')}
-          </p>
+          </Text>
         </div>
       </section>
 
@@ -57,8 +65,10 @@ function VendorPage() {
               }`}
             >
               <div className="flex-1">
-                <h2 className={`${ui.text.h3} mb-4`}>{t(`${key}.title`)}</h2>
-                <p className={`${ui.text.body} mb-6`}>{t(`${key}.description`)}</p>
+                <Heading level={2} size="2xl" className="mb-4">
+                  {t(`${key}.title`)}
+                </Heading>
+                <Text className="mb-6">{t(`${key}.description`)}</Text>
                 <ul className="space-y-3">
                   {(Array.isArray(t(`${key}.items`, { returnObjects: true }))
                     ? (t(`${key}.items`, { returnObjects: true }) as string[])
@@ -66,7 +76,7 @@ function VendorPage() {
                   ).map((item) => (
                     <li key={item} className="flex items-start gap-3">
                       <svg
-                        className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0"
+                        className="w-5 h-5 text-primary mt-0.5 flex-shrink-0"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -78,13 +88,15 @@ function VendorPage() {
                           d="m4.5 12.75 6 6 9-13.5"
                         />
                       </svg>
-                      <span className={ui.text.body}>{item}</span>
+                      <Text as="span">{item}</Text>
                     </li>
                   ))}
                 </ul>
               </div>
-              <div className="flex-1 bg-gray-100 rounded-xl p-8 flex items-center justify-center min-h-[200px]">
-                <span className={`text-sm ${ui.text.muted}`}>{t(`${key}.title`)} illustration</span>
+              <div className="flex-1 bg-theme-bg-secondary rounded-xl p-8 flex items-center justify-center min-h-[200px]">
+                <Text as="span" size="sm" color="muted">
+                  {t(`${key}.title`)} illustration
+                </Text>
               </div>
             </div>
           ))}
@@ -94,19 +106,24 @@ function VendorPage() {
       {/* CTA */}
       <section className={`${ui.section.subtle} py-16`}>
         <div className="max-w-4xl mx-auto px-4 text-center">
-          <h2 className={`${ui.text.h2} mb-4`}>{t('cta.title')}</h2>
-          <p className={`${ui.text.bodyLarge} mb-8`}>{t('cta.description')}</p>
-          <button
+          <Heading level={2} size="3xl" className="mb-4">
+            {t('cta.title')}
+          </Heading>
+          <Text size="lg" color="muted" className="mb-8">
+            {t('cta.description')}
+          </Text>
+          <Button
+            variant="primary"
+            size="lg"
             onClick={() => {
               analyticsService.trackButtonClick('vendor_cta', {
                 target: user ? 'dashboard' : 'login',
               });
               navigate(user ? '/dashboard' : '/login');
             }}
-            className={`px-8 py-3 rounded-lg font-semibold ${buttonVariant('primary')}`}
           >
             {user ? t('cta.ctaDashboard') : t('cta.ctaGetStarted')}
-          </button>
+          </Button>
         </div>
       </section>
     </>

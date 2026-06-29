@@ -1,4 +1,5 @@
 import { type ReactNode } from 'react';
+import { Button, Text } from '@sudobility/components';
 import { ui } from '@sudobility/design';
 
 export interface DataCardListProps<T> {
@@ -34,27 +35,25 @@ export function DataCardList<T>({
   className,
 }: DataCardListProps<T>) {
   const containerClass =
-    'bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden';
+    'bg-theme-bg-primary rounded-lg border border-theme-border overflow-hidden';
 
   if (data.length === 0) {
     return (
-      <div className={`${containerClass} p-8 text-center text-sm text-gray-500 dark:text-gray-400`}>
-        {emptyMessage}
+      <div className={`${containerClass} p-8 text-center`}>
+        <Text size="sm" color="muted">
+          {emptyMessage}
+        </Text>
       </div>
     );
   }
 
   return (
-    <ul
-      className={`${containerClass} divide-y divide-gray-100 dark:divide-gray-700 ${className ?? ''}`}
-    >
+    <ul className={`${containerClass} divide-y divide-theme-border-light ${className ?? ''}`}>
       {data.map((row) => (
         <li key={keyExtractor(row)}>
           <div
             className={`px-4 py-3 ${
-              onItemClick
-                ? `cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700/50 ${ui.transition.default}`
-                : ''
+              onItemClick ? `cursor-pointer hover:bg-theme-hover-bg ${ui.transition.default}` : ''
             }`}
             onClick={onItemClick ? () => onItemClick(row) : undefined}
           >
@@ -84,15 +83,17 @@ export function RowIconButton({
   disabled?: boolean;
 }) {
   const tone = disabled
-    ? 'text-gray-300 dark:text-gray-600 cursor-not-allowed'
+    ? 'text-theme-text-tertiary cursor-not-allowed'
     : variant === 'danger'
-      ? 'text-gray-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20'
+      ? 'text-muted-foreground hover:text-destructive hover:bg-destructive/10'
       : variant === 'primary'
-        ? 'text-blue-600 hover:text-blue-700 hover:bg-blue-50 dark:hover:bg-blue-900/20'
-        : 'text-gray-400 hover:text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700';
+        ? 'text-primary hover:text-primary/80 hover:bg-primary/10'
+        : 'text-muted-foreground hover:text-foreground hover:bg-accent';
 
   return (
-    <button
+    <Button
+      variant="ghost"
+      size="icon"
       type="button"
       aria-label={label}
       title={label}
@@ -101,10 +102,10 @@ export function RowIconButton({
         e.stopPropagation();
         onClick();
       }}
-      className={`p-1.5 rounded-md transition-colors ${tone}`}
+      className={`h-auto w-auto p-1.5 ${tone}`}
     >
       {icon}
-    </button>
+    </Button>
   );
 }
 
