@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { TapayokaClient } from '@sudobility/tapayoka_client';
+import { useTos } from '@sudobility/tapayoka_client';
 import { useApi } from '../context/apiContextDef';
 import { useAuthStatus } from '@sudobility/auth-components';
 import { Alert, Button, Card, Heading, Text } from '@sudobility/components';
@@ -14,6 +14,7 @@ function TosPage() {
   const navigate = useNavigate();
   const { networkClient, baseUrl, token } = useApi();
   const { user } = useAuthStatus();
+  const { acceptTosAndCreateEntity } = useTos(networkClient, baseUrl);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -32,8 +33,10 @@ function TosPage() {
     setError(null);
     analyticsService.trackButtonClick('accept_tos');
     try {
-      const client = new TapayokaClient({ networkClient, baseUrl });
-      await client.acceptTosAndCreateEntity({ acceptTos: true }, token);
+      const ok = await acceptTosAndCreateEntity(token);
+      if (!ok) {
+        throw new Error('Failed to accept terms. Please try again.');
+      }
       analyticsService.trackEvent('tos_accepted');
       navigate('/dashboard');
     } catch (err) {

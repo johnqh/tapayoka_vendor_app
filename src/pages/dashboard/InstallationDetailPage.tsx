@@ -182,31 +182,38 @@ export function InstallationDetailPage() {
             emptyMessage={
               isGrid ? 'No slots yet. Generate the grid in the mobile app.' : 'No slots yet.'
             }
-            renderItem={(slot) => (
-              <div className="flex items-start justify-between gap-3">
-                <div className="min-w-0">
-                  <Text weight="medium" truncate>
-                    {slot.label}
-                  </Text>
-                  <Text size="sm" color="muted">
-                    {slot.pricingTier?.name ?? '—'}
-                  </Text>
+            renderItem={(slot) => {
+              const tierName =
+                slot.pricingTier?.name ??
+                (slot.pricingTierId
+                  ? offering?.pricingTiers.find((t) => t.id === slot.pricingTierId)?.name
+                  : undefined);
+              return (
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <Text weight="medium" truncate>
+                      {slot.label}
+                    </Text>
+                    <Text size="sm" color="muted">
+                      {tierName ?? '—'}
+                    </Text>
+                  </div>
+                  <div className="flex flex-shrink-0 items-center gap-1">
+                    <RowIconButton
+                      icon={<PencilSquareIcon className="h-5 w-5" />}
+                      label="Edit"
+                      onClick={() => handleEdit(slot)}
+                    />
+                    <RowIconButton
+                      icon={<TrashIcon className="h-5 w-5" />}
+                      label="Delete"
+                      variant="danger"
+                      onClick={() => handleDelete(slot)}
+                    />
+                  </div>
                 </div>
-                <div className="flex flex-shrink-0 items-center gap-1">
-                  <RowIconButton
-                    icon={<PencilSquareIcon className="h-5 w-5" />}
-                    label="Edit"
-                    onClick={() => handleEdit(slot)}
-                  />
-                  <RowIconButton
-                    icon={<TrashIcon className="h-5 w-5" />}
-                    label="Delete"
-                    variant="danger"
-                    onClick={() => handleDelete(slot)}
-                  />
-                </div>
-              </div>
-            )}
+              );
+            }}
           />
         )}
       </ContentLayout>
@@ -214,6 +221,9 @@ export function InstallationDetailPage() {
       <SlotFormModal
         open={modalOpen}
         slot={editing}
+        slotPricing={model?.slotPricing ?? null}
+        modelPricing={model?.pricing ?? null}
+        offeringPricingTiers={offering?.pricingTiers ?? []}
         onClose={() => setModalOpen(false)}
         onSave={handleSave}
       />
