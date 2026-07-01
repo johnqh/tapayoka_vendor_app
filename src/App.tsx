@@ -22,6 +22,8 @@ const LocationDetailPage = lazy(() => import('./pages/dashboard/LocationDetailPa
 const ModelsPage = lazy(() => import('./pages/dashboard/ModelsPage'));
 const ModelDetailPage = lazy(() => import('./pages/dashboard/ModelDetailPage'));
 const OfferingDetailPage = lazy(() => import('./pages/dashboard/OfferingDetailPage'));
+const OfferingPricingTiersPage = lazy(() => import('./pages/dashboard/OfferingPricingTiersPage'));
+const OfferingSchedulePage = lazy(() => import('./pages/dashboard/OfferingSchedulePage'));
 const InstallationDetailPage = lazy(() => import('./pages/dashboard/InstallationDetailPage'));
 const OrdersPage = lazy(() => import('./pages/dashboard/OrdersPage'));
 const OrganizationsPage = lazy(() => import('./pages/organizations/OrganizationsPage'));
@@ -95,12 +97,28 @@ function AppRoutes() {
               element={<OfferingDetailPage />}
             />
             <Route
+              path="locations/:locationId/offerings/:offeringId/pricing"
+              element={<OfferingPricingTiersPage />}
+            />
+            <Route
+              path="locations/:locationId/offerings/:offeringId/schedule"
+              element={<OfferingSchedulePage />}
+            />
+            <Route
               path="locations/:locationId/offerings/:offeringId/installs/:wallet"
               element={<InstallationDetailPage />}
             />
             <Route path="models" element={<ModelsPage />} />
             <Route path="models/:modelId" element={<ModelDetailPage />} />
             <Route path="models/:modelId/offerings/:offeringId" element={<OfferingDetailPage />} />
+            <Route
+              path="models/:modelId/offerings/:offeringId/pricing"
+              element={<OfferingPricingTiersPage />}
+            />
+            <Route
+              path="models/:modelId/offerings/:offeringId/schedule"
+              element={<OfferingSchedulePage />}
+            />
             <Route
               path="models/:modelId/offerings/:offeringId/installs/:wallet"
               element={<InstallationDetailPage />}

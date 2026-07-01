@@ -5,7 +5,12 @@ import { useApi } from '../../context/apiContextDef';
 import { useCurrentEntity } from '@sudobility/entity_client';
 import { ui } from '@sudobility/design';
 import { Badge, Card, ContentLayout, Spinner, Text } from '@sudobility/components';
-import { PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline';
+import {
+  PencilSquareIcon,
+  TrashIcon,
+  CurrencyDollarIcon,
+  CalendarDaysIcon,
+} from '@heroicons/react/24/outline';
 import { DataCardList, RowIconButton } from '../../components/DataCardList';
 import { analyticsService } from '../../config/analytics';
 import {
@@ -15,7 +20,12 @@ import {
 } from '@sudobility/tapayoka_lib';
 import { OfferingModal } from '../../components/OfferingModal';
 import { DashboardPageHeader, DashboardDetailFooter } from '../../components/DashboardPageHeader';
-import { offeringPath, sectionPath } from '../../lib/dashboardPaths';
+import {
+  offeringPath,
+  offeringPricingPath,
+  offeringSchedulePath,
+  sectionPath,
+} from '../../lib/dashboardPaths';
 import { usePageBreadcrumbs } from '../../hooks/usePageConfig';
 import { dashboardTrail } from '../../lib/breadcrumbs';
 import { formatPricingSubtitle } from '../../components/pricingUtils';
@@ -181,6 +191,32 @@ export function LocationDetailPage() {
                       {inst.installationCount}
                     </Badge>
                   )}
+                  <RowIconButton
+                    icon={<CurrencyDollarIcon className="h-5 w-5" />}
+                    label="Pricing tiers"
+                    onClick={() =>
+                      navigate(
+                        offeringPricingPath(
+                          entitySlug ?? '',
+                          { parentType: 'location', parentId: locationId ?? '' },
+                          inst.id
+                        )
+                      )
+                    }
+                  />
+                  <RowIconButton
+                    icon={<CalendarDaysIcon className="h-5 w-5" />}
+                    label="Schedule"
+                    onClick={() =>
+                      navigate(
+                        offeringSchedulePath(
+                          entitySlug ?? '',
+                          { parentType: 'location', parentId: locationId ?? '' },
+                          inst.id
+                        )
+                      )
+                    }
+                  />
                   <RowIconButton
                     icon={<PencilSquareIcon className="h-5 w-5" />}
                     label="Edit"

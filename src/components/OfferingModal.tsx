@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { ui } from '@sudobility/design';
 import {
   Button,
@@ -20,22 +20,8 @@ import type {
   VendorOfferingUpdateRequest,
   VendorModel,
   VendorLocation,
-  PricingTier,
-  DailySchedule,
-  DayOfWeek,
 } from '@sudobility/tapayoka_types';
 import { makeDefaultTier } from '@sudobility/tapayoka_lib';
-import { VariablePricingForm, FixedPricingForm } from './pricingTierForms';
-
-const DAYS_OF_WEEK: DayOfWeek[] = [
-  'Monday',
-  'Tuesday',
-  'Wednesday',
-  'Thursday',
-  'Friday',
-  'Saturday',
-  'Sunday',
-];
 
 interface OfferingModalProps {
   open: boolean;
@@ -50,6 +36,13 @@ interface OfferingModalProps {
   onSave: (data: VendorOfferingCreateRequest | VendorOfferingUpdateRequest) => Promise<void>;
 }
 
+/**
+ * Create/rename an offering. Pricing tiers and schedule are managed on their
+ * own dedicated screens ($ and calendar actions on the offering row); this
+ * modal only handles the name (and, on create, the model/location it pairs).
+ * A single default pricing tier is seeded on create so the offering is
+ * immediately usable.
+ */
 export function OfferingModal({
   open,
   offering,
@@ -64,57 +57,25 @@ export function OfferingModal({
 }: OfferingModalProps) {
   const [name, setName] = useState('');
   const [pickerId, setPickerId] = useState('');
-  const [pricingTiers, setPricingTiers] = useState<PricingTier[]>([]);
-  const [schedule, setSchedule] = useState<DailySchedule[]>([]);
   const [saving, setSaving] = useState(false);
 
-  // Resolve model to determine pricing type
+  // Resolve the model to determine the default tier's pricing kind (on create).
   const resolvedModel =
     parentType === 'model' ? preselectedModel : models?.find((m) => m.id === pickerId);
-
   const modelPricing = resolvedModel?.pricing ?? null;
-
-  // Init pricing tiers when model changes
-  useEffect(() => {
-    if (!modelPricing || offering) return;
-    setPricingTiers([makeDefaultTier(modelPricing, 'USD', 'Default')]);
-  }, [modelPricing, offering]);
 
   useEffect(() => {
     if (open) {
-      if (offering) {
-        setName(offering.name);
-        setPricingTiers(offering.pricingTiers);
-        setSchedule(offering.schedule ?? []);
-        setPickerId(parentType === 'location' ? offering.vendorModelId : offering.vendorLocationId);
-      } else {
-        setName('');
-        setPricingTiers([]);
-        setSchedule([]);
-        setPickerId('');
-      }
+      setName(offering ? offering.name : '');
+      setPickerId(
+        offering
+          ? parentType === 'location'
+            ? offering.vendorModelId
+            : offering.vendorLocationId
+          : ''
+      );
     }
   }, [open, offering, parentType]);
-
-  const handleTierChange = useCallback((index: number, tier: PricingTier) => {
-    setPricingTiers((prev) => prev.map((t, i) => (i === index ? tier : t)));
-  }, []);
-
-  const handleTierNameChange = useCallback((index: number, tierName: string) => {
-    setPricingTiers((prev) => prev.map((t, i) => (i === index ? { ...t, name: tierName } : t)));
-  }, []);
-
-  const handleAddTier = useCallback(() => {
-    if (!modelPricing) return;
-    setPricingTiers((prev) => [
-      ...prev,
-      makeDefaultTier(modelPricing, 'USD', `Tier ${prev.length + 1}`),
-    ]);
-  }, [modelPricing]);
-
-  const handleRemoveTier = useCallback((index: number) => {
-    setPricingTiers((prev) => prev.filter((_, i) => i !== index));
-  }, []);
 
   const handleSave = async () => {
     if (!name.trim()) return;
@@ -122,20 +83,18 @@ export function OfferingModal({
     setSaving(true);
     try {
       if (offering) {
-        await onSave({
-          name: name.trim(),
-          pricingTiers,
-          schedule: schedule.length > 0 ? schedule : null,
-        } as VendorOfferingUpdateRequest);
+        await onSave({ name: name.trim() } as VendorOfferingUpdateRequest);
       } else {
         const vendorLocationId = parentType === 'location' ? parentId : pickerId;
         const vendorModelId = parentType === 'model' ? parentId : pickerId;
+        // Seed one default tier so the new offering is usable; the user can
+        // manage tiers afterward on the Pricing Tiers screen.
+        const pricingTiers = modelPricing ? [makeDefaultTier(modelPricing, 'USD', 'Default')] : [];
         await onSave({
           vendorLocationId,
           vendorModelId,
           name: name.trim(),
           pricingTiers,
-          ...(schedule.length > 0 ? { schedule } : {}),
         } as VendorOfferingCreateRequest);
       }
     } finally {
@@ -204,123 +163,6 @@ export function OfferingModal({
               </Select>
             </div>
           )}
-
-          {/* Pricing Tiers Section */}
-          {pricingTiers.length > 0 && (
-            <div>
-              <Text as="div" size="sm" weight="semibold" className="mb-2">
-                Pricing Tiers
-              </Text>
-              {pricingTiers.map((tier, index) => (
-                <div key={tier.id} className="border border-theme-border rounded-lg p-3 mb-3">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Input
-                      type="text"
-                      className="flex-1"
-                      value={tier.name}
-                      onChange={(e) => handleTierNameChange(index, e.target.value)}
-                      placeholder="Tier name"
-                    />
-                    {pricingTiers.length > 1 && (
-                      <Button
-                        type="button"
-                        variant="destructive-outline"
-                        size="sm"
-                        onClick={() => handleRemoveTier(index)}
-                      >
-                        Remove
-                      </Button>
-                    )}
-                  </div>
-                  {tier.type === 'timed' ? (
-                    <VariablePricingForm
-                      config={tier}
-                      onChange={(p) => handleTierChange(index, p)}
-                    />
-                  ) : (
-                    <FixedPricingForm config={tier} onChange={(p) => handleTierChange(index, p)} />
-                  )}
-                </div>
-              ))}
-              <Button type="button" variant="link" size="sm" onClick={handleAddTier}>
-                + Add Tier
-              </Button>
-            </div>
-          )}
-          {/* Schedule Section */}
-          <div>
-            <Text as="label" size="sm" weight="medium" className="block mb-2">
-              Schedule
-            </Text>
-            {schedule.map((entry, index) => (
-              <div
-                key={`${entry.dayOfWeek}-${index}`}
-                className="flex items-center gap-3 mb-2 bg-theme-bg-secondary rounded-lg px-3 py-2"
-              >
-                <Text as="span" size="sm" weight="medium" className="w-24">
-                  {entry.dayOfWeek}
-                </Text>
-                <Input
-                  type="text"
-                  className="w-20"
-                  value={entry.startTime}
-                  onChange={(e) =>
-                    setSchedule((prev) =>
-                      prev.map((s, i) => (i === index ? { ...s, startTime: e.target.value } : s))
-                    )
-                  }
-                  placeholder="09:00"
-                  maxLength={5}
-                />
-                <Text as="span" size="xs" color="muted">
-                  to
-                </Text>
-                <Input
-                  type="text"
-                  className="w-20"
-                  value={entry.endTime}
-                  onChange={(e) =>
-                    setSchedule((prev) =>
-                      prev.map((s, i) => (i === index ? { ...s, endTime: e.target.value } : s))
-                    )
-                  }
-                  placeholder="17:00"
-                  maxLength={5}
-                />
-                <Button
-                  type="button"
-                  variant="destructive-outline"
-                  size="sm"
-                  onClick={() => setSchedule((prev) => prev.filter((_, i) => i !== index))}
-                >
-                  Remove
-                </Button>
-              </div>
-            ))}
-            <div className="flex flex-wrap gap-2 mt-2">
-              {DAYS_OF_WEEK.filter((d) => !schedule.some((s) => s.dayOfWeek === d)).map((day) => (
-                <Button
-                  key={day}
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={() => {
-                    const last = schedule[schedule.length - 1];
-                    setSchedule((prev) => [
-                      ...prev,
-                      {
-                        dayOfWeek: day,
-                        startTime: last?.startTime ?? '09:00',
-                        endTime: last?.endTime ?? '17:00',
-                      },
-                    ]);
-                  }}
-                >
-                  + {day.slice(0, 3)}
-                </Button>
-              ))}
-            </div>
-          </div>
         </div>
       </ModalContent>
       <ModalFooter>

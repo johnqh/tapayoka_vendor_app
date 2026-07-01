@@ -40,3 +40,19 @@ export function installationPath(
 ): string {
   return `${offeringPath(entitySlug, parent, offeringId)}/installs/${wallet}`;
 }
+
+export function offeringPricingPath(
+  entitySlug: string,
+  parent: OfferingParent,
+  offeringId: string
+): string {
+  return `${offeringPath(entitySlug, parent, offeringId)}/pricing`;
+}
+
+export function offeringSchedulePath(
+  entitySlug: string,
+  parent: OfferingParent,
+  offeringId: string
+): string {
+  return `${offeringPath(entitySlug, parent, offeringId)}/schedule`;
+}
