@@ -9,6 +9,8 @@ import {
   getModelTypeDefaults,
   buildVendorModelConfig,
   formatModelSummary,
+  slotSupportsSlotPricing,
+  actionSupportsInterruption,
 } from '@sudobility/tapayoka_lib';
 import {
   Badge,
@@ -124,7 +126,7 @@ function ModelFormModal({ visible, model, onClose, onSave }: ModelFormModalProps
 
   const handleActionSelect = useCallback((a: VendorModelAction | null) => {
     setAction(a);
-    if (a === 'sequence') {
+    if (!actionSupportsInterruption(a)) {
       setInterruption(null);
     }
   }, []);
@@ -190,7 +192,7 @@ function ModelFormModal({ visible, model, onClose, onSave }: ModelFormModalProps
         />
 
         {/* Slot Pricing - only when slot is multi */}
-        {slot && slot !== 'single' && (
+        {slotSupportsSlotPricing(slot) && (
           <SegmentedField
             label="Slot Pricing"
             options={SLOT_PRICING_OPTIONS}
@@ -208,7 +210,7 @@ function ModelFormModal({ visible, model, onClose, onSave }: ModelFormModalProps
         />
 
         {/* Interruption - only when action is 'timed' */}
-        {action === 'timed' && (
+        {actionSupportsInterruption(action) && (
           <SegmentedField
             label="Interruption"
             options={INTERRUPTION_OPTIONS}

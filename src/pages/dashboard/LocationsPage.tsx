@@ -3,7 +3,15 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { EmptyState } from '@sudobility/building_blocks';
 import { useApi } from '../../context/apiContextDef';
 import { useCurrentEntity } from '@sudobility/entity_client';
-import { useVendorLocationsManager } from '@sudobility/tapayoka_lib';
+import {
+  useVendorLocationsManager,
+  emptyLocationForm,
+  locationToFormFields,
+  buildLocationRequest,
+  canSaveLocation,
+  formatLocationAddress,
+  type VendorLocationFormFields,
+} from '@sudobility/tapayoka_lib';
 import {
   Alert,
   Badge,
@@ -20,29 +28,7 @@ import { analyticsService } from '../../config/analytics';
 import { DashboardPageHeader } from '../../components/DashboardPageHeader';
 import { usePageBreadcrumbs } from '../../hooks/usePageConfig';
 import { dashboardTrail } from '../../lib/breadcrumbs';
-import type {
-  VendorLocation,
-  VendorLocationCreateRequest,
-  VendorLocationUpdateRequest,
-} from '@sudobility/tapayoka_types';
-
-interface FormFields {
-  name: string;
-  address: string;
-  city: string;
-  stateProvince: string;
-  zipcode: string;
-  country: string;
-}
-
-const emptyForm: FormFields = {
-  name: '',
-  address: '',
-  city: '',
-  stateProvince: '',
-  zipcode: '',
-  country: '',
-};
+import type { VendorLocation } from '@sudobility/tapayoka_types';
 
 export function LocationsPage() {
   const navigate = useNavigate();
@@ -60,59 +46,37 @@ export function LocationsPage() {
 
   const [modalOpen, setModalOpen] = useState(false);
   const [editingLocation, setEditingLocation] = useState<VendorLocation | null>(null);
-  const [form, setForm] = useState<FormFields>(emptyForm);
+  const [form, setForm] = useState<VendorLocationFormFields>(emptyLocationForm);
   const [saving, setSaving] = useState(false);
 
   const openAddModal = () => {
     analyticsService.trackButtonClick('add_location');
     setEditingLocation(null);
-    setForm(emptyForm);
+    setForm(emptyLocationForm);
     setModalOpen(true);
   };
 
   const openEditModal = (location: VendorLocation) => {
     setEditingLocation(location);
-    setForm({
-      name: location.name,
-      address: location.address,
-      city: location.city,
-      stateProvince: location.stateProvince,
-      zipcode: location.zipcode,
-      country: location.country,
-    });
+    setForm(locationToFormFields(location));
     setModalOpen(true);
   };
 
   const closeModal = () => {
     setModalOpen(false);
     setEditingLocation(null);
-    setForm(emptyForm);
+    setForm(emptyLocationForm);
     manager.clearError();
   };
 
   const handleSave = async () => {
     setSaving(true);
     try {
+      const data = buildLocationRequest(form);
       if (editingLocation) {
-        const data: VendorLocationUpdateRequest = {
-          name: form.name,
-          address: form.address,
-          city: form.city,
-          stateProvince: form.stateProvince,
-          zipcode: form.zipcode,
-          country: form.country,
-        };
         const result = await manager.updateLocation(editingLocation.id, data);
         if (result) closeModal();
       } else {
-        const data: VendorLocationCreateRequest = {
-          name: form.name,
-          address: form.address,
-          city: form.city,
-          stateProvince: form.stateProvince,
-          zipcode: form.zipcode,
-          country: form.country,
-        };
         const result = await manager.addLocation(data);
         if (result) closeModal();
       }
@@ -135,7 +99,7 @@ export function LocationsPage() {
     navigate(`/dashboard/${encodeURIComponent(entitySlug ?? '')}/locations/${location.id}`);
   };
 
-  const updateField = (field: keyof FormFields, value: string) => {
+  const updateField = (field: keyof VendorLocationFormFields, value: string) => {
     setForm((prev) => ({ ...prev, [field]: value }));
   };
 
@@ -192,15 +156,7 @@ export function LocationsPage() {
                     {location.name}
                   </Text>
                   <Text size="sm" color="muted">
-                    {[
-                      location.address,
-                      location.city,
-                      location.stateProvince,
-                      location.zipcode,
-                      location.country,
-                    ]
-                      .filter(Boolean)
-                      .join(', ')}
+                    {formatLocationAddress(location)}
                   </Text>
                 </div>
                 <div className="flex flex-shrink-0 items-center gap-1">
@@ -233,7 +189,7 @@ export function LocationsPage() {
         onClose={closeModal}
         onSave={handleSave}
         saving={saving}
-        canSave={!!form.name.trim()}
+        canSave={canSaveLocation(form)}
         size="medium"
       >
         {manager.error && (

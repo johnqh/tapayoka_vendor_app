@@ -10,7 +10,11 @@ import type {
   VendorModelInterruption,
   VendorModelPayment,
 } from '@sudobility/tapayoka_types';
-import { buildVendorModelConfig } from '@sudobility/tapayoka_lib';
+import {
+  buildVendorModelConfig,
+  slotSupportsSlotPricing,
+  actionSupportsInterruption,
+} from '@sudobility/tapayoka_lib';
 import { SegmentedField } from './SegmentedField';
 import {
   SLOT_OPTIONS,
@@ -81,7 +85,7 @@ export function ModelSettingsModal({ open, model, onClose, onSave }: ModelSettin
           onChange={(v) => setPricing(v as VendorModelPricing)}
         />
 
-        {slot && slot !== 'single' && (
+        {slotSupportsSlotPricing(slot) && (
           <SegmentedField
             label="Slot Pricing"
             options={SLOT_PRICING_OPTIONS}
@@ -96,11 +100,11 @@ export function ModelSettingsModal({ open, model, onClose, onSave }: ModelSettin
           value={action}
           onChange={(v) => {
             setAction(v as VendorModelAction);
-            if (v === 'sequence') setInterruption(null);
+            if (!actionSupportsInterruption(v as VendorModelAction)) setInterruption(null);
           }}
         />
 
-        {action === 'timed' && (
+        {actionSupportsInterruption(action) && (
           <SegmentedField
             label="Interruption"
             options={INTERRUPTION_OPTIONS}

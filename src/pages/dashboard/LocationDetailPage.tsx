@@ -17,6 +17,7 @@ import {
   useVendorLocationsManager,
   useVendorModelsManager,
   useVendorOfferingsManager,
+  formatLocationAddress,
 } from '@sudobility/tapayoka_lib';
 import { OfferingModal } from '../../components/OfferingModal';
 import { DashboardPageHeader, DashboardDetailFooter } from '../../components/DashboardPageHeader';
@@ -78,12 +79,15 @@ export function LocationDetailPage() {
     analyticsService.trackButtonClick('add_offering', { context: 'location_detail' });
     setEditingOffering(null);
     setModalOpen(true);
-  }, []);
+  }, [setEditingOffering, setModalOpen]);
 
-  const handleEdit = useCallback((inst: VendorOffering) => {
-    setEditingOffering(inst);
-    setModalOpen(true);
-  }, []);
+  const handleEdit = useCallback(
+    (inst: VendorOffering) => {
+      setEditingOffering(inst);
+      setModalOpen(true);
+    },
+    [setEditingOffering, setModalOpen]
+  );
 
   const handleDelete = useCallback(
     async (inst: VendorOffering) => {
@@ -113,7 +117,7 @@ export function LocationDetailPage() {
       }
       setModalOpen(false);
     },
-    [editingOffering, offeringsManager]
+    [editingOffering, offeringsManager, setModalOpen]
   );
 
   if (!location && !locationsManager.isLoading) {
@@ -144,10 +148,7 @@ export function LocationDetailPage() {
         }
         footer={
           location ? (
-            <DashboardDetailFooter>
-              {location.address}, {location.city}, {location.stateProvince} {location.zipcode},{' '}
-              {location.country}
-            </DashboardDetailFooter>
+            <DashboardDetailFooter>{formatLocationAddress(location)}</DashboardDetailFooter>
           ) : undefined
         }
         contentClassName="p-4"
