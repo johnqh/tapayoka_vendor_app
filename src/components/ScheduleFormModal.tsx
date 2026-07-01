@@ -1,9 +1,5 @@
 import { useState, useEffect } from 'react';
 import {
-  Modal,
-  ModalContent,
-  ModalFooter,
-  Button,
   FormField,
   Text,
   Select,
@@ -12,6 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@sudobility/components';
+import { FormModal } from '@sudobility/components';
 import type { DailySchedule, DayOfWeek } from '@sudobility/tapayoka_types';
 
 const DAYS_OF_WEEK: DayOfWeek[] = [
@@ -76,62 +73,60 @@ export function ScheduleFormModal({
   };
 
   return (
-    <Modal isOpen={open} onClose={onClose} title={entry ? 'Edit day' : 'Add day'} size="small">
-      <ModalContent variant="scrollable">
-        <div className="space-y-4">
-          <div>
-            <Text as="label" size="sm" weight="medium" className="block mb-1">
-              Day
-            </Text>
-            {entry ? (
-              <Text weight="medium">{draft.dayOfWeek}</Text>
-            ) : (
-              <Select
-                value={draft.dayOfWeek}
-                onValueChange={(value) => setDraft({ ...draft, dayOfWeek: value as DayOfWeek })}
-              >
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select a day" />
-                </SelectTrigger>
-                <SelectContent>
-                  {availableDays.map((d) => (
-                    <SelectItem key={d} value={d}>
-                      {d}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            )}
-          </div>
-          <div className="flex items-end gap-3">
-            <FormField
-              id="schedule-start"
-              label="Opens"
-              value={draft.startTime}
-              onChange={(e) => setDraft({ ...draft, startTime: e.target.value })}
-              placeholder="09:00"
-              maxLength={5}
-            />
-            <FormField
-              id="schedule-end"
-              label="Closes"
-              value={draft.endTime}
-              onChange={(e) => setDraft({ ...draft, endTime: e.target.value })}
-              placeholder="17:00"
-              maxLength={5}
-            />
-          </div>
+    <FormModal
+      open={open}
+      title={entry ? 'Edit day' : 'Add day'}
+      onClose={onClose}
+      onSave={handleSave}
+      saving={saving}
+      canSave={canSave}
+      size="small"
+    >
+      <div className="space-y-4">
+        <div>
+          <Text as="label" size="sm" weight="medium" className="block mb-1">
+            Day
+          </Text>
+          {entry ? (
+            <Text weight="medium">{draft.dayOfWeek}</Text>
+          ) : (
+            <Select
+              value={draft.dayOfWeek}
+              onValueChange={(value) => setDraft({ ...draft, dayOfWeek: value as DayOfWeek })}
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select a day" />
+              </SelectTrigger>
+              <SelectContent>
+                {availableDays.map((d) => (
+                  <SelectItem key={d} value={d}>
+                    {d}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          )}
         </div>
-      </ModalContent>
-      <ModalFooter>
-        <Button variant="outline" onClick={onClose}>
-          Cancel
-        </Button>
-        <Button variant="primary" onClick={handleSave} disabled={saving || !canSave}>
-          {saving ? 'Saving…' : 'Save'}
-        </Button>
-      </ModalFooter>
-    </Modal>
+        <div className="flex items-end gap-3">
+          <FormField
+            id="schedule-start"
+            label="Opens"
+            value={draft.startTime}
+            onChange={(e) => setDraft({ ...draft, startTime: e.target.value })}
+            placeholder="09:00"
+            maxLength={5}
+          />
+          <FormField
+            id="schedule-end"
+            label="Closes"
+            value={draft.endTime}
+            onChange={(e) => setDraft({ ...draft, endTime: e.target.value })}
+            placeholder="17:00"
+            maxLength={5}
+          />
+        </div>
+      </div>
+    </FormModal>
   );
 }
 

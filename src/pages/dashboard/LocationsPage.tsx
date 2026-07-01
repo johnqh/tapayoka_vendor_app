@@ -4,21 +4,16 @@ import { EmptyState } from '@sudobility/building_blocks';
 import { useApi } from '../../context/apiContextDef';
 import { useCurrentEntity } from '@sudobility/entity_client';
 import { useVendorLocationsManager } from '@sudobility/tapayoka_lib';
-import { ui } from '@sudobility/design';
 import {
   Alert,
   Badge,
-  Button,
   Card,
   ContentLayout,
   FormField,
-  Modal,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
   Spinner,
   Text,
 } from '@sudobility/components';
+import { FormModal } from '@sudobility/components';
 import { PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { DataCardList, RowIconButton } from '../../components/DataCardList';
 import { analyticsService } from '../../config/analytics';
@@ -232,85 +227,68 @@ export function LocationsPage() {
         )}
       </ContentLayout>
 
-      <Modal
-        isOpen={modalOpen}
+      <FormModal
+        open={modalOpen}
+        title={editingLocation ? 'Edit Location' : 'Add Location'}
         onClose={closeModal}
+        onSave={handleSave}
+        saving={saving}
+        canSave={!!form.name.trim()}
         size="medium"
-        aria-labelledby="location-modal-title"
       >
-        <ModalHeader>
-          <h2 id="location-modal-title" className={ui.text.h5}>
-            {editingLocation ? 'Edit Location' : 'Add Location'}
-          </h2>
-        </ModalHeader>
-        <ModalContent variant="scrollable">
-          {manager.error && (
-            <Alert variant="error" description={String(manager.error)} className="mb-4" />
-          )}
+        {manager.error && (
+          <Alert variant="error" description={String(manager.error)} className="mb-4" />
+        )}
 
-          <div className="space-y-4">
+        <div className="space-y-4">
+          <FormField
+            id="location-name"
+            label="Name"
+            value={form.name}
+            onChange={(e) => updateField('name', e.target.value)}
+            placeholder="Location name"
+          />
+          <FormField
+            id="location-address"
+            label="Address"
+            value={form.address}
+            onChange={(e) => updateField('address', e.target.value)}
+            placeholder="Street address"
+          />
+          <div className="grid grid-cols-2 gap-4">
             <FormField
-              id="location-name"
-              label="Name"
-              value={form.name}
-              onChange={(e) => updateField('name', e.target.value)}
-              placeholder="Location name"
+              id="location-city"
+              label="City"
+              value={form.city}
+              onChange={(e) => updateField('city', e.target.value)}
+              placeholder="City"
             />
             <FormField
-              id="location-address"
-              label="Address"
-              value={form.address}
-              onChange={(e) => updateField('address', e.target.value)}
-              placeholder="Street address"
+              id="location-state"
+              label="State/Province"
+              value={form.stateProvince}
+              onChange={(e) => updateField('stateProvince', e.target.value)}
+              placeholder="State or province"
             />
-            <div className="grid grid-cols-2 gap-4">
-              <FormField
-                id="location-city"
-                label="City"
-                value={form.city}
-                onChange={(e) => updateField('city', e.target.value)}
-                placeholder="City"
-              />
-              <FormField
-                id="location-state"
-                label="State/Province"
-                value={form.stateProvince}
-                onChange={(e) => updateField('stateProvince', e.target.value)}
-                placeholder="State or province"
-              />
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <FormField
-                id="location-zip"
-                label="Zip Code"
-                value={form.zipcode}
-                onChange={(e) => updateField('zipcode', e.target.value)}
-                placeholder="Zip / postal code"
-              />
-              <FormField
-                id="location-country"
-                label="Country"
-                value={form.country}
-                onChange={(e) => updateField('country', e.target.value)}
-                placeholder="Country"
-              />
-            </div>
           </div>
-        </ModalContent>
-        <ModalFooter>
-          <Button variant="outline" size="sm" onClick={closeModal}>
-            Cancel
-          </Button>
-          <Button
-            variant="primary"
-            size="sm"
-            onClick={handleSave}
-            disabled={saving || !form.name.trim()}
-          >
-            {saving ? 'Saving...' : 'Save'}
-          </Button>
-        </ModalFooter>
-      </Modal>
+          <div className="grid grid-cols-2 gap-4">
+            <FormField
+              id="location-zip"
+              label="Zip Code"
+              value={form.zipcode}
+              onChange={(e) => updateField('zipcode', e.target.value)}
+              placeholder="Zip / postal code"
+            />
+            <FormField
+              id="location-country"
+              label="Country"
+              value={form.country}
+              onChange={(e) => updateField('country', e.target.value)}
+              placeholder="Country"
+            />
+          </div>
+        </div>
+      </FormModal>
     </>
   );
 }

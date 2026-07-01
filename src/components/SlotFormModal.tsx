@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Modal, ModalContent, ModalFooter, Button, FormField, Text } from '@sudobility/components';
+import { FormField, Text } from '@sudobility/components';
+import { FormModal } from '@sudobility/components';
 import type {
   VendorInstallationSlot,
   VendorInstallationSlotCreateRequest,
@@ -98,80 +99,75 @@ export function SlotFormModal({
   };
 
   return (
-    <Modal isOpen={open} onClose={onClose} title={slot ? 'Edit slot' : 'Add slot'} size="small">
-      <ModalContent variant="scrollable">
-        <div className="space-y-4">
-          <FormField
-            id="slot-label"
-            label="Label"
-            value={label}
-            onChange={(e) => setLabel(e.target.value)}
-            placeholder="Slot label"
-          />
+    <FormModal
+      open={open}
+      title={slot ? 'Edit slot' : 'Add slot'}
+      onClose={onClose}
+      onSave={handleSave}
+      saving={saving}
+      canSave={canSave}
+      size="small"
+    >
+      <div className="space-y-4">
+        <FormField
+          id="slot-label"
+          label="Label"
+          value={label}
+          onChange={(e) => setLabel(e.target.value)}
+          placeholder="Slot label"
+        />
 
-          {/* Tiered mode: pick one of the offering's pricing tiers */}
-          {isTiered && tiers.length > 0 && (
-            <div>
-              <Text as="div" size="sm" weight="medium" color="muted" className="mb-1">
-                Pricing tier
-              </Text>
-              <div className="space-y-1.5">
-                {tiers.map((tier) => {
-                  const isSelected = selectedTierId === tier.id;
-                  return (
-                    <button
-                      key={tier.id}
-                      type="button"
-                      onClick={() => setSelectedTierId(tier.id)}
-                      className={`w-full rounded-lg border p-3 text-left transition-colors ${
-                        isSelected
-                          ? 'border-theme-primary bg-theme-bg-secondary'
-                          : 'border-theme-border'
-                      }`}
-                    >
-                      <Text weight="semibold">{tier.name}</Text>
-                      <Text size="sm" color="muted" className="mt-0.5">
-                        {formatTierSummary(tier)}
-                      </Text>
-                    </button>
-                  );
-                })}
-              </div>
+        {/* Tiered mode: pick one of the offering's pricing tiers */}
+        {isTiered && tiers.length > 0 && (
+          <div>
+            <Text as="div" size="sm" weight="medium" color="muted" className="mb-1">
+              Pricing tier
+            </Text>
+            <div className="space-y-1.5">
+              {tiers.map((tier) => {
+                const isSelected = selectedTierId === tier.id;
+                return (
+                  <button
+                    key={tier.id}
+                    type="button"
+                    onClick={() => setSelectedTierId(tier.id)}
+                    className={`w-full rounded-lg border p-3 text-left transition-colors ${
+                      isSelected
+                        ? 'border-theme-primary bg-theme-bg-secondary'
+                        : 'border-theme-border'
+                    }`}
+                  >
+                    <Text weight="semibold">{tier.name}</Text>
+                    <Text size="sm" color="muted" className="mt-0.5">
+                      {formatTierSummary(tier)}
+                    </Text>
+                  </button>
+                );
+              })}
             </div>
-          )}
+          </div>
+        )}
 
-          {/* Unique mode: edit a per-slot custom pricing tier */}
-          {isUnique && customPricingTier && (
-            <div>
-              <Text as="div" size="sm" weight="semibold" className="mb-1">
-                Pricing
-              </Text>
-              <div className="rounded-lg border border-theme-border p-3">
-                {customPricingTier.type === 'timed' ? (
-                  <VariablePricingForm
-                    config={customPricingTier}
-                    onChange={handleCustomPricingChange}
-                  />
-                ) : (
-                  <FixedPricingForm
-                    config={customPricingTier}
-                    onChange={handleCustomPricingChange}
-                  />
-                )}
-              </div>
+        {/* Unique mode: edit a per-slot custom pricing tier */}
+        {isUnique && customPricingTier && (
+          <div>
+            <Text as="div" size="sm" weight="semibold" className="mb-1">
+              Pricing
+            </Text>
+            <div className="rounded-lg border border-theme-border p-3">
+              {customPricingTier.type === 'timed' ? (
+                <VariablePricingForm
+                  config={customPricingTier}
+                  onChange={handleCustomPricingChange}
+                />
+              ) : (
+                <FixedPricingForm config={customPricingTier} onChange={handleCustomPricingChange} />
+              )}
             </div>
-          )}
-        </div>
-      </ModalContent>
-      <ModalFooter>
-        <Button variant="outline" onClick={onClose}>
-          Cancel
-        </Button>
-        <Button variant="primary" onClick={handleSave} disabled={saving || !canSave}>
-          {saving ? 'Saving…' : 'Save'}
-        </Button>
-      </ModalFooter>
-    </Modal>
+          </div>
+        )}
+      </div>
+    </FormModal>
   );
 }
 

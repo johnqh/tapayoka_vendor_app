@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Modal, ModalContent, ModalFooter, Button, Text } from '@sudobility/components';
+import { FormModal } from '@sudobility/components';
 import type {
   VendorModel,
   VendorModelUpdateRequest,
@@ -10,32 +10,15 @@ import type {
   VendorModelInterruption,
   VendorModelPayment,
 } from '@sudobility/tapayoka_types';
-
-const PRICING_OPTIONS: VendorModelPricing[] = ['fixed', 'variable'];
-const SLOT_OPTIONS: VendorModelSlot[] = ['single', 'multi1D', 'multi2D'];
-const SLOT_PRICING_OPTIONS: VendorModelSlotPricing[] = ['Tiered', 'Unique'];
-const ACTION_OPTIONS: VendorModelAction[] = ['timed', 'sequence'];
-const INTERRUPTION_OPTIONS: VendorModelInterruption[] = ['stop', 'continue'];
-const PAYMENT_OPTIONS: VendorModelPayment[] = ['atStart', 'atEnd'];
-
-function Chip({ label, active, onClick }: { label: string; active: boolean; onClick: () => void }) {
-  return (
-    <Button type="button" variant={active ? 'primary' : 'outline'} size="sm" onClick={onClick}>
-      {label}
-    </Button>
-  );
-}
-
-function Field({ label, children }: { label: string; children: React.ReactNode }) {
-  return (
-    <div>
-      <Text as="label" size="sm" weight="medium" color="muted" className="block mb-2">
-        {label}
-      </Text>
-      <div className="flex gap-2 flex-wrap">{children}</div>
-    </div>
-  );
-}
+import { SegmentedField } from './SegmentedField';
+import {
+  SLOT_OPTIONS,
+  PRICING_OPTIONS,
+  SLOT_PRICING_OPTIONS,
+  ACTION_OPTIONS,
+  INTERRUPTION_OPTIONS,
+  PAYMENT_OPTIONS,
+} from './modelOptions';
 
 interface ModelSettingsModalProps {
   open: boolean;
@@ -79,92 +62,65 @@ export function ModelSettingsModal({ open, model, onClose, onSave }: ModelSettin
   };
 
   return (
-    <Modal isOpen={open} onClose={onClose} title="Model settings" size="medium">
-      <ModalContent>
-        <div className="space-y-4">
-          <Field label="Slot">
-            {SLOT_OPTIONS.map((s) => (
-              <Chip
-                key={s}
-                label={s === 'multi1D' ? 'Multi 1D' : s === 'multi2D' ? 'Multi 2D' : 'Single'}
-                active={slot === s}
-                onClick={() => setSlot(s)}
-              />
-            ))}
-          </Field>
+    <FormModal
+      open={open}
+      title="Model settings"
+      onClose={onClose}
+      onSave={handleSave}
+      saving={saving}
+      size="medium"
+    >
+      <div className="space-y-3">
+        <SegmentedField
+          label="Slot"
+          options={SLOT_OPTIONS}
+          value={slot}
+          onChange={(v) => setSlot(v as VendorModelSlot)}
+        />
 
-          <Field label="Pricing">
-            {PRICING_OPTIONS.map((p) => (
-              <Chip
-                key={p}
-                label={p === 'fixed' ? 'Fixed' : 'Variable'}
-                active={pricing === p}
-                onClick={() => setPricing(p)}
-              />
-            ))}
-          </Field>
+        <SegmentedField
+          label="Pricing"
+          options={PRICING_OPTIONS}
+          value={pricing}
+          onChange={(v) => setPricing(v as VendorModelPricing)}
+        />
 
-          {slot && slot !== 'single' && (
-            <Field label="Slot Pricing">
-              {SLOT_PRICING_OPTIONS.map((sp) => (
-                <Chip
-                  key={sp}
-                  label={sp}
-                  active={slotPricing === sp}
-                  onClick={() => setSlotPricing(sp)}
-                />
-              ))}
-            </Field>
-          )}
+        {slot && slot !== 'single' && (
+          <SegmentedField
+            label="Slot Pricing"
+            options={SLOT_PRICING_OPTIONS}
+            value={slotPricing}
+            onChange={(v) => setSlotPricing(v as VendorModelSlotPricing)}
+          />
+        )}
 
-          <Field label="Action">
-            {ACTION_OPTIONS.map((a) => (
-              <Chip
-                key={a}
-                label={a === 'timed' ? 'Timed' : 'Sequence'}
-                active={action === a}
-                onClick={() => {
-                  setAction(a);
-                  if (a === 'sequence') setInterruption(null);
-                }}
-              />
-            ))}
-          </Field>
+        <SegmentedField
+          label="Action"
+          options={ACTION_OPTIONS}
+          value={action}
+          onChange={(v) => {
+            setAction(v as VendorModelAction);
+            if (v === 'sequence') setInterruption(null);
+          }}
+        />
 
-          {action === 'timed' && (
-            <Field label="Interruption">
-              {INTERRUPTION_OPTIONS.map((i) => (
-                <Chip
-                  key={i}
-                  label={i === 'stop' ? 'Stop' : 'Continue'}
-                  active={interruption === i}
-                  onClick={() => setInterruption(i)}
-                />
-              ))}
-            </Field>
-          )}
+        {action === 'timed' && (
+          <SegmentedField
+            label="Interruption"
+            options={INTERRUPTION_OPTIONS}
+            value={interruption}
+            onChange={(v) => setInterruption(v as VendorModelInterruption)}
+          />
+        )}
 
-          <Field label="Payment">
-            {PAYMENT_OPTIONS.map((p) => (
-              <Chip
-                key={p}
-                label={p === 'atStart' ? 'At Start' : 'At End'}
-                active={payment === p}
-                onClick={() => setPayment(p)}
-              />
-            ))}
-          </Field>
-        </div>
-      </ModalContent>
-      <ModalFooter>
-        <Button variant="outline" onClick={onClose}>
-          Cancel
-        </Button>
-        <Button variant="primary" onClick={handleSave} disabled={saving}>
-          {saving ? 'Saving…' : 'Save'}
-        </Button>
-      </ModalFooter>
-    </Modal>
+        <SegmentedField
+          label="Payment"
+          options={PAYMENT_OPTIONS}
+          value={payment}
+          onChange={(v) => setPayment(v as VendorModelPayment)}
+        />
+      </div>
+    </FormModal>
   );
 }
 

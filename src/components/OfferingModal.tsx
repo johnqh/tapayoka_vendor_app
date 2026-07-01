@@ -1,12 +1,6 @@
 import { useState, useEffect } from 'react';
-import { ui } from '@sudobility/design';
 import {
-  Button,
   Input,
-  Modal,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
   Select,
   SelectContent,
   SelectItem,
@@ -14,6 +8,7 @@ import {
   SelectValue,
   Text,
 } from '@sudobility/components';
+import { FormModal } from '@sudobility/components';
 import type {
   VendorOffering,
   VendorOfferingCreateRequest,
@@ -114,65 +109,58 @@ export function OfferingModal({
       : `Add ${parentName} Offering`;
 
   return (
-    <Modal isOpen={open} onClose={onClose} size="medium" aria-labelledby="offering-modal-title">
-      <ModalHeader>
-        <h2 id="offering-modal-title" className={ui.text.h4}>
-          {title}
-        </h2>
-      </ModalHeader>
-      <ModalContent variant="scrollable">
-        <div className="space-y-4">
+    <FormModal
+      open={open}
+      title={title}
+      onClose={onClose}
+      onSave={handleSave}
+      saving={saving}
+      canSave={!!name.trim() && (!!offering || !!pickerId)}
+      size="medium"
+    >
+      <div className="space-y-4">
+        <div>
+          <Text as="label" size="sm" weight="medium" className="block mb-1">
+            Name
+          </Text>
+          <Input
+            type="text"
+            className="w-full"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Offering name"
+          />
+        </div>
+
+        {!offering && (
           <div>
             <Text as="label" size="sm" weight="medium" className="block mb-1">
-              Name
+              {parentType === 'location' ? 'Model' : 'Location'}
             </Text>
-            <Input
-              type="text"
-              className="w-full"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Offering name"
-            />
+            <Select
+              value={pickerId}
+              onValueChange={(value) => {
+                setPickerId(value);
+                if (!name.trim() && value) {
+                  const item = pickerItems.find((i) => i.id === value);
+                  if (item) setName(`${item.label} at ${parentName}`);
+                }
+              }}
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select..." />
+              </SelectTrigger>
+              <SelectContent>
+                {pickerItems.map((item) => (
+                  <SelectItem key={item.id} value={item.id}>
+                    {item.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
-
-          {!offering && (
-            <div>
-              <Text as="label" size="sm" weight="medium" className="block mb-1">
-                {parentType === 'location' ? 'Model' : 'Location'}
-              </Text>
-              <Select
-                value={pickerId}
-                onValueChange={(value) => {
-                  setPickerId(value);
-                  if (!name.trim() && value) {
-                    const item = pickerItems.find((i) => i.id === value);
-                    if (item) setName(`${item.label} at ${parentName}`);
-                  }
-                }}
-              >
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select..." />
-                </SelectTrigger>
-                <SelectContent>
-                  {pickerItems.map((item) => (
-                    <SelectItem key={item.id} value={item.id}>
-                      {item.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          )}
-        </div>
-      </ModalContent>
-      <ModalFooter>
-        <Button variant="ghost" size="sm" onClick={onClose}>
-          Cancel
-        </Button>
-        <Button variant="primary" size="sm" onClick={handleSave} disabled={saving || !name.trim()}>
-          {saving ? 'Saving...' : 'Save'}
-        </Button>
-      </ModalFooter>
-    </Modal>
+        )}
+      </div>
+    </FormModal>
   );
 }

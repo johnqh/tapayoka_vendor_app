@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
-import { Modal, ModalContent, ModalFooter, Button, FormField, Text } from '@sudobility/components';
+import { FormField, Text } from '@sudobility/components';
 import type { PricingTier, VendorModelPricing } from '@sudobility/tapayoka_types';
 import { makeDefaultVariableTier, makeDefaultFixedTier } from '@sudobility/tapayoka_lib';
+import { FormModal } from '@sudobility/components';
 import { VariablePricingForm, FixedPricingForm } from './pricingTierForms';
 
 interface TierFormModalProps {
@@ -56,44 +57,37 @@ export function TierFormModal({
   };
 
   return (
-    <Modal
-      isOpen={open}
-      onClose={onClose}
+    <FormModal
+      open={open}
       title={tier ? 'Edit pricing tier' : 'Add pricing tier'}
+      onClose={onClose}
+      onSave={handleSave}
+      saving={saving}
+      canSave={canSave}
       size="medium"
     >
-      <ModalContent variant="scrollable">
-        <div className="space-y-4">
-          <FormField
-            id="tier-name"
-            label="Name"
-            value={draft.name}
-            onChange={(e) => setDraft({ ...draft, name: e.target.value })}
-            placeholder="Tier name"
-          />
-          <div>
-            <Text as="div" size="sm" weight="medium" color="muted" className="mb-1">
-              Pricing
-            </Text>
-            <div className="rounded-lg border border-theme-border p-3">
-              {draft.type === 'timed' ? (
-                <VariablePricingForm config={draft} onChange={(c) => setDraft(c)} />
-              ) : (
-                <FixedPricingForm config={draft} onChange={(c) => setDraft(c)} />
-              )}
-            </div>
+      <div className="space-y-4">
+        <FormField
+          id="tier-name"
+          label="Name"
+          value={draft.name}
+          onChange={(e) => setDraft({ ...draft, name: e.target.value })}
+          placeholder="Tier name"
+        />
+        <div>
+          <Text as="div" size="sm" weight="medium" color="muted" className="mb-1">
+            Pricing
+          </Text>
+          <div className="rounded-lg border border-theme-border p-3">
+            {draft.type === 'timed' ? (
+              <VariablePricingForm config={draft} onChange={(c) => setDraft(c)} />
+            ) : (
+              <FixedPricingForm config={draft} onChange={(c) => setDraft(c)} />
+            )}
           </div>
         </div>
-      </ModalContent>
-      <ModalFooter>
-        <Button variant="outline" onClick={onClose}>
-          Cancel
-        </Button>
-        <Button variant="primary" onClick={handleSave} disabled={saving || !canSave}>
-          {saving ? 'Saving…' : 'Save'}
-        </Button>
-      </ModalFooter>
-    </Modal>
+      </div>
+    </FormModal>
   );
 }
 

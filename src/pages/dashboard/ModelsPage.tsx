@@ -4,22 +4,28 @@ import { EmptyState } from '@sudobility/building_blocks';
 import { useApi } from '../../context/apiContextDef';
 import { useCurrentEntity } from '@sudobility/entity_client';
 import { useVendorModelsManager } from '@sudobility/tapayoka_lib';
-import { ui } from '@sudobility/design';
 import {
   Badge,
   Button,
   Card,
   ContentLayout,
   FormField,
-  Modal,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
   Spinner,
   Text,
 } from '@sudobility/components';
+import { FormModal } from '@sudobility/components';
 import { PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { DataCardList, RowIconButton } from '../../components/DataCardList';
+import { SegmentedField } from '../../components/SegmentedField';
+import {
+  SLOT_OPTIONS,
+  PRICING_OPTIONS,
+  SLOT_PRICING_OPTIONS,
+  ACTION_OPTIONS,
+  INTERRUPTION_OPTIONS,
+  PAYMENT_OPTIONS,
+  TYPE_DESCRIPTIONS,
+} from '../../components/modelOptions';
 import { analyticsService } from '../../config/analytics';
 import { DashboardPageHeader } from '../../components/DashboardPageHeader';
 import { usePageBreadcrumbs } from '../../hooks/usePageConfig';
@@ -38,12 +44,6 @@ import type {
 } from '@sudobility/tapayoka_types';
 
 const MODEL_TYPES: VendorModelType[] = ['Washer', 'Dryer', 'Parking', 'Locker', 'Vending'];
-const PRICING_OPTIONS: VendorModelPricing[] = ['fixed', 'variable'];
-const SLOT_OPTIONS: VendorModelSlot[] = ['single', 'multi1D', 'multi2D'];
-const SLOT_PRICING_OPTIONS: VendorModelSlotPricing[] = ['Tiered', 'Unique'];
-const ACTION_OPTIONS: VendorModelAction[] = ['timed', 'sequence'];
-const INTERRUPTION_OPTIONS: VendorModelInterruption[] = ['stop', 'continue'];
-const PAYMENT_OPTIONS: VendorModelPayment[] = ['atStart', 'atEnd'];
 
 const TYPE_DEFAULTS: Record<
   VendorModelType,
@@ -119,40 +119,6 @@ function Chip<T extends string>({
     >
       {label}
     </Button>
-  );
-}
-
-function ChipGroup<T extends string>({
-  label,
-  options,
-  value,
-  onChange,
-  allowNone,
-}: {
-  label: string;
-  options: { label: string; value: T }[];
-  value: T | null;
-  onChange: (v: T | null) => void;
-  allowNone?: boolean;
-}) {
-  return (
-    <div>
-      <Text as="label" size="sm" weight="medium" className="block mb-1">
-        {label}
-      </Text>
-      <div className="flex flex-wrap gap-2">
-        {allowNone && <Chip label="None" value={null} selected={value} onSelect={onChange} />}
-        {options.map((opt) => (
-          <Chip
-            key={opt.value}
-            label={opt.label}
-            value={opt.value}
-            selected={value}
-            onSelect={onChange}
-          />
-        ))}
-      </div>
-    </div>
   );
 }
 
@@ -232,103 +198,88 @@ function ModelFormModal({ visible, model, onClose, onSave }: ModelFormModalProps
   };
 
   return (
-    <Modal isOpen={visible} onClose={onClose} size="medium" aria-labelledby="model-modal-title">
-      <ModalHeader>
-        <h2 id="model-modal-title" className={ui.text.h5}>
-          {isEditing ? 'Edit Model' : 'Add Model'}
-        </h2>
-      </ModalHeader>
-      <ModalContent variant="scrollable">
-        <div className="space-y-4">
-          {/* Name */}
-          <FormField
-            id="model-name"
-            label="Name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Model name"
+    <FormModal
+      open={visible}
+      title={isEditing ? 'Edit Model' : 'Add Model'}
+      onClose={onClose}
+      onSave={handleSave}
+      saving={saving}
+      canSave={!!name.trim()}
+      size="medium"
+    >
+      <div className="space-y-4">
+        {/* Name */}
+        <FormField
+          id="model-name"
+          label="Name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder="Model name"
+        />
+
+        {/* Type — a category picker (chips) whose selection seeds defaults */}
+        <SegmentedField label="Type" value={type} description={type ? TYPE_DESCRIPTIONS[type] : ''}>
+          <div className="flex flex-wrap gap-2">
+            <Chip label="None" value={null} selected={type} onSelect={handleTypeSelect} />
+            {MODEL_TYPES.map((mt) => (
+              <Chip key={mt} label={mt} value={mt} selected={type} onSelect={handleTypeSelect} />
+            ))}
+          </div>
+        </SegmentedField>
+
+        {/* Slot */}
+        <SegmentedField
+          label="Slot"
+          options={SLOT_OPTIONS}
+          value={slot}
+          onChange={(v) => setSlot(v as VendorModelSlot)}
+        />
+
+        {/* Pricing */}
+        <SegmentedField
+          label="Pricing"
+          options={PRICING_OPTIONS}
+          value={pricing}
+          onChange={(v) => setPricing(v as VendorModelPricing)}
+        />
+
+        {/* Slot Pricing - only when slot is multi */}
+        {slot && slot !== 'single' && (
+          <SegmentedField
+            label="Slot Pricing"
+            options={SLOT_PRICING_OPTIONS}
+            value={slotPricing}
+            onChange={(v) => setSlotPricing(v as VendorModelSlotPricing)}
           />
+        )}
 
-          {/* Type */}
-          <ChipGroup
-            label="Type"
-            options={MODEL_TYPES.map((t) => ({ label: t, value: t }))}
-            value={type}
-            onChange={handleTypeSelect}
-            allowNone
+        {/* Action */}
+        <SegmentedField
+          label="Action"
+          options={ACTION_OPTIONS}
+          value={action}
+          onChange={(v) => handleActionSelect(v as VendorModelAction)}
+        />
+
+        {/* Interruption - only when action is 'timed' */}
+        {action === 'timed' && (
+          <SegmentedField
+            label="Interruption"
+            options={INTERRUPTION_OPTIONS}
+            value={interruption}
+            onChange={(v) => setInterruption(v as VendorModelInterruption)}
           />
+        )}
 
-          {/* Slot */}
-          <ChipGroup
-            label="Slot"
-            options={SLOT_OPTIONS.map((s) => ({
-              label: s === 'multi1D' ? 'Multi 1D' : s === 'multi2D' ? 'Multi 2D' : 'Single',
-              value: s,
-            }))}
-            value={slot}
-            onChange={setSlot}
-          />
-
-          {/* Pricing */}
-          <ChipGroup
-            label="Pricing"
-            options={PRICING_OPTIONS.map((p) => ({ label: p, value: p }))}
-            value={pricing}
-            onChange={setPricing}
-          />
-
-          {/* Slot Pricing - only when slot is multi */}
-          {slot && slot !== 'single' && (
-            <ChipGroup
-              label="Slot Pricing"
-              options={SLOT_PRICING_OPTIONS.map((sp) => ({ label: sp, value: sp }))}
-              value={slotPricing}
-              onChange={setSlotPricing}
-            />
-          )}
-
-          {/* Action */}
-          <ChipGroup
-            label="Action"
-            options={ACTION_OPTIONS.map((a) => ({ label: a, value: a }))}
-            value={action}
-            onChange={handleActionSelect}
-          />
-
-          {/* Interruption - only when action is 'timed' */}
-          {action === 'timed' && (
-            <ChipGroup
-              label="Interruption"
-              options={INTERRUPTION_OPTIONS.map((i) => ({ label: i, value: i }))}
-              value={interruption}
-              onChange={setInterruption}
-            />
-          )}
-
-          {/* Payment */}
-          <ChipGroup
-            label="Payment"
-            options={PAYMENT_OPTIONS.map((p) => ({ label: p, value: p }))}
-            value={payment}
-            onChange={setPayment}
-          />
-        </div>
-      </ModalContent>
-      <ModalFooter>
-        <Button type="button" variant="ghost" size="sm" onClick={onClose}>
-          Cancel
-        </Button>
-        <Button
-          type="button"
-          variant="primary"
-          size="sm"
-          onClick={handleSave}
-          disabled={saving || !name.trim()}
-        >
-          {saving ? 'Saving...' : 'Save'}
-        </Button>
-      </ModalFooter>
-    </Modal>
+        {/* Payment */}
+        <SegmentedField
+          label="Payment"
+          options={PAYMENT_OPTIONS}
+          value={payment}
+          onChange={(v) => setPayment(v as VendorModelPayment)}
+        />
+      </div>
+    </FormModal>
   );
 }
 
