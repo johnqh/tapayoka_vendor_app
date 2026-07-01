@@ -10,16 +10,11 @@ import {
 } from '@sudobility/components';
 import { FormModal } from '@sudobility/components';
 import type { DailySchedule, DayOfWeek } from '@sudobility/tapayoka_types';
-
-const DAYS_OF_WEEK: DayOfWeek[] = [
-  'Monday',
-  'Tuesday',
-  'Wednesday',
-  'Thursday',
-  'Friday',
-  'Saturday',
-  'Sunday',
-];
+import {
+  getAvailableScheduleDays,
+  makeDefaultDailySchedule,
+  canSaveDailySchedule,
+} from '@sudobility/tapayoka_lib';
 
 interface ScheduleFormModalProps {
   open: boolean;
@@ -42,25 +37,17 @@ export function ScheduleFormModal({
   const [draft, setDraft] = useState<DailySchedule | null>(null);
   const [saving, setSaving] = useState(false);
 
-  const availableDays = DAYS_OF_WEEK.filter((d) => !usedDays.includes(d));
+  const availableDays = getAvailableScheduleDays(usedDays);
 
   useEffect(() => {
     if (!open) return;
-    if (entry) {
-      setDraft(entry);
-    } else {
-      setDraft({
-        dayOfWeek: availableDays[0] ?? 'Monday',
-        startTime: '09:00',
-        endTime: '17:00',
-      });
-    }
+    setDraft(entry ?? makeDefaultDailySchedule(usedDays));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, entry]);
 
   if (!draft) return null;
 
-  const canSave = !!draft.dayOfWeek && !!draft.startTime.trim() && !!draft.endTime.trim();
+  const canSave = canSaveDailySchedule(draft);
 
   const handleSave = async () => {
     if (!canSave) return;

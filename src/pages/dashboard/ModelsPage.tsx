@@ -3,7 +3,13 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { EmptyState } from '@sudobility/building_blocks';
 import { useApi } from '../../context/apiContextDef';
 import { useCurrentEntity } from '@sudobility/entity_client';
-import { useVendorModelsManager } from '@sudobility/tapayoka_lib';
+import {
+  useVendorModelsManager,
+  MODEL_TYPES,
+  getModelTypeDefaults,
+  buildVendorModelConfig,
+  formatModelSummary,
+} from '@sudobility/tapayoka_lib';
 import {
   Badge,
   Button,
@@ -42,61 +48,6 @@ import type {
   VendorModelInterruption,
   VendorModelPayment,
 } from '@sudobility/tapayoka_types';
-
-const MODEL_TYPES: VendorModelType[] = ['Washer', 'Dryer', 'Parking', 'Locker', 'Vending'];
-
-const TYPE_DEFAULTS: Record<
-  VendorModelType,
-  {
-    pricing: VendorModelPricing;
-    slot: VendorModelSlot;
-    slotPricing: VendorModelSlotPricing | null;
-    action: VendorModelAction;
-    interruption: VendorModelInterruption | null;
-    payment: VendorModelPayment;
-  }
-> = {
-  Washer: {
-    pricing: 'variable',
-    slot: 'single',
-    slotPricing: null,
-    action: 'timed',
-    interruption: 'stop',
-    payment: 'atStart',
-  },
-  Dryer: {
-    pricing: 'variable',
-    slot: 'single',
-    slotPricing: null,
-    action: 'timed',
-    interruption: 'stop',
-    payment: 'atStart',
-  },
-  Parking: {
-    pricing: 'variable',
-    slot: 'multi1D',
-    slotPricing: 'Tiered',
-    action: 'timed',
-    interruption: 'continue',
-    payment: 'atStart',
-  },
-  Locker: {
-    pricing: 'variable',
-    slot: 'multi1D',
-    slotPricing: 'Tiered',
-    action: 'timed',
-    interruption: 'stop',
-    payment: 'atEnd',
-  },
-  Vending: {
-    pricing: 'fixed',
-    slot: 'multi1D',
-    slotPricing: 'Tiered',
-    action: 'sequence',
-    interruption: null,
-    payment: 'atStart',
-  },
-};
 
 function Chip<T extends string>({
   label,
@@ -159,7 +110,7 @@ function ModelFormModal({ visible, model, onClose, onSave }: ModelFormModalProps
     (mt: VendorModelType | null) => {
       setType(mt);
       if (mt && !isEditing) {
-        const defaults = TYPE_DEFAULTS[mt];
+        const defaults = getModelTypeDefaults(mt);
         setPricing(defaults.pricing);
         setSlot(defaults.slot);
         setSlotPricing(defaults.slotPricing);
@@ -185,12 +136,7 @@ function ModelFormModal({ visible, model, onClose, onSave }: ModelFormModalProps
       await onSave({
         name: name.trim(),
         type: type || undefined,
-        pricing: pricing || undefined,
-        slot: slot || undefined,
-        slotPricing: slot && slot !== 'single' ? slotPricing || undefined : undefined,
-        action: action || undefined,
-        interruption: interruption || undefined,
-        payment: payment || undefined,
+        ...buildVendorModelConfig({ pricing, slot, slotPricing, action, interruption, payment }),
       });
     } finally {
       setSaving(false);
@@ -375,9 +321,7 @@ export function ModelsPage() {
                     {model.name}
                   </Text>
                   <Text size="sm" color="muted">
-                    {[model.type, model.pricing, model.slot, model.action]
-                      .filter(Boolean)
-                      .join(' · ') || '—'}
+                    {formatModelSummary(model)}
                   </Text>
                 </div>
                 <div className="flex flex-shrink-0 items-center gap-1">

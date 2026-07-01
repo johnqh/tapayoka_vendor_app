@@ -1,3 +1,8 @@
+// Note: `resolveOfferingParent`/`OfferingParent` also live in
+// @sudobility/tapayoka_lib. They are kept local here (a trivial parent-union
+// helper) so this routing module — which is unit-tested — doesn't pull the lib
+// into vitest's Node-ESM resolution (the lib's dist uses directory re-exports
+// that bundlers resolve but Node ESM does not).
 export type OfferingParent = { parentType: 'model' | 'location'; parentId: string };
 
 export function dashboardHomePath(entitySlug: string): string {

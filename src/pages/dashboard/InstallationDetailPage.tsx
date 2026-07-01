@@ -11,6 +11,7 @@ import {
   useVendorLocationsManager,
   useVendorInstallationsManager,
   useVendorInstallationSlotsManager,
+  resolveSlotTierName,
 } from '@sudobility/tapayoka_lib';
 import { DashboardPageHeader } from '../../components/DashboardPageHeader';
 import { SlotFormModal } from '../../components/SlotFormModal';
@@ -183,11 +184,7 @@ export function InstallationDetailPage() {
               isGrid ? 'No slots yet. Generate the grid in the mobile app.' : 'No slots yet.'
             }
             renderItem={(slot) => {
-              const tierName =
-                slot.pricingTier?.name ??
-                (slot.pricingTierId
-                  ? offering?.pricingTiers.find((t) => t.id === slot.pricingTierId)?.name
-                  : undefined);
+              const tierName = resolveSlotTierName(slot, offering?.pricingTiers ?? []);
               return (
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">

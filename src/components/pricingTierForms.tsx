@@ -5,6 +5,7 @@ import type {
   OfferingSignal,
   DurationUnit,
 } from '@sudobility/tapayoka_types';
+import { parseIntOr, addSignal, removeSignal, updateSignal } from '@sudobility/tapayoka_lib';
 
 // UI-only: the duration units offered as toggle buttons in the tier forms.
 const DURATION_UNITS: DurationUnit[] = ['minutes', 'hours'];
@@ -44,9 +45,7 @@ export function VariablePricingForm({
             type="number"
             className="w-16"
             value={config.startDuration}
-            onChange={(e) =>
-              onChange({ ...config, startDuration: parseInt(e.target.value, 10) || 1 })
-            }
+            onChange={(e) => onChange({ ...config, startDuration: parseIntOr(e.target.value, 1) })}
           />
           <div className="flex gap-1">
             {DURATION_UNITS.map((u) => (
@@ -90,7 +89,7 @@ export function VariablePricingForm({
             className="w-16"
             value={config.marginalDuration}
             onChange={(e) =>
-              onChange({ ...config, marginalDuration: parseInt(e.target.value, 10) || 1 })
+              onChange({ ...config, marginalDuration: parseIntOr(e.target.value, 1) })
             }
           />
           <div className="flex gap-1">
@@ -118,7 +117,7 @@ export function VariablePricingForm({
           value={config.pinNumber}
           min={0}
           max={25}
-          onChange={(e) => onChange({ ...config, pinNumber: parseInt(e.target.value, 10) || 0 })}
+          onChange={(e) => onChange({ ...config, pinNumber: parseIntOr(e.target.value, 0) })}
         />
       </div>
     </div>
@@ -132,15 +131,10 @@ export function FixedPricingForm({
   config: FixedPricingTier;
   onChange: (c: FixedPricingTier) => void;
 }) {
-  const handleAddSignal = () => {
-    onChange({ ...config, signals: [...config.signals, { pinNumber: 0, duration: 5 }] });
-  };
-  const handleRemoveSignal = (index: number) => {
-    onChange({ ...config, signals: config.signals.filter((_, i) => i !== index) });
-  };
-  const handleUpdateSignal = (index: number, signal: OfferingSignal) => {
-    onChange({ ...config, signals: config.signals.map((s, i) => (i === index ? signal : s)) });
-  };
+  const handleAddSignal = () => onChange(addSignal(config));
+  const handleRemoveSignal = (index: number) => onChange(removeSignal(config, index));
+  const handleUpdateSignal = (index: number, signal: OfferingSignal) =>
+    onChange(updateSignal(config, index, signal));
 
   return (
     <div className="space-y-3">
@@ -183,7 +177,7 @@ export function FixedPricingForm({
               onChange={(e) =>
                 handleUpdateSignal(index, {
                   ...signal,
-                  pinNumber: parseInt(e.target.value, 10) || 0,
+                  pinNumber: parseIntOr(e.target.value, 0),
                 })
               }
             />
@@ -197,7 +191,7 @@ export function FixedPricingForm({
               onChange={(e) =>
                 handleUpdateSignal(index, {
                   ...signal,
-                  duration: parseInt(e.target.value, 10) || 1,
+                  duration: parseIntOr(e.target.value, 1),
                 })
               }
             />

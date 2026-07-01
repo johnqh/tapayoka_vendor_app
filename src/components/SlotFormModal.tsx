@@ -10,9 +10,11 @@ import type {
 } from '@sudobility/tapayoka_types';
 import { VariablePricingForm, FixedPricingForm } from './pricingTierForms';
 import {
-  makeDefaultVariableTier,
-  makeDefaultFixedTier,
   formatTierSummary,
+  autoSelectTierId,
+  makeDefaultCustomTier,
+  canSaveSlot,
+  buildSlotRequest,
 } from '@sudobility/tapayoka_lib';
 
 interface SlotFormModalProps {
@@ -61,16 +63,10 @@ export function SlotFormModal({
     } else {
       setLabel('');
       // Auto-select when the offering has exactly one tier.
-      setSelectedTierId(availableTiers.length === 1 ? availableTiers[0].id : null);
-      if (isUnique && modelPricing) {
-        setCustomPricingTier(
-          modelPricing === 'variable'
-            ? makeDefaultVariableTier(defaultCurrency, 'Default')
-            : makeDefaultFixedTier(defaultCurrency, 'Default')
-        );
-      } else {
-        setCustomPricingTier(null);
-      }
+      setSelectedTierId(autoSelectTierId(availableTiers));
+      setCustomPricingTier(
+        isUnique && modelPricing ? makeDefaultCustomTier(modelPricing, defaultCurrency) : null
+      );
     }
   }, [open, slot, isUnique, modelPricing, defaultCurrency, offeringPricingTiers]);
 
@@ -78,21 +74,13 @@ export function SlotFormModal({
     setCustomPricingTier(tier);
   }, []);
 
-  const canSave = (() => {
-    if (!label.trim()) return false;
-    if (isTiered && tiers.length > 0 && !selectedTierId) return false;
-    if (isUnique && !customPricingTier) return false;
-    return true;
-  })();
+  const canSave = canSaveSlot({ label, slotPricing, tiers, selectedTierId, customPricingTier });
 
   const handleSave = async () => {
     if (!canSave) return;
     setSaving(true);
     try {
-      const data: VendorInstallationSlotCreateRequest = { label: label.trim() };
-      if (isTiered && selectedTierId) data.pricingTierId = selectedTierId;
-      if (isUnique && customPricingTier) data.pricingTier = customPricingTier;
-      await onSave(data);
+      await onSave(buildSlotRequest({ label, slotPricing, selectedTierId, customPricingTier }));
     } finally {
       setSaving(false);
     }

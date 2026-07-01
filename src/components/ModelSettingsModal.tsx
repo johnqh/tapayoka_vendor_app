@@ -10,6 +10,7 @@ import type {
   VendorModelInterruption,
   VendorModelPayment,
 } from '@sudobility/tapayoka_types';
+import { buildVendorModelConfig } from '@sudobility/tapayoka_lib';
 import { SegmentedField } from './SegmentedField';
 import {
   SLOT_OPTIONS,
@@ -48,14 +49,9 @@ export function ModelSettingsModal({ open, model, onClose, onSave }: ModelSettin
   const handleSave = async () => {
     setSaving(true);
     try {
-      await onSave({
-        pricing: pricing || undefined,
-        slot: slot || undefined,
-        slotPricing: slot && slot !== 'single' ? slotPricing || undefined : undefined,
-        action: action || undefined,
-        interruption: action === 'timed' ? interruption || undefined : undefined,
-        payment: payment || undefined,
-      });
+      await onSave(
+        buildVendorModelConfig({ pricing, slot, slotPricing, action, interruption, payment })
+      );
     } finally {
       setSaving(false);
     }

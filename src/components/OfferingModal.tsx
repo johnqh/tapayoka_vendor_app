@@ -16,7 +16,7 @@ import type {
   VendorModel,
   VendorLocation,
 } from '@sudobility/tapayoka_types';
-import { makeDefaultTier } from '@sudobility/tapayoka_lib';
+import { buildOfferingCreateRequest, offeringDefaultName } from '@sudobility/tapayoka_lib';
 
 interface OfferingModalProps {
   open: boolean;
@@ -80,17 +80,11 @@ export function OfferingModal({
       if (offering) {
         await onSave({ name: name.trim() } as VendorOfferingUpdateRequest);
       } else {
-        const vendorLocationId = parentType === 'location' ? parentId : pickerId;
-        const vendorModelId = parentType === 'model' ? parentId : pickerId;
-        // Seed one default tier so the new offering is usable; the user can
+        // Seeds one default tier so the new offering is usable; the user can
         // manage tiers afterward on the Pricing Tiers screen.
-        const pricingTiers = modelPricing ? [makeDefaultTier(modelPricing, 'USD', 'Default')] : [];
-        await onSave({
-          vendorLocationId,
-          vendorModelId,
-          name: name.trim(),
-          pricingTiers,
-        } as VendorOfferingCreateRequest);
+        await onSave(
+          buildOfferingCreateRequest({ parentType, parentId, pickerId, name, modelPricing })
+        );
       }
     } finally {
       setSaving(false);
@@ -143,7 +137,7 @@ export function OfferingModal({
                 setPickerId(value);
                 if (!name.trim() && value) {
                   const item = pickerItems.find((i) => i.id === value);
-                  if (item) setName(`${item.label} at ${parentName}`);
+                  if (item) setName(offeringDefaultName(item.label, parentName));
                 }
               }}
             >
