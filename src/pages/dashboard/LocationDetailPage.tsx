@@ -1,5 +1,7 @@
 import { useState, useCallback, useEffect } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
+import { LocalizedLink, useLocalizedNavigate } from '@sudobility/components';
+import { isLanguageSupported } from '../../i18n';
 import { EmptyState } from '@sudobility/building_blocks';
 import { useApi } from '../../context/apiContextDef';
 import { useCurrentEntity } from '@sudobility/entity_client';
@@ -38,7 +40,7 @@ import type {
 
 export function LocationDetailPage() {
   const { entitySlug, locationId } = useParams<{ entitySlug: string; locationId: string }>();
-  const navigate = useNavigate();
+  const { navigate } = useLocalizedNavigate({ isLanguageSupported });
   const { networkClient, baseUrl, token } = useApi();
   const { currentEntitySlug } = useCurrentEntity();
 
@@ -125,9 +127,13 @@ export function LocationDetailPage() {
       <div className="text-center mt-12">
         <Text color="muted">
           Location not found.{' '}
-          <Link to={`/dashboard/${entitySlug}/locations`} className={ui.text.linkSubtle}>
+          <LocalizedLink
+            to={`/dashboard/${entitySlug}/locations`}
+            isLanguageSupported={isLanguageSupported}
+            className={ui.text.linkSubtle}
+          >
             Back to locations
-          </Link>
+          </LocalizedLink>
         </Text>
       </div>
     );

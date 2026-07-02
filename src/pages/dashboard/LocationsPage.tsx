@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
+import { useLocalizedNavigate } from '@sudobility/components';
+import { isLanguageSupported } from '../../i18n';
 import { EmptyState } from '@sudobility/building_blocks';
 import { useApi } from '../../context/apiContextDef';
 import { useCurrentEntity } from '@sudobility/entity_client';
@@ -31,7 +33,7 @@ import { dashboardTrail } from '../../lib/breadcrumbs';
 import type { VendorLocation } from '@sudobility/tapayoka_types';
 
 export function LocationsPage() {
-  const navigate = useNavigate();
+  const { navigate } = useLocalizedNavigate({ isLanguageSupported });
   const { entitySlug } = useParams<{ entitySlug: string }>();
   const { networkClient, baseUrl, token } = useApi();
   const { currentEntitySlug } = useCurrentEntity();

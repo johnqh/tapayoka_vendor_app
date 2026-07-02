@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocalizedNavigate } from '@sudobility/components';
+import { isLanguageSupported } from '../i18n';
 import { useTos } from '@sudobility/tapayoka_client';
 import { useApi } from '../context/apiContextDef';
 import { useAuthStatus } from '@sudobility/auth-components';
@@ -11,7 +12,7 @@ import { usePageBreadcrumbs } from '../hooks/usePageConfig';
 import { publicTrail } from '../lib/breadcrumbs';
 
 function TosPage() {
-  const navigate = useNavigate();
+  const { navigate } = useLocalizedNavigate({ isLanguageSupported });
   const { networkClient, baseUrl, token } = useApi();
   const { user } = useAuthStatus();
   const { acceptTosAndCreateEntity } = useTos(networkClient, baseUrl);

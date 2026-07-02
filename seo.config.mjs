@@ -17,6 +17,10 @@ export default {
   primaryDomain: 'tapayoka.com',
   appName: APP_NAME,
   appDomain: process.env.VITE_APP_DOMAIN || 'tapayoka.com',
+  // Canonical URLs have NO trailing slash (source of truth). v2 defaults to
+  // true; pin false so canonicals, hreflang alternates, sitemap, LocalizedLink
+  // hrefs, and the functions/_middleware.js 301 all agree — see sudobility/docs/SEO.md.
+  trailingSlashUrls: false,
   envPlaceholderPattern: /%([A-Z_]+)%/g,
   robotsDisallowPaths: ['/tos', '/login', '/dashboard/'],
 

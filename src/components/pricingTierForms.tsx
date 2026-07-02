@@ -163,7 +163,7 @@ export function FixedPricingForm({
         <Text as="label" size="xs" weight="medium" color="muted" className="block mb-1">
           Signals
         </Text>
-        {config.signals.map((signal, index) => (
+        {(config.signals ?? []).map((signal, index) => (
           <div key={index} className="flex items-center gap-2 mb-2">
             <Text as="span" size="xs" color="muted">
               Pin

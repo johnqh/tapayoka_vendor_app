@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocalizedNavigate } from '@sudobility/components';
+import { isLanguageSupported } from '../i18n';
 import { useTranslation } from 'react-i18next';
 import { useAuthStatus } from '@sudobility/auth-components';
 import { getFirebaseAuth } from '@sudobility/auth_lib';
@@ -17,7 +18,7 @@ import { analyticsService } from '../config/analytics';
 
 export default function LoginPage() {
   const { user, loading } = useAuthStatus();
-  const navigate = useNavigate();
+  const { navigate } = useLocalizedNavigate({ isLanguageSupported });
   const { t } = useTranslation('loginPage');
   const auth = getFirebaseAuth();
 

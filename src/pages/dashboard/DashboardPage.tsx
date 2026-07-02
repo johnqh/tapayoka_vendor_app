@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Outlet, useLocation, useParams, useNavigate, Link } from 'react-router-dom';
+import { Outlet, useLocation, useParams } from 'react-router-dom';
 import {
   MasterDetailLayout,
   Select,
@@ -7,7 +7,11 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
+  LocalizedLink,
+  useLocalizedNavigate,
+  removeLanguageFromPath,
 } from '@sudobility/components';
+import { isLanguageSupported } from '../../i18n';
 import { useApi } from '../../context/apiContextDef';
 import { useCurrentEntity } from '@sudobility/entity_client';
 import { ui } from '@sudobility/design';
@@ -60,7 +64,7 @@ interface NavItem {
 function DashboardMasterList({ onNavigate }: { onNavigate?: () => void }) {
   const { entitySlug = '' } = useParams<{ entitySlug: string }>();
   const location = useLocation();
-  const navigate = useNavigate();
+  const { navigate } = useLocalizedNavigate({ isLanguageSupported });
   const { entities, selectEntity } = useCurrentEntity();
   const base = `/dashboard/${entitySlug}`;
 
@@ -76,17 +80,21 @@ function DashboardMasterList({ onNavigate }: { onNavigate?: () => void }) {
     { id: 'orders', label: 'Orders', path: `${base}/orders`, icon: <ClipboardIcon /> },
   ];
 
+  // Routes are language-prefixed (/:lang/...); compare against the
+  // prefix-stripped pathname so active state matches the non-prefixed paths.
+  const activePath = removeLanguageFromPath(location.pathname, isLanguageSupported);
   const isActive = (item: NavItem) => {
     if (item.id === 'locations') {
-      return location.pathname === base || location.pathname.startsWith(`${base}/locations`);
+      return activePath === base || activePath.startsWith(`${base}/locations`);
     }
-    return location.pathname.startsWith(item.path);
+    return activePath.startsWith(item.path);
   };
 
   const renderItem = (item: NavItem) => (
-    <Link
+    <LocalizedLink
       key={item.id}
       to={item.path}
+      isLanguageSupported={isLanguageSupported}
       onClick={onNavigate}
       className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium ${ui.transition.default} ${
         isActive(item)
@@ -96,7 +104,7 @@ function DashboardMasterList({ onNavigate }: { onNavigate?: () => void }) {
     >
       <span className={isActive(item) ? 'text-primary' : 'text-muted-foreground'}>{item.icon}</span>
       {item.label}
-    </Link>
+    </LocalizedLink>
   );
 
   return (
@@ -121,7 +129,7 @@ function DashboardMasterList({ onNavigate }: { onNavigate?: () => void }) {
 
 function DashboardPage() {
   const location = useLocation();
-  const navigate = useNavigate();
+  const { navigate } = useLocalizedNavigate({ isLanguageSupported });
   const { entitySlug = '' } = useParams<{ entitySlug: string }>();
   const { isReady } = useApi();
   const { selectEntity } = useCurrentEntity();
@@ -167,7 +175,8 @@ function DashboardPage() {
   useEffect(() => {
     const isMobile = window.innerWidth < 768;
     if (isMobile) {
-      const pathname = location.pathname;
+      // Routes are language-prefixed; strip it before comparing to the base path.
+      const pathname = removeLanguageFromPath(location.pathname, isLanguageSupported);
       const base = `/dashboard/${entitySlug}`;
       const hasSpecificContent = pathname !== base && pathname !== `${base}/`;
       if (hasSpecificContent) {

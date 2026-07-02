@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { LocalizedLink } from '@sudobility/components';
 import {
   getCopyrightYear,
   type FooterConfig,
@@ -6,6 +6,7 @@ import {
 } from '@sudobility/building_blocks';
 import { SystemStatusIndicator, useNetwork } from '@sudobility/devops-components';
 import { CONSTANTS } from '../../config/constants';
+import { isLanguageSupported } from '../../i18n';
 
 const linkWrapper = ({
   href,
@@ -16,9 +17,9 @@ const linkWrapper = ({
   children: React.ReactNode;
   className?: string;
 }) => (
-  <Link to={href} className={className}>
+  <LocalizedLink to={href} className={className} isLanguageSupported={isLanguageSupported}>
     {children}
-  </Link>
+  </LocalizedLink>
 );
 
 export function useFooterConfig(variant: 'full' | 'compact'): FooterConfig {

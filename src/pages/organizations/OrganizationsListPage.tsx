@@ -1,5 +1,6 @@
 import { useEffect, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocalizedNavigate } from '@sudobility/components';
+import { isLanguageSupported } from '../../i18n';
 import { EntityClient, useCurrentEntity } from '@sudobility/entity_client';
 import { EntityListPage } from '@sudobility/entity_pages';
 import { useApi } from '../../context/apiContextDef';
@@ -8,7 +9,7 @@ import { usePageBreadcrumbs } from '../../hooks/usePageConfig';
 import { organizationsTrail } from '../../lib/breadcrumbs';
 
 export function OrganizationsListPage() {
-  const navigate = useNavigate();
+  const { navigate } = useLocalizedNavigate({ isLanguageSupported });
   const { networkClient, baseUrl } = useApi();
   const { selectEntity } = useCurrentEntity();
 

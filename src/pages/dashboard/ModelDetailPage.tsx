@@ -1,5 +1,7 @@
 import { useState, useCallback, useEffect } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
+import { LocalizedLink, useLocalizedNavigate } from '@sudobility/components';
+import { isLanguageSupported } from '../../i18n';
 import { EmptyState } from '@sudobility/building_blocks';
 import { useApi } from '../../context/apiContextDef';
 import { useCurrentEntity } from '@sudobility/entity_client';
@@ -39,7 +41,7 @@ import type {
 
 export function ModelDetailPage() {
   const { entitySlug, modelId } = useParams<{ entitySlug: string; modelId: string }>();
-  const navigate = useNavigate();
+  const { navigate } = useLocalizedNavigate({ isLanguageSupported });
   const { networkClient, baseUrl, token } = useApi();
   const { currentEntitySlug } = useCurrentEntity();
 
@@ -140,9 +142,13 @@ export function ModelDetailPage() {
       <div className="text-center mt-12">
         <Text color="muted">
           Model not found.{' '}
-          <Link to={`/dashboard/${entitySlug}/models`} className={ui.text.linkSubtle}>
+          <LocalizedLink
+            to={`/dashboard/${entitySlug}/models`}
+            isLanguageSupported={isLanguageSupported}
+            className={ui.text.linkSubtle}
+          >
             Back to models
-          </Link>
+          </LocalizedLink>
         </Text>
       </div>
     );

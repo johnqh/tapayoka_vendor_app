@@ -14,6 +14,8 @@ import {
   buildVendorModelConfig,
   slotSupportsSlotPricing,
   actionSupportsInterruption,
+  pricingForAction,
+  pricingLockedByAction,
 } from '@sudobility/tapayoka_lib';
 import { SegmentedField } from './SegmentedField';
 import {
@@ -50,11 +52,32 @@ export function ModelSettingsModal({ open, model, onClose, onSave }: ModelSettin
     setPayment(model?.payment ?? null);
   }, [model?.id, open]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  // A 'timed' action forces variable pricing; the Pricing control is then locked.
+  const pricingLocked = pricingLockedByAction(action);
+  const effectivePricing = pricingForAction(action, pricing) ?? pricing;
+  const pricingOptions = pricingLocked
+    ? PRICING_OPTIONS.map((o) => ({ ...o, disabled: true }))
+    : PRICING_OPTIONS;
+
+  const handleActionChange = (v: VendorModelAction) => {
+    setAction(v);
+    if (!actionSupportsInterruption(v)) setInterruption(null);
+    // Picking 'timed' forces pricing to variable.
+    if (pricingLockedByAction(v)) setPricing('variable');
+  };
+
   const handleSave = async () => {
     setSaving(true);
     try {
       await onSave(
-        buildVendorModelConfig({ pricing, slot, slotPricing, action, interruption, payment })
+        buildVendorModelConfig({
+          pricing: pricingForAction(action, pricing),
+          slot,
+          slotPricing,
+          action,
+          interruption,
+          payment,
+        })
       );
     } finally {
       setSaving(false);
@@ -79,10 +102,17 @@ export function ModelSettingsModal({ open, model, onClose, onSave }: ModelSettin
         />
 
         <SegmentedField
+          label="Action"
+          options={ACTION_OPTIONS}
+          value={action}
+          onChange={(v) => handleActionChange(v as VendorModelAction)}
+        />
+
+        <SegmentedField
           label="Pricing"
-          options={PRICING_OPTIONS}
-          value={pricing}
-          onChange={(v) => setPricing(v as VendorModelPricing)}
+          options={pricingOptions}
+          value={effectivePricing}
+          onChange={pricingLocked ? undefined : (v) => setPricing(v as VendorModelPricing)}
         />
 
         {slotSupportsSlotPricing(slot) && (
@@ -93,16 +123,6 @@ export function ModelSettingsModal({ open, model, onClose, onSave }: ModelSettin
             onChange={(v) => setSlotPricing(v as VendorModelSlotPricing)}
           />
         )}
-
-        <SegmentedField
-          label="Action"
-          options={ACTION_OPTIONS}
-          value={action}
-          onChange={(v) => {
-            setAction(v as VendorModelAction);
-            if (!actionSupportsInterruption(v as VendorModelAction)) setInterruption(null);
-          }}
-        />
 
         {actionSupportsInterruption(action) && (
           <SegmentedField

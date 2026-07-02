@@ -1,5 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
+import { useLocalizedNavigate } from '@sudobility/components';
+import { isLanguageSupported } from '../../i18n';
 import { EmptyState } from '@sudobility/building_blocks';
 import { useApi } from '../../context/apiContextDef';
 import { useCurrentEntity } from '@sudobility/entity_client';
@@ -11,6 +13,8 @@ import {
   formatModelSummary,
   slotSupportsSlotPricing,
   actionSupportsInterruption,
+  pricingForAction,
+  pricingLockedByAction,
 } from '@sudobility/tapayoka_lib';
 import {
   Badge,
@@ -129,7 +133,16 @@ function ModelFormModal({ visible, model, onClose, onSave }: ModelFormModalProps
     if (!actionSupportsInterruption(a)) {
       setInterruption(null);
     }
+    // Picking 'timed' forces pricing to variable.
+    if (pricingLockedByAction(a)) setPricing('variable');
   }, []);
+
+  // A 'timed' action forces variable pricing; the Pricing control is then locked.
+  const pricingLocked = pricingLockedByAction(action);
+  const effectivePricing = pricingForAction(action, pricing) ?? pricing;
+  const pricingOptions = pricingLocked
+    ? PRICING_OPTIONS.map((o) => ({ ...o, disabled: true }))
+    : PRICING_OPTIONS;
 
   const handleSave = async () => {
     if (!name.trim()) return;
@@ -138,7 +151,14 @@ function ModelFormModal({ visible, model, onClose, onSave }: ModelFormModalProps
       await onSave({
         name: name.trim(),
         type: type || undefined,
-        ...buildVendorModelConfig({ pricing, slot, slotPricing, action, interruption, payment }),
+        ...buildVendorModelConfig({
+          pricing: pricingForAction(action, pricing),
+          slot,
+          slotPricing,
+          action,
+          interruption,
+          payment,
+        }),
       });
     } finally {
       setSaving(false);
@@ -183,12 +203,20 @@ function ModelFormModal({ visible, model, onClose, onSave }: ModelFormModalProps
           onChange={(v) => setSlot(v as VendorModelSlot)}
         />
 
-        {/* Pricing */}
+        {/* Action */}
+        <SegmentedField
+          label="Action"
+          options={ACTION_OPTIONS}
+          value={action}
+          onChange={(v) => handleActionSelect(v as VendorModelAction)}
+        />
+
+        {/* Pricing — locked to variable when the action is 'timed' */}
         <SegmentedField
           label="Pricing"
-          options={PRICING_OPTIONS}
-          value={pricing}
-          onChange={(v) => setPricing(v as VendorModelPricing)}
+          options={pricingOptions}
+          value={effectivePricing}
+          onChange={pricingLocked ? undefined : (v) => setPricing(v as VendorModelPricing)}
         />
 
         {/* Slot Pricing - only when slot is multi */}
@@ -200,14 +228,6 @@ function ModelFormModal({ visible, model, onClose, onSave }: ModelFormModalProps
             onChange={(v) => setSlotPricing(v as VendorModelSlotPricing)}
           />
         )}
-
-        {/* Action */}
-        <SegmentedField
-          label="Action"
-          options={ACTION_OPTIONS}
-          value={action}
-          onChange={(v) => handleActionSelect(v as VendorModelAction)}
-        />
 
         {/* Interruption - only when action is 'timed' */}
         {actionSupportsInterruption(action) && (
@@ -232,7 +252,7 @@ function ModelFormModal({ visible, model, onClose, onSave }: ModelFormModalProps
 }
 
 export function ModelsPage() {
-  const navigate = useNavigate();
+  const { navigate } = useLocalizedNavigate({ isLanguageSupported });
   const { entitySlug } = useParams<{ entitySlug: string }>();
   const { networkClient, baseUrl, token } = useApi();
   const { currentEntitySlug } = useCurrentEntity();

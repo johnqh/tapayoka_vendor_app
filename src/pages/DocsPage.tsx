@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
+import { LocalizedLink, useLocalizedNavigate } from '@sudobility/components';
+import { isLanguageSupported } from '../i18n';
 import { useTranslation } from 'react-i18next';
 import { Card, Heading, MasterDetailLayout, Text } from '@sudobility/components';
 import { ui } from '@sudobility/design';
@@ -24,9 +26,10 @@ function DocsSidebar({ onNavigate }: { onNavigate?: () => void }) {
   return (
     <nav className="p-4 space-y-1">
       {sidebarItems.map((item) => (
-        <Link
+        <LocalizedLink
           key={item.id}
           to={`/docs/${item.id}`}
+          isLanguageSupported={isLanguageSupported}
           onClick={onNavigate}
           className={`block px-3 py-2 rounded-lg text-sm font-medium ${ui.transition.default} ${
             currentSection === item.id
@@ -35,7 +38,7 @@ function DocsSidebar({ onNavigate }: { onNavigate?: () => void }) {
           }`}
         >
           {item.label}
-        </Link>
+        </LocalizedLink>
       ))}
     </nav>
   );
@@ -230,7 +233,7 @@ function ApiReferenceContent() {
 
 function DocsPage() {
   const { section } = useParams<{ section?: string }>();
-  const navigate = useNavigate();
+  const { navigate } = useLocalizedNavigate({ isLanguageSupported });
   const { t } = useTranslation('docsPage');
   const [mobileView, setMobileView] = useState<'navigation' | 'content'>('navigation');
   useSetPageConfig({ scrollable: false, contentPadding: 'sm', maxWidth: '7xl' });

@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocalizedNavigate } from '@sudobility/components';
+import { isLanguageSupported } from '../i18n';
 import { useTranslation } from 'react-i18next';
 import { useAuthStatus } from '@sudobility/auth-components';
 import { ui } from '@sudobility/design';
@@ -18,7 +19,7 @@ const sectionKeys = [
 ] as const;
 
 function VendorPage() {
-  const navigate = useNavigate();
+  const { navigate } = useLocalizedNavigate({ isLanguageSupported });
   const { user } = useAuthStatus();
   const { t } = useTranslation('vendorPage');
 

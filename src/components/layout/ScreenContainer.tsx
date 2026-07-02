@@ -1,10 +1,27 @@
 import type { ReactNode } from 'react';
 import { useLocation } from 'react-router-dom';
 import { AppPageLayout } from '@sudobility/building_blocks';
+import { LocalizedLink, removeLanguageFromPath } from '@sudobility/components';
 import { useTopBarConfig } from './TopBar';
 import { useFooterConfig } from './Footer';
 import { PageConfigProvider } from '../../context/PageConfigProvider';
 import { usePageConfig } from '../../hooks/usePageConfig';
+import { isLanguageSupported } from '../../i18n';
+
+/** Renders breadcrumb links with the active language prefix. */
+const breadcrumbLink = ({
+  href,
+  children,
+  className,
+}: {
+  href: string;
+  children: ReactNode;
+  className?: string;
+}) => (
+  <LocalizedLink to={href} className={className} isLanguageSupported={isLanguageSupported}>
+    {children}
+  </LocalizedLink>
+);
 
 interface ScreenContainerProps {
   children: ReactNode;
@@ -30,13 +47,16 @@ function ScreenContainerInner({ children }: { children: ReactNode }) {
 
   // Home keeps the full marketing footer; every other page uses the compact
   // footer, which sticks to the bottom of the viewport (same as the dashboard).
-  const isHomePage = location.pathname === '/';
+  // Routes are language-prefixed (/:lang), so strip the prefix before comparing.
+  const isHomePage = removeLanguageFromPath(location.pathname, isLanguageSupported) === '/';
   const footerConfig = useFooterConfig(isHomePage ? 'full' : 'compact');
 
   return (
     <AppPageLayout
       topBar={topBarConfig}
-      breadcrumbs={breadcrumbs.length > 0 ? { items: breadcrumbs } : undefined}
+      breadcrumbs={
+        breadcrumbs.length > 0 ? { items: breadcrumbs, LinkComponent: breadcrumbLink } : undefined
+      }
       footer={footerConfig}
       page={{
         maxWidth: 'full',

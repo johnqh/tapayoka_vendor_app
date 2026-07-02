@@ -1,6 +1,12 @@
 import { useState, useRef, useEffect, type ReactNode } from 'react';
-import { Outlet, useLocation, useNavigate, Link } from 'react-router-dom';
-import { MasterDetailLayout } from '@sudobility/components';
+import { Outlet, useLocation } from 'react-router-dom';
+import {
+  MasterDetailLayout,
+  LocalizedLink,
+  useLocalizedNavigate,
+  removeLanguageFromPath,
+} from '@sudobility/components';
+import { isLanguageSupported } from '../../i18n';
 import { ui } from '@sudobility/design';
 import { SEOHead } from '@sudobility/seo_lib';
 import { CONSTANTS } from '../../config/constants';
@@ -58,15 +64,18 @@ function OrganizationsMasterList({ onNavigate }: { onNavigate?: () => void }) {
     },
   ];
 
+  // Routes are language-prefixed (/:lang/...); strip the prefix before comparing.
+  const activePath = removeLanguageFromPath(location.pathname, isLanguageSupported);
   const isActive = (item: NavItem) => {
-    if (item.id === 'organizations') return location.pathname === '/organizations';
-    return location.pathname.startsWith(item.path);
+    if (item.id === 'organizations') return activePath === '/organizations';
+    return activePath.startsWith(item.path);
   };
 
   const renderItem = (item: NavItem) => (
-    <Link
+    <LocalizedLink
       key={item.id}
       to={item.path}
+      isLanguageSupported={isLanguageSupported}
       onClick={onNavigate}
       className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium ${ui.transition.default} ${
         isActive(item)
@@ -76,7 +85,7 @@ function OrganizationsMasterList({ onNavigate }: { onNavigate?: () => void }) {
     >
       <span className={isActive(item) ? 'text-primary' : 'text-muted-foreground'}>{item.icon}</span>
       {item.label}
-    </Link>
+    </LocalizedLink>
   );
 
   return <nav className="p-2 space-y-1">{items.map(renderItem)}</nav>;
@@ -84,7 +93,7 @@ function OrganizationsMasterList({ onNavigate }: { onNavigate?: () => void }) {
 
 function OrganizationsPage() {
   const location = useLocation();
-  const navigate = useNavigate();
+  const { navigate } = useLocalizedNavigate({ isLanguageSupported });
   useSetPageConfig({ scrollable: false, contentPadding: 'none', maxWidth: '7xl' });
 
   useEffect(() => {
@@ -107,7 +116,11 @@ function OrganizationsPage() {
   // Auto-switch to content view when navigating on mobile.
   useEffect(() => {
     const isMobile = window.innerWidth < 768;
-    if (isMobile && location.pathname !== '/organizations') {
+    // Routes are language-prefixed; strip the prefix before comparing.
+    if (
+      isMobile &&
+      removeLanguageFromPath(location.pathname, isLanguageSupported) !== '/organizations'
+    ) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setMobileView('content');
     }

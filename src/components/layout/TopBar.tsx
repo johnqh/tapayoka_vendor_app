@@ -2,7 +2,7 @@
 
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link, useNavigate } from 'react-router-dom';
+import { LocalizedLink, useLocalizedNavigate } from '@sudobility/components';
 import type { ComponentType } from 'react';
 import {
   type MenuItemConfig,
@@ -129,14 +129,14 @@ const linkWrapper = ({
   children: React.ReactNode;
   className?: string;
 }) => (
-  <Link to={href} className={className}>
+  <LocalizedLink to={href} className={className} isLanguageSupported={isLanguageSupported}>
     {children}
-  </Link>
+  </LocalizedLink>
 );
 
 export function useTopBarConfig(): TopBarConfig {
   const { i18n } = useTranslation();
-  const navigate = useNavigate();
+  const { navigate, switchLanguage } = useLocalizedNavigate({ isLanguageSupported });
   const { user } = useAuthStatus();
   const { networkClient, baseUrl, token } = useApi();
 
@@ -160,8 +160,9 @@ export function useTopBarConfig(): TopBarConfig {
 
   const handleLanguageChange = (newLang: string) => {
     if (isLanguageSupported(newLang)) {
-      i18n.changeLanguage(newLang);
       localStorage.setItem('language', newLang);
+      // Switch language AND update the URL prefix so routing/SEO stay in sync.
+      switchLanguage(newLang);
     }
   };
 

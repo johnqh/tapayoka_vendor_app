@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
+import { useLocalizedNavigate } from '@sudobility/components';
+import { isLanguageSupported } from '../../i18n';
 import { useApi } from '../../context/apiContextDef';
 import { useCurrentEntity } from '@sudobility/entity_client';
 import { Card, ContentLayout, Spinner, Alert, Text } from '@sudobility/components';
@@ -39,7 +41,7 @@ export function InstallationDetailPage() {
     offeringId: string;
     wallet: string;
   }>();
-  const navigate = useNavigate();
+  const { navigate } = useLocalizedNavigate({ isLanguageSupported });
   const entitySlug = params.entitySlug ?? '';
   const offeringId = params.offeringId ?? '';
   const wallet = params.wallet ?? '';
@@ -220,6 +222,8 @@ export function InstallationDetailPage() {
         slot={editing}
         slotPricing={model?.slotPricing ?? null}
         modelPricing={model?.pricing ?? null}
+        modelAction={model?.action ?? null}
+        modelPayment={model?.payment ?? null}
         offeringPricingTiers={offering?.pricingTiers ?? []}
         onClose={() => setModalOpen(false)}
         onSave={handleSave}

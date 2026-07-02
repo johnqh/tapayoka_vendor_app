@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
+import { useLocalizedNavigate } from '@sudobility/components';
+import { isLanguageSupported } from '../../i18n';
 import { useApi } from '../../context/apiContextDef';
 import { useCurrentEntity } from '@sudobility/entity_client';
 import { Card, ContentLayout, Spinner, Alert, Text } from '@sudobility/components';
@@ -30,7 +32,7 @@ export function OfferingPricingTiersPage() {
     locationId?: string;
     offeringId: string;
   }>();
-  const navigate = useNavigate();
+  const { navigate } = useLocalizedNavigate({ isLanguageSupported });
   const entitySlug = params.entitySlug ?? '';
   const offeringId = params.offeringId ?? '';
   const parent = resolveOfferingParent(params);

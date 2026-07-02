@@ -1,10 +1,11 @@
 import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useCurrentEntity } from '@sudobility/entity_client';
 import { ui } from '@sudobility/design';
+import { useLocalizedNavigate } from '@sudobility/components';
+import { isLanguageSupported } from '../i18n';
 
 function EntityRedirect() {
-  const navigate = useNavigate();
+  const { navigate } = useLocalizedNavigate({ isLanguageSupported });
   const { currentEntity, isLoading, isInitialized } = useCurrentEntity();
 
   useEffect(() => {
