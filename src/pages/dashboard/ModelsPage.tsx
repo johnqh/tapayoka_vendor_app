@@ -13,22 +13,13 @@ import {
   formatModelSummary,
   slotSupportsSlotPricing,
   actionSupportsInterruption,
-  pricingForAction,
-  pricingLockedByAction,
 } from '@sudobility/tapayoka_lib';
-import {
-  Badge,
-  Button,
-  Card,
-  ContentLayout,
-  FormField,
-  Spinner,
-  Text,
-} from '@sudobility/components';
+import { Badge, Card, ContentLayout, Dropdown, Spinner, Text } from '@sudobility/components';
 import { FormModal } from '@sudobility/components';
-import { PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline';
+import { PencilSquareIcon, TrashIcon, TagIcon } from '@heroicons/react/24/outline';
 import { DataCardList, RowIconButton } from '../../components/DataCardList';
 import { SegmentedField } from '../../components/SegmentedField';
+import { MODEL_TYPE_ICONS, MODEL_TYPE_COLORS } from '../../config/modelTypeIcons';
 import {
   SLOT_OPTIONS,
   PRICING_OPTIONS,
@@ -36,7 +27,6 @@ import {
   ACTION_OPTIONS,
   INTERRUPTION_OPTIONS,
   PAYMENT_OPTIONS,
-  TYPE_DESCRIPTIONS,
 } from '../../components/modelOptions';
 import { analyticsService } from '../../config/analytics';
 import { DashboardPageHeader } from '../../components/DashboardPageHeader';
@@ -54,30 +44,6 @@ import type {
   VendorModelInterruption,
   VendorModelPayment,
 } from '@sudobility/tapayoka_types';
-
-function Chip<T extends string>({
-  label,
-  value,
-  selected,
-  onSelect,
-}: {
-  label: string;
-  value: T | null;
-  selected: T | null;
-  onSelect: (v: T | null) => void;
-}) {
-  const isActive = value === selected;
-  return (
-    <Button
-      type="button"
-      variant={isActive ? 'primary' : 'outline'}
-      size="sm"
-      onClick={() => onSelect(value)}
-    >
-      {label}
-    </Button>
-  );
-}
 
 interface ModelFormModalProps {
   visible: boolean;
@@ -112,20 +78,22 @@ function ModelFormModal({ visible, model, onClose, onSave }: ModelFormModalProps
     }
   }, [visible, model]);
 
-  const handleTypeSelect = useCallback(
+  // Type is descriptive metadata, but picking one also seeds the settings below
+  // (still editable afterward). 'None' just clears the type without touching them.
+  const handleSelectType = useCallback(
     (mt: VendorModelType | null) => {
       setType(mt);
-      if (mt && !isEditing) {
-        const defaults = getModelTypeDefaults(mt);
-        setPricing(defaults.pricing);
-        setSlot(defaults.slot);
-        setSlotPricing(defaults.slotPricing);
-        setAction(defaults.action);
-        setInterruption(defaults.interruption);
-        setPayment(defaults.payment);
-      }
+      if (!mt) return;
+      if (!name.trim()) setName(mt);
+      const defaults = getModelTypeDefaults(mt);
+      setPricing(defaults.pricing);
+      setSlot(defaults.slot);
+      setSlotPricing(defaults.slotPricing);
+      setAction(defaults.action);
+      setInterruption(defaults.interruption);
+      setPayment(defaults.payment);
     },
-    [isEditing]
+    [name]
   );
 
   const handleActionSelect = useCallback((a: VendorModelAction | null) => {
@@ -133,16 +101,9 @@ function ModelFormModal({ visible, model, onClose, onSave }: ModelFormModalProps
     if (!actionSupportsInterruption(a)) {
       setInterruption(null);
     }
-    // Picking 'timed' forces pricing to variable.
-    if (pricingLockedByAction(a)) setPricing('variable');
   }, []);
 
-  // A 'timed' action forces variable pricing; the Pricing control is then locked.
-  const pricingLocked = pricingLockedByAction(action);
-  const effectivePricing = pricingForAction(action, pricing) ?? pricing;
-  const pricingOptions = pricingLocked
-    ? PRICING_OPTIONS.map((o) => ({ ...o, disabled: true }))
-    : PRICING_OPTIONS;
+  const TypeIcon = type ? MODEL_TYPE_ICONS[type] : null;
 
   const handleSave = async () => {
     if (!name.trim()) return;
@@ -152,7 +113,7 @@ function ModelFormModal({ visible, model, onClose, onSave }: ModelFormModalProps
         name: name.trim(),
         type: type || undefined,
         ...buildVendorModelConfig({
-          pricing: pricingForAction(action, pricing),
+          pricing,
           slot,
           slotPricing,
           action,
@@ -176,24 +137,49 @@ function ModelFormModal({ visible, model, onClose, onSave }: ModelFormModalProps
       size="medium"
     >
       <div className="space-y-4">
-        {/* Name */}
-        <FormField
-          id="model-name"
-          label="Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder="Model name"
-        />
-
-        {/* Type — a category picker (chips) whose selection seeds defaults */}
-        <SegmentedField label="Type" value={type} description={type ? TYPE_DESCRIPTIONS[type] : ''}>
-          <div className="flex flex-wrap gap-2">
-            <Chip label="None" value={null} selected={type} onSelect={handleTypeSelect} />
-            {MODEL_TYPES.map((mt) => (
-              <Chip key={mt} label={mt} value={mt} selected={type} onSelect={handleTypeSelect} />
-            ))}
+        {/* Name — with a trailing type accessory. Type is descriptive; picking
+            one from the menu also seeds the settings below (still editable). */}
+        <div>
+          <Text as="label" size="sm" weight="medium" className="block mb-1">
+            Name
+          </Text>
+          <div className="relative">
+            <input
+              id="model-name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Model name"
+              className="w-full px-3 py-2 pr-11 text-sm bg-muted border-none rounded-md focus:outline-none focus:ring-2 focus:ring-ring"
+            />
+            <div className="absolute inset-y-0 right-1 flex items-center">
+              <Dropdown
+                align="right"
+                trigger={
+                  <button
+                    type="button"
+                    aria-label="Type"
+                    className="flex h-8 w-8 items-center justify-center rounded-md hover:bg-background"
+                  >
+                    {TypeIcon ? (
+                      <TypeIcon className="h-5 w-5" style={{ color: MODEL_TYPE_COLORS[type!] }} />
+                    ) : (
+                      <TagIcon className="h-5 w-5 text-theme-text-tertiary" />
+                    )}
+                  </button>
+                }
+                items={[
+                  { id: 'none', label: 'None', onClick: () => handleSelectType(null) },
+                  ...MODEL_TYPES.map((mt) => ({
+                    id: mt,
+                    label: mt,
+                    icon: MODEL_TYPE_ICONS[mt],
+                    onClick: () => handleSelectType(mt),
+                  })),
+                ]}
+              />
+            </div>
           </div>
-        </SegmentedField>
+        </div>
 
         {/* Slot */}
         <SegmentedField
@@ -211,12 +197,12 @@ function ModelFormModal({ visible, model, onClose, onSave }: ModelFormModalProps
           onChange={(v) => handleActionSelect(v as VendorModelAction)}
         />
 
-        {/* Pricing — locked to variable when the action is 'timed' */}
+        {/* Pricing — independent of the action (fixed or variable). */}
         <SegmentedField
           label="Pricing"
-          options={pricingOptions}
-          value={effectivePricing}
-          onChange={pricingLocked ? undefined : (v) => setPricing(v as VendorModelPricing)}
+          options={PRICING_OPTIONS}
+          value={pricing}
+          onChange={(v) => setPricing(v as VendorModelPricing)}
         />
 
         {/* Slot Pricing - only when slot is multi */}
@@ -336,36 +322,47 @@ export function ModelsPage() {
             data={manager.models}
             keyExtractor={(model) => model.id}
             onItemClick={handleRowClick}
-            renderItem={(model) => (
-              <div className="flex items-start justify-between gap-3">
-                <div className="min-w-0">
-                  <Text weight="medium" truncate>
-                    {model.name}
-                  </Text>
-                  <Text size="sm" color="muted">
-                    {formatModelSummary(model)}
-                  </Text>
+            renderItem={(model) => {
+              const RowIcon = model.type ? MODEL_TYPE_ICONS[model.type] : null;
+              return (
+                <div className="flex items-start justify-between gap-3">
+                  <div className="flex min-w-0 items-start gap-2">
+                    {RowIcon && (
+                      <RowIcon
+                        className="mt-0.5 h-5 w-5 flex-shrink-0"
+                        style={{ color: MODEL_TYPE_COLORS[model.type!] }}
+                      />
+                    )}
+                    <div className="min-w-0">
+                      <Text weight="medium" truncate>
+                        {model.name}
+                      </Text>
+                      <Text size="sm" color="muted">
+                        {formatModelSummary(model)}
+                      </Text>
+                    </div>
+                  </div>
+                  <div className="flex flex-shrink-0 items-center gap-1">
+                    {model.offeringCount != null && (
+                      <Badge variant="primary" pill>
+                        {model.offeringCount}
+                      </Badge>
+                    )}
+                    <RowIconButton
+                      icon={<PencilSquareIcon className="h-5 w-5" />}
+                      label="Edit"
+                      onClick={() => handleEdit(model)}
+                    />
+                    <RowIconButton
+                      icon={<TrashIcon className="h-5 w-5" />}
+                      label="Delete"
+                      variant="danger"
+                      onClick={() => handleDelete(model)}
+                    />
+                  </div>
                 </div>
-                <div className="flex flex-shrink-0 items-center gap-1">
-                  {model.offeringCount != null && (
-                    <Badge variant="primary" pill>
-                      {model.offeringCount}
-                    </Badge>
-                  )}
-                  <RowIconButton
-                    icon={<PencilSquareIcon className="h-5 w-5" />}
-                    label="Edit"
-                    onClick={() => handleEdit(model)}
-                  />
-                  <RowIconButton
-                    icon={<TrashIcon className="h-5 w-5" />}
-                    label="Delete"
-                    variant="danger"
-                    onClick={() => handleDelete(model)}
-                  />
-                </div>
-              </div>
-            )}
+              );
+            }}
           />
         )}
       </ContentLayout>

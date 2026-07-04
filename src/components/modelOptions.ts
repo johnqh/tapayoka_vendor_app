@@ -84,11 +84,3 @@ export const PAYMENT_OPTIONS: SegmentedControlOption[] = [
     description: 'The buyer is charged when the session finishes.',
   },
 ];
-
-export const TYPE_DESCRIPTIONS: Record<string, string> = {
-  Washer: 'Laundry washer — variable time pricing on a single slot.',
-  Dryer: 'Laundry dryer — variable time pricing on a single slot.',
-  Parking: 'Parking spots — tiered multi-slot pricing; continues if interrupted.',
-  Locker: 'Rental lockers — tiered multi-slot pricing; charged at the end.',
-  Vending: 'Vending machine — fixed price with a one-shot sequence action.',
-};
