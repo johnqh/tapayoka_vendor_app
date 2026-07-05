@@ -170,9 +170,7 @@ export function SlotFormModal({
                     type="button"
                     onClick={() => setSelectedTierId(tier.id)}
                     className={`w-full rounded-lg border p-3 text-left transition-colors ${
-                      isSelected
-                        ? 'border-theme-primary bg-theme-bg-secondary'
-                        : 'border-theme-border'
+                      isSelected ? 'border-primary bg-muted' : 'border-border'
                     }`}
                   >
                     <Text weight="semibold">{tier.name}</Text>
@@ -192,7 +190,7 @@ export function SlotFormModal({
             <Text as="div" size="sm" weight="semibold" className="mb-1">
               Pricing
             </Text>
-            <div className="rounded-lg border border-theme-border p-3">
+            <div className="rounded-lg border border-border p-3">
               {customPricingTier.type === 'timed' ? (
                 <VariablePricingForm
                   config={customPricingTier}
@@ -211,7 +209,7 @@ export function SlotFormModal({
             <Text as="div" size="sm" weight="semibold" className="mb-1">
               Actions
             </Text>
-            <div className="space-y-3 rounded-lg border border-theme-border p-3">
+            <div className="space-y-3 rounded-lg border border-border p-3">
               <SignalsEditor label="Start signals" signals={action.start} onChange={updateStart} />
               {modelPayment === 'atEnd' && (
                 <SignalsEditor

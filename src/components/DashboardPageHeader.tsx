@@ -52,7 +52,7 @@ export function DashboardPageHeader({
 }: DashboardPageHeaderProps) {
   return (
     <div
-      className={`flex items-center gap-3 px-4 py-3 border-b border-theme-border ${ui.background.subtle}`}
+      className={`flex items-center gap-3 px-4 py-3 border-b border-border ${ui.background.subtle}`}
     >
       {onBack && (
         <Button
@@ -107,7 +107,7 @@ export function DashboardPageHeader({
             title={addTitle ?? addLabel}
             className={`h-auto w-auto p-2 ${
               addDisabled
-                ? 'text-theme-text-tertiary cursor-not-allowed'
+                ? 'text-muted-foreground cursor-not-allowed'
                 : 'text-primary hover:text-primary/80'
             }`}
           >
@@ -125,7 +125,7 @@ export function DashboardPageHeader({
  */
 export function DashboardDetailFooter({ children }: { children: ReactNode }) {
   return (
-    <div className={`px-4 py-3 border-t border-theme-border ${ui.background.subtle}`}>
+    <div className={`px-4 py-3 border-t border-border ${ui.background.subtle}`}>
       <Text size="sm" color="muted">
         {children}
       </Text>

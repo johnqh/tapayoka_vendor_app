@@ -34,7 +34,7 @@ function DocsSidebar({ onNavigate }: { onNavigate?: () => void }) {
           className={`block px-3 py-2 rounded-lg text-sm font-medium ${ui.transition.default} ${
             currentSection === item.id
               ? 'bg-accent text-primary'
-              : 'text-theme-text-secondary hover:bg-theme-bg-tertiary'
+              : 'text-muted-foreground hover:bg-accent'
           }`}
         >
           {item.label}
@@ -191,7 +191,7 @@ function ApiReferenceContent() {
               <span className={endpoint.method === 'GET' ? 'text-success' : 'text-primary'}>
                 {endpoint.method}
               </span>{' '}
-              <span className="text-theme-text-primary">{endpoint.path}</span>
+              <span className="text-foreground">{endpoint.path}</span>
               <Text size="sm" color="muted" className="mt-1 font-sans">
                 {endpoint.description}
               </Text>

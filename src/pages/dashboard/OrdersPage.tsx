@@ -62,10 +62,7 @@ export function OrdersPage() {
           renderItem={(order) => (
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0">
-                <p
-                  className="truncate font-mono text-sm text-theme-text-secondary"
-                  title={order.id}
-                >
+                <p className="truncate font-mono text-sm text-muted-foreground" title={order.id}>
                   {truncateId(order.id)}
                 </p>
                 <Text size="xs" color="muted">

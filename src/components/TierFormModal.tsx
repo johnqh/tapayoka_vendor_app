@@ -78,7 +78,7 @@ export function TierFormModal({
           <Text as="div" size="sm" weight="medium" color="muted" className="mb-1">
             Pricing
           </Text>
-          <div className="rounded-lg border border-theme-border p-3">
+          <div className="rounded-lg border border-border p-3">
             {draft.type === 'timed' ? (
               <VariablePricingForm config={draft} onChange={(c) => setDraft(c)} />
             ) : (

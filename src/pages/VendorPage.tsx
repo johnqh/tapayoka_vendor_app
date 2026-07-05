@@ -94,7 +94,7 @@ function VendorPage() {
                   ))}
                 </ul>
               </div>
-              <div className="flex-1 bg-theme-bg-secondary rounded-xl p-8 flex items-center justify-center min-h-[200px]">
+              <div className="flex-1 bg-muted rounded-xl p-8 flex items-center justify-center min-h-[200px]">
                 <Text as="span" size="sm" color="muted">
                   {t(`${key}.title`)} illustration
                 </Text>

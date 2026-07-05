@@ -46,10 +46,7 @@ export function SegmentedControl({
   className,
 }: SegmentedControlProps) {
   return (
-    <div
-      role="group"
-      className={cn('flex w-full rounded-lg bg-theme-bg-secondary p-1 gap-1', className)}
-    >
+    <div role="group" className={cn('flex w-full rounded-lg bg-muted p-1 gap-1', className)}>
       {options.map((option) => {
         const selected = value === option.value;
         return (
@@ -65,8 +62,8 @@ export function SegmentedControl({
               'disabled:opacity-50 disabled:cursor-not-allowed',
               sizeClasses[size],
               selected
-                ? 'bg-theme-bg-primary text-theme-text-primary shadow-sm'
-                : 'text-theme-text-secondary hover:bg-theme-hover-bg'
+                ? 'bg-background text-foreground shadow-sm'
+                : 'text-muted-foreground hover:bg-accent'
             )}
           >
             {option.icon && <span className="flex-shrink-0 w-4 h-4">{option.icon}</span>}

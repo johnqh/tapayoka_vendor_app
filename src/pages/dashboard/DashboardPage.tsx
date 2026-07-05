@@ -97,9 +97,7 @@ function DashboardMasterList({ onNavigate }: { onNavigate?: () => void }) {
       isLanguageSupported={isLanguageSupported}
       onClick={onNavigate}
       className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium ${ui.transition.default} ${
-        isActive(item)
-          ? 'bg-accent text-primary'
-          : 'text-theme-text-secondary hover:bg-theme-bg-tertiary'
+        isActive(item) ? 'bg-accent text-primary' : 'text-muted-foreground hover:bg-accent'
       }`}
     >
       <span className={isActive(item) ? 'text-primary' : 'text-muted-foreground'}>{item.icon}</span>

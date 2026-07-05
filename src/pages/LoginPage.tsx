@@ -34,7 +34,7 @@ export default function LoginPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-theme-bg-primary">
+      <div className="min-h-screen flex items-center justify-center bg-background">
         <Spinner ariaLabel="Loading authentication" />
       </div>
     );
@@ -42,7 +42,7 @@ export default function LoginPage() {
 
   if (!auth) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-theme-bg-primary">
+      <div className="min-h-screen flex items-center justify-center bg-background">
         <Alert variant="error" description="Firebase not configured" />
       </div>
     );

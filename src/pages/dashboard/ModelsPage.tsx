@@ -163,7 +163,7 @@ function ModelFormModal({ visible, model, onClose, onSave }: ModelFormModalProps
                     {TypeIcon ? (
                       <TypeIcon className="h-5 w-5" style={{ color: MODEL_TYPE_COLORS[type!] }} />
                     ) : (
-                      <TagIcon className="h-5 w-5 text-theme-text-tertiary" />
+                      <TagIcon className="h-5 w-5 text-muted-foreground" />
                     )}
                   </button>
                 }

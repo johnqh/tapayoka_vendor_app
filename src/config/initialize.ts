@@ -1,6 +1,6 @@
 import { initializeWebApp } from '@sudobility/di_web';
 import { configureTheme } from '@sudobility/design';
-import { defaultTheme } from '@sudobility/design/themes';
+import { defaultTheme, generateThemeCSS } from '@sudobility/design/themes';
 import { FIREBASE_CONFIG } from './constants';
 import { initializeI18n } from '../i18n';
 
@@ -9,6 +9,12 @@ import { initializeI18n } from '../i18n';
 // variables in index.css + createTailwindPreset() in tailwind.config.js —
 // matching the RN apps and making all design styles + light/dark work.
 configureTheme(defaultTheme);
+if (typeof document !== 'undefined') {
+  const styleEl = document.createElement('style');
+  styleEl.id = 'sudobility-design-theme';
+  styleEl.textContent = generateThemeCSS(defaultTheme);
+  document.head.appendChild(styleEl);
+}
 
 export async function initializeApp(): Promise<void> {
   await initializeWebApp({

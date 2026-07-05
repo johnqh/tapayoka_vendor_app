@@ -34,8 +34,7 @@ export function DataCardList<T>({
   emptyMessage = 'No data yet.',
   className,
 }: DataCardListProps<T>) {
-  const containerClass =
-    'bg-theme-bg-primary rounded-lg border border-theme-border overflow-hidden';
+  const containerClass = 'bg-background rounded-lg border border-border overflow-hidden';
 
   if (data.length === 0) {
     return (
@@ -53,7 +52,7 @@ export function DataCardList<T>({
         <li key={keyExtractor(row)}>
           <div
             className={`px-4 py-3 ${
-              onItemClick ? `cursor-pointer hover:bg-theme-hover-bg ${ui.transition.default}` : ''
+              onItemClick ? `cursor-pointer hover:bg-accent ${ui.transition.default}` : ''
             }`}
             onClick={onItemClick ? () => onItemClick(row) : undefined}
           >
@@ -83,7 +82,7 @@ export function RowIconButton({
   disabled?: boolean;
 }) {
   const tone = disabled
-    ? 'text-theme-text-tertiary cursor-not-allowed'
+    ? 'text-muted-foreground cursor-not-allowed'
     : variant === 'danger'
       ? 'text-muted-foreground hover:text-destructive hover:bg-destructive/10'
       : variant === 'primary'

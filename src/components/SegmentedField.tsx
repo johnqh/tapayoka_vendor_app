@@ -42,7 +42,7 @@ export function SegmentedField({
         <SegmentedControl options={options} value={value ?? undefined} onChange={onChange} />
       )}
       {/* Fixed two-line area (h-8 / leading-4) so option changes never reflow. */}
-      <div className="mt-1.5 h-8 overflow-hidden text-xs leading-4 text-theme-text-tertiary">
+      <div className="mt-1.5 h-8 overflow-hidden text-xs leading-4 text-muted-foreground">
         {selectedDescription}
       </div>
     </div>
