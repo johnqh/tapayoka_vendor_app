@@ -15,7 +15,7 @@
         "@sudobility/di_web": "^0.1.209",
         "@sudobility/entity_client": "^0.0.36",
         "@sudobility/entity_pages": "^0.0.137",
-        "@sudobility/seo_lib": "^0.0.32",
+        "@sudobility/seo_lib": "^0.0.33",
         "@sudobility/subscription_lib": "^0.0.44",
         "@sudobility/tapayoka_client": "^0.0.56",
         "@sudobility/tapayoka_lib": "^0.0.59",
@@ -504,7 +504,7 @@
 
     "@sudobility/entity_pages": ["@sudobility/entity_pages@0.0.137", "", { "optionalDependencies": { "@rollup/rollup-linux-x64-gnu": "4.52.5", "@rollup/rollup-linux-x64-musl": "4.52.5" }, "peerDependencies": { "@heroicons/react": "^2.2.0", "@sudobility/components": "^5.0.95", "@sudobility/design": "^1.1.46", "@sudobility/entity-components": "^1.0.13", "@sudobility/entity_client": "^0.0.36", "@sudobility/types": "^1.9.62", "@tanstack/react-query": "^5.0.0", "react": "^18.0.0 || ^19.0.0", "react-dom": "^18.0.0 || ^19.0.0" } }, "sha512-84KfpyWcFdrkC5T51LoBTQI7WfHKqFI7RZxt2fN3FeIKb0mYIh6ajYkTQPXVk7kw7hZSLIoHm+WXTlbsukhiMA=="],
 
-    "@sudobility/seo_lib": ["@sudobility/seo_lib@0.0.32", "", { "peerDependencies": { "i18next": ">=23.0.0", "react": "^18.0.0 || ^19.0.0", "react-dom": "^18.0.0 || ^19.0.0", "react-helmet-async": ">=2.0.0", "react-i18next": ">=14.0.0", "react-router-dom": ">=6.0.0" }, "optionalPeers": ["i18next", "react-i18next", "react-router-dom"] }, "sha512-5Np9OWZVpzx810DuYzEphn/Fbtd1srZBLzDLSONm+V45LkFpFGHtHKluBadczZe+LJ61SDPHpWs8WBlXIMGY1w=="],
+    "@sudobility/seo_lib": ["@sudobility/seo_lib@0.0.33", "", { "peerDependencies": { "i18next": ">=23.0.0", "react": "^18.0.0 || ^19.0.0", "react-dom": "^18.0.0 || ^19.0.0", "react-helmet-async": ">=2.0.0", "react-i18next": ">=14.0.0", "react-router-dom": ">=6.0.0" }, "optionalPeers": ["i18next", "react-i18next", "react-router-dom"] }, "sha512-S+RQyQpB1DpR9QSdeGKMwTsXRnpl6aSAQI38smVNSolSbZdSNgrrykIxfXhIKW1dXc1wA6/WVcQxjaVXgRz+UQ=="],
 
     "@sudobility/subscription_lib": ["@sudobility/subscription_lib@0.0.44", "", { "peerDependencies": { "@revenuecat/purchases-js": "^1.0.0", "@sudobility/types": "^1.9.62", "@tanstack/react-query": "^5.0.0", "react": "^18.0.0 || ^19.0.0", "react-native-purchases": ">=7.0.0" }, "optionalPeers": ["@revenuecat/purchases-js", "@tanstack/react-query", "react-native-purchases"] }, "sha512-2bS5QjnYMg9Ehd/6RyfVoK0npOnXcTZ3oq1MGB7BmxismYVPb+jcyiewsh7fRwloLucWtNxrDNIZvjTz3JM4fw=="],
 
